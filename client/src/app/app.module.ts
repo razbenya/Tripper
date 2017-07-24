@@ -12,6 +12,7 @@ import { AlertService, AuthenticationService, UserService } from './_services/in
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './_guards/index';
+import { ProfileComponent } from './profile/profile.component';
 
 
 // Define the routes
@@ -29,6 +30,7 @@ const ROUTES = [
   { path: '', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: ':id', component: ProfileComponent},
 
   // otherwise redirect to home
   { path: '**', redirectTo: '' }
@@ -42,7 +44,8 @@ const ROUTES = [
     HomeComponent,
     LoginComponent,
     RegisterComponent,
-    AlertComponent
+    AlertComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,

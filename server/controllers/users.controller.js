@@ -10,6 +10,7 @@ router.get('/', getAll);
 router.get('/current', getCurrent);
 router.put('/:_id', update);
 router.delete('/:_id', _delete);
+router.get('/:_id', getUser);
 
 module.exports = router;
 
@@ -48,6 +49,21 @@ function getAll(req, res) {
             res.status(400).send(err);
         });
 }
+
+function getUser(req, res) {
+    userService.getById(req.params._id)
+        .then(function (user) {
+            if (user) {
+                res.send(user);
+            } else {
+                res.sendStatus(404);
+            }
+        })
+        .catch(function (err) {
+            res.status(400).send(err);
+        });
+}
+
 
 function getCurrent(req, res) {
     userService.getById(req.user.sub)

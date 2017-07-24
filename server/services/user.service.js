@@ -60,9 +60,9 @@ function getAll() {
     return deferred.promise;
 }
 
+
 function getById(_id) {
     var deferred = Q.defer();
-
     db.users.findById(_id, function (err, user) {
         if (err) deferred.reject(err.name + ': ' + err.message);
 
@@ -117,7 +117,6 @@ function create(userParam) {
 
         // add hashed password to user object
         user.hash = bcrypt.hashSync(userParam.password, 10);
-
         db.users.insert(
             user,
             function (err, doc) {
@@ -160,8 +159,7 @@ function update(_id, userParam) {
         // fields to update
         var set = {
             firstName: userParam.firstName,
-            lastName: userParam.lastName,
-            username: userParam.username,
+            lastName: userParam.lastName
         };
 
         // update password if it was entered
