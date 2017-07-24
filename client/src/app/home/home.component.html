@@ -4,7 +4,7 @@
     <h3>All registered users:</h3>
     <ul>
         <li *ngFor="let user of users">
-          {{user._id}}  {{user.username}} ({{user.firstName}} {{user.lastName}})
+         <a routerLink = {{user._id}} > {{user.username}} </a> ({{user.firstName}} {{user.lastName}})
             - <a (click)="deleteUser(user.username)">Delete</a>
         </li>
     </ul>

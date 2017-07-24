@@ -12,9 +12,8 @@ export class UserService {
       return this.http.get('/users').map((response: Response) => response.json());
   }
 
-  getById(username: string) {
-      console.log(username);
-      return this.http.get('/users/' + username).map((response: Response) => response.json());
+  getById(_id: string) {
+      return this.http.get('/users/' + _id).map((response: Response) => response.json());
   }
 
   create(user: User) { 

@@ -11,7 +11,7 @@ import { User } from "app/_models";
 })
 export class ProfileComponent implements OnInit {
   currentUser: User;
-  user: User;
+  userProfile: User;
   id: string;
 
 
@@ -24,8 +24,8 @@ export class ProfileComponent implements OnInit {
 
   getUser() {
     this.userService.getById(this.id).subscribe(user => {
-
-      this.user = user;
+      this.userProfile = user;
+       console.log(this.userProfile._id);
     });
   }
 

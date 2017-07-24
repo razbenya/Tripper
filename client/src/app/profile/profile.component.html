@@ -1,4 +1,6 @@
 <div class="col-md-6 col-md-offset-3">
   <h1>hi {{currentUser.firstName}}</h1>
-  <h3>welcome to {{user.firstName}} profile</h3>
+  <div *ngIf="userProfile">
+      <h3>this is {{userProfile.firstName}} profile </h3> 
+  </div> 
 </div>
