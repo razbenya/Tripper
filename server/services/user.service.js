@@ -18,10 +18,10 @@ service.delete = _delete;
 
 module.exports = service;
 
-function authenticate(username, password) {
+function authenticate(email, password) {
     var deferred = Q.defer();
 
-    db.users.findOne({ username: username }, function (err, user) {
+    db.users.findOne({ email: email }, function (err, user) {
         if (err) deferred.reject(err.name + ': ' + err.message);
 
         if (user && bcrypt.compareSync(password, user.hash)) {
@@ -31,6 +31,7 @@ function authenticate(username, password) {
                 username: user.username,
                 firstName: user.firstName,
                 lastName: user.lastName,
+                email: user.email,
                 token: jwt.sign({ sub: user._id }, config.secret)
             });
         } else {
@@ -82,7 +83,7 @@ function create(userParam) {
 
     // validation
     db.users.findOne(
-        { username: userParam.username },
+        { username: userParam.username } ,
         function (err, user) {
             if (err) deferred.reject(err.name + ': ' + err.message);
 
@@ -90,9 +91,25 @@ function create(userParam) {
                 // username already exists
                 deferred.reject('Username "' + userParam.username + '" is already taken');
             } else {
-                createUser();
+               checkUniqueMail();
             }
         });
+
+    function checkUniqueMail(){
+        db.users.findOne(
+            { email: userParam.email }, (err, user) => {
+                if(err) {
+                    deferred.reject(err.name + ":" + err.message);
+                }
+                if(user) {
+                    deferred.reject('email "'+ userParam.email +'" is already taken');
+                } else {
+                    createUser();
+                }
+            }
+        )
+    }
+
 
     function createUser() {
         // set user object to userParam without the cleartext password

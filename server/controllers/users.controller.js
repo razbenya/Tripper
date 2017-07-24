@@ -14,7 +14,7 @@ router.delete('/:_id', _delete);
 module.exports = router;
 
 function authenticate(req, res) {
-    userService.authenticate(req.body.username, req.body.password)
+    userService.authenticate(req.body.email, req.body.password)
         .then(function (user) {
             if (user) {
                 // authentication successful
