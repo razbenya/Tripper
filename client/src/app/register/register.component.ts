@@ -7,7 +7,7 @@ import { AlertService, UserService } from '../_services/index';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-export class RegisterComponent{
+export class RegisterComponent {
   model: any = {};
   loading = false;
 
@@ -16,19 +16,25 @@ export class RegisterComponent{
     private userService: UserService,
     private alertService: AlertService
   ) { }
-  
+
   register() {
     this.loading = true;
-    this.userService.create(this.model)
+    if (this.model.password.length < 4) {
+      this.alertService.error("password too short (at least 4 characters)");
+      this.loading = false;
+    }
+    else {
+      this.userService.create(this.model)
         .subscribe(
-          data => {
-              this.alertService.success('Registration successful', true);
-              this.router.navigate(['/login']);
-          },
-          error => {
-              this.alertService.error(error);
-              this.loading = false;
-          }
+        data => {
+          this.alertService.success('Registration successful', true);
+          this.router.navigate(['/login']);
+        },
+        error => {
+          this.alertService.error(error);
+          this.loading = false;
+        }
         );
+    }
   }
 }

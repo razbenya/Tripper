@@ -1,6 +1,11 @@
-
-<h1>
-  <b>{{ heading }} </b>
-</h1>
-
-<router-outlet></router-outlet>
+<div class="jumbotron">
+    <div class="container">
+        <div class="col-sm-8 col-sm-offset-2">
+            <h1>
+              <b>{{ heading }} </b>
+            </h1>
+            <app-alert></app-alert>
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>
