@@ -4,7 +4,7 @@
     "description": "Server for tripper",
     "repository": {
         "type": "git",
-        "url": "https://github.com/neTAC23/TripAdvisor.git"
+        "url": "https://github.com/neTAC23/Tripper.git"
     },
     "dependencies": {
         "bcryptjs": "^2.1.0",
