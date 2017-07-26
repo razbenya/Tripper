@@ -16,8 +16,21 @@ export class UserService {
       return this.http.get('/users/' + _id).map((response: Response) => response.json());
   }
 
+  follow(current: User, user: User){
+    return this.http.put('/users/follow/' + current._id, user);
+  }
+
+  unfollow(current: User, user: User){
+    return this.http.put('/users/unfollow/' + current._id, user);
+  }
+
   create(user: User) { 
       user._id = user.username;
+      user.likes = 0;
+      user.posts = [];
+      user.followers = [];
+      user.following = [];
+      user.profilePic = "default.jpg";
       return this.http.post('/users/register', user);
   }
 

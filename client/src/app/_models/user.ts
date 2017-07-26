@@ -6,5 +6,9 @@ export class User {
     username: string;
     password: string;
     image: string;
-    posts: [number];
+    likes: number;
+    posts: number[];
+    following: string[];
+    followers: string[];
+    profilePic: string;
 }

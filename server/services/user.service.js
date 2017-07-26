@@ -15,6 +15,8 @@ service.getById = getById;
 service.create = create;
 service.update = update;
 service.delete = _delete;
+service.follow = follow;
+service.unfollow = unfollow;
 
 module.exports = service;
 
@@ -25,13 +27,16 @@ function authenticate(email, password) {
         if (err) deferred.reject(err.name + ': ' + err.message);
 
         if (user && bcrypt.compareSync(password, user.hash)) {
-            // authentication successful
             deferred.resolve({
                 _id: user._id,
                 username: user.username,
                 firstName: user.firstName,
                 lastName: user.lastName,
                 email: user.email,
+                posts: user.posts,
+                followers: user.followers,
+                following: user.following,
+                likes: user.likes,
                 token: jwt.sign({ sub: user._id }, config.secret)
             });
         } else {
@@ -83,7 +88,7 @@ function create(userParam) {
 
     // validation
     db.users.findOne(
-        { username: userParam.username } ,
+        { username: userParam.username },
         function (err, user) {
             if (err) deferred.reject(err.name + ': ' + err.message);
 
@@ -91,18 +96,18 @@ function create(userParam) {
                 // username already exists
                 deferred.reject('Username "' + userParam.username + '" is already taken');
             } else {
-               checkUniqueMail();
+                checkUniqueMail();
             }
         });
 
-    function checkUniqueMail(){
+    function checkUniqueMail() {
         db.users.findOne(
             { email: userParam.email }, (err, user) => {
-                if(err) {
+                if (err) {
                     deferred.reject(err.name + ":" + err.message);
                 }
-                if(user) {
-                    deferred.reject('email "'+ userParam.email +'" is already taken');
+                if (user) {
+                    deferred.reject('email "' + userParam.email + '" is already taken');
                 } else {
                     createUser();
                 }
@@ -127,6 +132,118 @@ function create(userParam) {
     }
 
     return deferred.promise;
+}
+
+
+
+function follow(_id, toFollow) {
+    var deferred = Q.defer();
+    //curr: User;
+    db.users.findById(_id, function (err, user) {
+        if (err)
+            deferred.reject(err.name + ': ' + err.message);
+        if (user) {
+            db.users.findById(toFollow, function (err, followedUser) {
+                if (err)
+                    deferred.reject(err.name + ': ' + err.message);
+                if (followedUser) {
+                   addFollowing(user);
+                   addFollower(followedUser);
+                }
+            });
+
+        }
+    });
+
+
+    function addFollowing(user) {
+        user.following.push(toFollow);
+        var set = {
+            following: user.following
+        };
+        db.users.update(
+            { _id: mongo.helper.toObjectID(_id) },
+            { $set: set },
+            function (err, doc) {
+                if (err) deferred.reject(err.name + ': ' + err.message);
+
+                deferred.resolve();
+            });
+    }
+    function addFollower(user) {
+        user.followers.push(_id);
+        var set = {
+            followers: user.followers
+        };
+        db.users.update(
+            { _id: mongo.helper.toObjectID(toFollow) },
+            { $set: set },
+            function (err, doc) {
+                if (err) deferred.reject(err.name + ': ' + err.message);
+
+                deferred.resolve();
+            });
+    }
+    return deferred.promise;
+
+}
+
+function unfollow(_id, toFollow) {
+    var deferred = Q.defer();
+    //curr: User;
+    db.users.findById(_id, function (err, user) {
+        if (err)
+            deferred.reject(err.name + ': ' + err.message);
+        if (user) {
+            db.users.findById(toFollow, function (err, followedUser) {
+                if (err)
+                    deferred.reject(err.name + ': ' + err.message);
+                if (followedUser) {
+                   removeFollowing(user);
+                   removeFollower(followedUser);
+                }
+            });
+
+        }
+    });
+
+
+    function removeFollowing(user) {
+        let index = user.following.indexOf(toFollow);
+        if (index !== -1) {
+            user.following.splice(index, 1);
+        } 
+        var set = {
+            following: user.following
+        };
+        db.users.update(
+            { _id: mongo.helper.toObjectID(_id) },
+            { $set: set },
+            function (err, doc) {
+                if (err) deferred.reject(err.name + ': ' + err.message);
+
+                deferred.resolve();
+            });
+    }
+    function removeFollower(user) {
+        let index = user.followers.indexOf(_id);
+        if (index !== -1) {
+            user.followers.splice(index, 1);
+        } 
+        var set = {
+            followers: user.followers
+        };
+        db.users.update(
+            { _id: mongo.helper.toObjectID(toFollow) },
+            { $set: set },
+            function (err, doc) {
+                if (err) deferred.reject(err.name + ': ' + err.message);
+
+                deferred.resolve();
+            });
+    }
+    return deferred.promise;
+
 }
 
 function update(_id, userParam) {
@@ -159,7 +276,7 @@ function update(_id, userParam) {
         // fields to update
         var set = {
             firstName: userParam.firstName,
-            lastName: userParam.lastName
+            lastName: userParam.lastName,
         };
 
         // update password if it was entered

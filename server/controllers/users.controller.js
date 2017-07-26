@@ -9,6 +9,8 @@ router.post('/register', register);
 router.get('/', getAll);
 router.get('/current', getCurrent);
 router.put('/:_id', update);
+router.put('/follow/:_id', follow);
+router.put('/unfollow/:_id', unfollow);
 router.delete('/:_id', _delete);
 router.get('/:_id', getUser);
 
@@ -88,6 +90,27 @@ function update(req, res) {
             res.status(400).send(err);
         });
 }
+
+function follow(req, res) {
+    userService.follow(req.params._id, req.body._id)
+        .then(function () {
+            res.sendStatus(200);
+        })
+        .catch(function (err) {
+            res.status(400).send(err);
+        });
+}
+
+function unfollow(req, res) {
+    userService.unfollow(req.params._id, req.body._id)
+        .then(function () {
+            res.sendStatus(200);
+        })
+        .catch(function (err) {
+            res.status(400).send(err);
+        });
+}
+
 
 function _delete(req, res) {
     userService.delete(req.params._id)
