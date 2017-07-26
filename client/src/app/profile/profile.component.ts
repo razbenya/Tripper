@@ -14,7 +14,7 @@ export class ProfileComponent implements OnInit {
   currentUser: User;
   userProfile: User;
   id: string;
-  following: boolean;
+  following: string = "follow";
   profilePicture: string;
 
 
@@ -41,26 +41,28 @@ export class ProfileComponent implements OnInit {
   }
 
   checkFollow() {
-    this.following = false;
+    this.following = "follow";
     this.userService.getById(this.currentUser._id).subscribe(user => {
       user.following.forEach(element => {
         if (element == this.userProfile._id) {
-          this.following = true;
+          this.following = "Unfollow";
         }
       });
     });
   }
 
-  unfollow() {
-    this.userService.unfollow(this.currentUser, this.userProfile).subscribe(() => {
-      this.getUser();
-    });
-  }
 
   follow() {
-    this.userService.follow(this.currentUser, this.userProfile).subscribe(() => {
-      this.getUser();
-    });
+    if (this.following == "follow") {
+      this.userService.follow(this.currentUser, this.userProfile).subscribe(() => {
+        this.getUser();
+      });
+    }
+    else {
+      this.userService.unfollow(this.currentUser, this.userProfile).subscribe(() => {
+        this.getUser();
+      });
+    }
   }
 
   ngOnInit() {

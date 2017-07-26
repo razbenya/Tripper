@@ -6,7 +6,7 @@
     <figure class="profile-picture" [style.background-image]="getProfilePic()">
     </figure>
     <div class= "profile-name">
-       <a href = {{userProfile._id}} >
+       <a routerLink = "/{{userProfile._id}}" >
         {{userProfile.firstName}} {{userProfile.lastName}}
         </a>
       </div>
@@ -18,17 +18,11 @@
         <li> Likes <span> {{userProfile.likes}}  </span> </li>
       </ul>
       <div *ngIf="currentUser._id != userProfile._id">
-        <div *ngIf="!following">
           <a (click)="follow()" class="follow">
-                Follow {{userProfile.firstName}}
+                {{following}} {{userProfile.firstName}}
           </a>
         </div>
-        <div *ngIf = "following">
-          <a (click)="unfollow()" class="follow">
-          Unfollow {{userProfile.firstName}}
-      </a>
-        </div>
-      </div>
+
     </div>
   </header>
 </div>

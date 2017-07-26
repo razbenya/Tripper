@@ -17,16 +17,7 @@ import { ProfileComponent } from './profile/profile.component';
 
 // Define the routes
 const ROUTES = [
-  /*
-  {
-    path: '',
-    redirectTo: 'register',
-    pathMatch: 'full'
-  },
-  {
-    path: 'register',
-    component: RegisterComponent
-  }*/
+
   { path: '', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },

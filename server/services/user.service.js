@@ -138,7 +138,6 @@ function create(userParam) {
 
 function follow(_id, toFollow) {
     var deferred = Q.defer();
-    //curr: User;
     db.users.findById(_id, function (err, user) {
         if (err)
             deferred.reject(err.name + ': ' + err.message);
@@ -151,33 +150,28 @@ function follow(_id, toFollow) {
                    addFollower(followedUser);
                 }
             });
-
         }
     });
 
-
     function addFollowing(user) {
-        user.following.push(toFollow);
-        var set = {
-            following: user.following
+        var push = {
+            following: toFollow 
         };
         db.users.update(
             { _id: mongo.helper.toObjectID(_id) },
-            { $set: set },
+            { $push: push },
             function (err, doc) {
                 if (err) deferred.reject(err.name + ': ' + err.message);
-
                 deferred.resolve();
             });
     }
     function addFollower(user) {
-        user.followers.push(_id);
-        var set = {
-            followers: user.followers
+        var push = {
+            followers: _id
         };
         db.users.update(
             { _id: mongo.helper.toObjectID(toFollow) },
-            { $set: set },
+            { $push: push },
             function (err, doc) {
                 if (err) deferred.reject(err.name + ': ' + err.message);
 
@@ -209,16 +203,12 @@ function unfollow(_id, toFollow) {
 
 
     function removeFollowing(user) {
-        let index = user.following.indexOf(toFollow);
-        if (index !== -1) {
-            user.following.splice(index, 1);
-        } 
-        var set = {
-            following: user.following
+        var pull = {
+            following: toFollow
         };
         db.users.update(
             { _id: mongo.helper.toObjectID(_id) },
-            { $set: set },
+            { $pull: pull },
             function (err, doc) {
                 if (err) deferred.reject(err.name + ': ' + err.message);
 
@@ -226,16 +216,12 @@ function unfollow(_id, toFollow) {
             });
     }
     function removeFollower(user) {
-        let index = user.followers.indexOf(_id);
-        if (index !== -1) {
-            user.followers.splice(index, 1);
-        } 
-        var set = {
-            followers: user.followers
+        var pull = {
+            followers: _id
         };
         db.users.update(
             { _id: mongo.helper.toObjectID(toFollow) },
-            { $set: set },
+            { $pull: pull },
             function (err, doc) {
                 if (err) deferred.reject(err.name + ': ' + err.message);
 
