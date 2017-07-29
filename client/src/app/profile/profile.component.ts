@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { UserService } from "app/_services";
+import { UserService, SocketService } from "app/_services";
 import { User } from "app/_models";
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 
@@ -10,15 +10,17 @@ import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browse
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
+
   currentUser: User;
   userProfile: User;
   id: string;
   following: string = "follow";
   profilePicture: string;
+  connection;
 
 
-  constructor(private _sanitizer: DomSanitizer, private route: ActivatedRoute, private router: Router, private userService: UserService) {
+  constructor(private socketServer: SocketService, private _sanitizer: DomSanitizer, private route: ActivatedRoute, private router: Router, private userService: UserService) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.route.params.subscribe(params => {
       this.id = params['id'];
@@ -43,29 +45,43 @@ export class ProfileComponent implements OnInit {
   checkFollow() {
     this.following = "follow";
     this.userService.getById(this.currentUser._id).subscribe(user => {
-      user.following.forEach(element => {
-        if (element == this.userProfile._id) {
-          this.following = "Unfollow";
-        }
-      });
+      if (user.following.indexOf(this.userProfile._id) != -1)
+        this.following = "Unfollow";
     });
   }
 
+  notifyServer() {
+    this.socketServer.notifyServer('follow', this.userProfile._id);
+    this.socketServer.notifyServer('follow', this.currentUser._id);
+  }
 
   follow() {
     if (this.following == "follow") {
       this.userService.follow(this.currentUser, this.userProfile).subscribe(() => {
-        this.getUser();
+        this.notifyServer();
       });
     }
     else {
       this.userService.unfollow(this.currentUser, this.userProfile).subscribe(() => {
-        this.getUser();
+        this.notifyServer();
       });
     }
   }
 
+  socketObserverInit() {
+      this.connection = this.socketServer.observeServer(this.id).subscribe(data => {
+          this.getUser();
+      });
+  }
+
   ngOnInit() {
     this.getUser();
+    this.socketObserverInit();
+  }
+
+  ngOnDestroy(): void {
+    if (this.connection) {
+      this.connection.unsubscribe();
+    }
   }
 }

@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { RegisterComponent } from './register/register.component';
 import { RouterModule } from '@angular/router';
 import { AlertComponent } from './_directives/index';
-import { AlertService, AuthenticationService, UserService } from './_services/index';
+import { AlertService, AuthenticationService, UserService, SocketService } from './_services/index';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './_guards/index';
@@ -49,7 +49,8 @@ const ROUTES = [
     AuthGuard,
     AlertService,
     AuthenticationService,
-    UserService
+    UserService,
+    SocketService
   ],
   bootstrap: [AppComponent]
 })
