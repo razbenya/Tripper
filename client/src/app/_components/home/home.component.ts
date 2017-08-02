@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../_models/index';
-import { UserService, SocketService } from '../_services/index';
+import { User, Post} from '../../_models/index';
+import { PostService, UserService, SocketService } from '../../_services/index';
 
 @Component({
   selector: 'app-home',
@@ -10,9 +10,9 @@ import { UserService, SocketService } from '../_services/index';
 export class HomeComponent implements OnInit {
   currentUser: User;
   users: User[] = [];
-  
+  posts: Post[] = [];
 
-  constructor(private userService: UserService, private socketService: SocketService) {
+  constructor(private postService: PostService, private userService: UserService, private socketService: SocketService) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
   }
 
@@ -20,6 +20,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.loadAllUsers();
+    this.loadAllPosts();
     this.socketService.observeServer('test2').subscribe(test => {
       this.loadAllUsers();
     })
@@ -27,12 +28,23 @@ export class HomeComponent implements OnInit {
 
 
   }
+  deletePost(_id){
+    this.postService.delete(_id).subscribe(()=> {
+      this.loadAllPosts();
+    })
+  }
 
   deleteUser(_id: string) {
       this.userService.delete(_id).subscribe(() => { 
         this.loadAllUsers() 
         this.socketService.notifyServer("test1","test");
       });
+  }
+
+  private loadAllPosts(){
+    this.postService.getAll().subscribe(posts => {
+      this.posts = posts;
+    })
   }
 
   private loadAllUsers() {

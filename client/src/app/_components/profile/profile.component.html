@@ -3,7 +3,8 @@
     <figure class="profile-banner" >
       <img src="" alt="Profile banner" />
     </figure>
-    <figure class="profile-picture" [style.background-image]="getProfilePic()">
+    <figure class="profile-picture">
+      <img ng-src = "getProfilePic()">
     </figure>
     <div class= "profile-name">
        <a routerLink = "/{{userProfile._id}}" >
@@ -16,12 +17,13 @@
         <li> Following <span> {{userProfile.following?.length}} </span> </li>
         <li> Followers <span> {{userProfile.followers?.length}} </span> </li>
         <li> Likes <span> {{userProfile.likes}}  </span> </li>
+        <li> taggedIn <span> {{userProfile.taggedPosts?.length}} posts </span> </li>
       </ul>
-      <div *ngIf="currentUser._id != userProfile._id">
-          <a (click)="follow()" class="follow">
+       <div *ngIf="currentUser._id != userProfile._id">
+      <button [disabled]="loading" class="btn btn-primary" (click)="follow()">
                 {{following}} {{userProfile.firstName}}
-          </a>
-        </div>
+      </button>
+     </div>
     </div>
   </header>
 </div>

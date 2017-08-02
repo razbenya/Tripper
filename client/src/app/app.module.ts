@@ -1,19 +1,20 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { customHttpProvider } from './custom-http';
 import { AppComponent } from './app.component';
-import { RegisterComponent } from './register/register.component';
+import { RegisterComponent, HomeComponent, LoginComponent, ProfileComponent, PostFormComponent } from './_components/index';
 import { RouterModule } from '@angular/router';
 import { AlertComponent } from './_directives/index';
-import { AlertService, AuthenticationService, UserService, SocketService } from './_services/index';
-import { HomeComponent } from './home/home.component';
-import { LoginComponent } from './login/login.component';
+import { PostService, ImagesService, AlertService, AuthenticationService, UserService, SocketService } from './_services/index';
 import { AuthGuard } from './_guards/index';
-import { ProfileComponent } from './profile/profile.component';
-
+import { TextFormComponent } from './_components/text-form/text-form.component';
+import { ImageUploadModule } from "angular2-image-upload";
+import { Ng2AutoCompleteModule } from 'ng2-auto-complete';
+import { AgmCoreModule } from '@agm/core';
+//import {GooglePlaceModule} from "angular2-google-place"
 
 // Define the routes
 const ROUTES = [
@@ -21,8 +22,9 @@ const ROUTES = [
   { path: '', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'form', component: PostFormComponent},
   { path: ':id', component: ProfileComponent},
-
+  
   // otherwise redirect to home
   { path: '**', redirectTo: '' }
 ];
@@ -36,13 +38,21 @@ const ROUTES = [
     LoginComponent,
     RegisterComponent,
     AlertComponent,
-    ProfileComponent
+    ProfileComponent,
+    PostFormComponent,
+    TextFormComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
-    RouterModule.forRoot(ROUTES) 
+    ReactiveFormsModule,
+    Ng2AutoCompleteModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyCOt9ge0TKiOEk_HboTuGOcdaa80U6IJp8'
+    }),
+    ImageUploadModule.forRoot(),
+    RouterModule.forRoot(ROUTES)
   ],
   providers: [
     customHttpProvider,
@@ -50,7 +60,9 @@ const ROUTES = [
     AlertService,
     AuthenticationService,
     UserService,
-    SocketService
+    SocketService,
+    ImagesService,
+    PostService,
   ],
   bootstrap: [AppComponent]
 })

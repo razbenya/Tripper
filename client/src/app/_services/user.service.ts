@@ -30,8 +30,13 @@ export class UserService {
       user.posts = [];
       user.followers = [];
       user.following = [];
+      user.taggedPosts = [];
       user.profilePic = "default.jpg";
       return this.http.post('/users/register', user);
+  }
+
+  getByRef(ref) {
+      return this.http.post('/users/',ref);
   }
 
   update(user: User) {

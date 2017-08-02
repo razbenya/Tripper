@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var userService = require('services/user.service');
 
+
 // routes
 router.post('/authenticate', authenticate);
 router.post('/register', register);
@@ -31,6 +32,7 @@ function authenticate(req, res) {
             res.status(400).send(err);
         });
 }
+
 
 function register(req, res) {
     userService.create(req.body)

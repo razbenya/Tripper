@@ -1,0 +1,74 @@
+<div class="jumbotron">
+  <div class="container">
+    <div class="col-sm-12">
+      <div class="col-md-6 col-md-offset-3">
+        <form [formGroup]="myForm" novalidate (ngSubmit)="save(myForm.value)">
+          <div class="form-group">
+            <label>Title</label>
+            <input type="text" class="form-control" formControlName="title">
+            <small *ngIf="!myForm.controls.title.valid" class="text-danger">
+            title is required.
+          </small>
+
+            <div class="tagInput" *ngIf="tagged">
+              <label>Choose users to tag</label>
+
+              <input *ngIf="friendsList" 
+                ng2-auto-complete class="form-control" 
+                formControlName="tag" [source]="observableSource.bind(this)"
+                [list-formatter]="autocompleListFormatter" 
+                placeholder="Enter Name" (valueChanged)="addTaggedUser($event)"
+                [min-chars]="1">
+              <span *ngIf="choosedUsers?.length > 0">  Tagged:  </span>
+              <span *ngFor="let user of choosedUsers; let i=index"> 
+                <a (click)="removeFromList(i)"> {{user.firstName}} </a> 
+                <span *ngIf="i + 1 < choosedUsers?.length">, </span>
+              </span>
+            </div>
+            <div class = "map" > 
+                 <agm-map [latitude]="40" [longitude]="30" [disableDefaultUI] = "false"></agm-map>
+  </div> 
+          </div>
+          <div formArrayName="postData">
+            <div *ngFor="let texts of myForm.controls.postData.controls; let i=index">
+              <div [formGroupName]="i">
+                <label>
+                <a (click) = "remove(i)"> x </a> 
+                input: 
+                 <a *ngIf = "i + 1  < myForm.controls.postData.controls?.length " (click)="swap(i,i+1)"> down </a> 
+                 <a *ngIf = "i > 0 " (click)="swap(i,i-1)"> up </a> 
+                </label>
+                <div *ngIf="myForm.controls.postData.controls[i].controls.text">
+                  <app-text-form [group]="myForm.controls.postData.controls[i]"></app-text-form>
+                </div>
+                <div *ngIf="myForm.controls.postData.controls[i].controls.image">
+                  <image-upload [url]="uploadUrl" [preview]="true" [dropBoxMessage]="'Drop your images here!'" [extensions]="['jpeg','png','gif']"
+                    (onFileUploadFinish)="onUploadFinished($event, i)" (onRemove)="imageRemoved($event, i)">
+                  </image-upload>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <a (click)="addText()" style="cursor: default">
+            AddText +
+          </a>
+
+          <a (click)="addImgs()" style="cursor: default">
+            AddImages +
+          </a>
+
+          <a (click)="addTagged()" style="cursor: default">
+            TaggedFriends
+          </a>
+
+          <div class="margin-20">
+            <button type="submit" class="btn btn-primary pull-right" [disabled]="!myForm.valid || loading">Submit</button>
+          </div>
+          <div class="clearfix"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

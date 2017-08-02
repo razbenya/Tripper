@@ -1,0 +1,8 @@
+<div [formGroup]="textForm">
+  <div class="form-group">
+    <textarea formControlName="text" class="form-control"  cols="35" rows="8"></textarea>
+    <small [hidden]="textForm.controls.text.valid" class="text-danger">
+            text cant be empty
+        </small>
+  </div>
+</div>

@@ -10,5 +10,6 @@ export class User {
     posts: number[];
     following: string[];
     followers: string[];
+    taggedPosts: any[];
     profilePic: string;
 }

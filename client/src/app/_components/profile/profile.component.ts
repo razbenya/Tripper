@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { UserService, SocketService } from "app/_services";
-import { User } from "app/_models";
+import { UserService, SocketService } from "../../_services/index"
+import { User } from "../../_models";
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 
 
@@ -18,6 +18,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   following: string = "follow";
   profilePicture: string;
   connection;
+  loading = false;
 
 
   constructor(private socketServer: SocketService, private _sanitizer: DomSanitizer, private route: ActivatedRoute, private router: Router, private userService: UserService) {
@@ -28,7 +29,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   getProfilePic() {
-    return this._sanitizer.bypassSecurityTrustStyle(`linear-gradient( rgba(29, 29, 29, 0), rgba(16, 16, 23, 0.5)), url(${"imgs/profiles/" + this.userProfile.profilePic})`);
+    let cu:any = this.currentUser; 
+    return this._sanitizer.bypassSecurityTrustStyle(`linear-gradient( rgba(29, 29, 29, 0), rgba(16, 16, 23, 0.5)), url(${"http://localhost:4000/uploads/profiles/" + this.userProfile.profilePic +"?token="+cu.token})`);
   }
 
   getUser() {
@@ -43,8 +45,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   checkFollow() {
+    this.loading = true;
     this.following = "follow";
     this.userService.getById(this.currentUser._id).subscribe(user => {
+      this.loading = false;
       if (user.following.indexOf(this.userProfile._id) != -1)
         this.following = "Unfollow";
     });
@@ -56,14 +60,17 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   follow() {
+    this.loading = true;
     if (this.following == "follow") {
       this.userService.follow(this.currentUser, this.userProfile).subscribe(() => {
         this.notifyServer();
+        this.loading = false;
       });
     }
     else {
       this.userService.unfollow(this.currentUser, this.userProfile).subscribe(() => {
         this.notifyServer();
+        this.loading = false;
       });
     }
   }
