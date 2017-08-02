@@ -12,6 +12,9 @@ node_modules
 *.launch
 .settings/
 
+#public
+/uploads
+
 # IDE - VSCode
 .vscode/*
 !.vscode/settings.json
