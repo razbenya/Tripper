@@ -7,6 +7,10 @@ export class Post {
     comments: Comments[];
     taggedUsers: string[];
     title: string;
+    location: {
+        lat: number,
+        lng: number
+    }
     data: any[];
 }
 

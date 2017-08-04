@@ -15,7 +15,8 @@ export class ImagesService {
     return this.http.post(url+ "/delete/", {path: imageName});
   }
 
-  
-
+  public getImage(url){
+    return this.http.get('/images/'+url);
+  }
 
 }

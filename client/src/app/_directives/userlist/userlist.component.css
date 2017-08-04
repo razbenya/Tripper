@@ -1,0 +1,16 @@
+.media-object{
+    height: 50px;
+    width: 50px;
+}
+
+.close{
+    margin-right: 10px;
+}
+
+.media{
+    margin-left: 3px;
+}
+
+#follow{
+    margin-top: 5px;
+}

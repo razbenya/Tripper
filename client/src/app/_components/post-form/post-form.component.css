@@ -1,3 +1,10 @@
 .sebm-google-map-container {
-       height: 300px;
+       height: 200px;
+}
+
+.pac-container { z-index: 100000; }
+
+.jumbotron{
+    background-color:white;
+    color:black;
 }

@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { NgZone, ElementRef, Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { Post, User, ImgData, TextData } from '../../_models/index';
 import { ImagesService, PostService, AlertService, UserService } from '../../_services/index';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { MapsAPILoader } from '@agm/core';
 import 'rxjs/add/observable/of';
 
 @Component({
@@ -12,21 +13,35 @@ import 'rxjs/add/observable/of';
   templateUrl: './post-form.component.html',
   styleUrls: ['./post-form.component.css']
 })
+
 export class PostFormComponent implements OnInit, OnDestroy {
+
+
+  @ViewChild("search") searchElementRef: ElementRef;
+
   public myForm: FormGroup;
   uploadUrl: string;
   url: string;
   submit: boolean = false;
   currentUser;
+  address;
   loading = false;
   tagged = false;
 
-  constructor(private userService: UserService, private _sanitizer: DomSanitizer, private router: Router, private alertService: AlertService, private postService: PostService, private imgService: ImagesService, private _fb: FormBuilder) {
+  constructor(private mapsAPILoader: MapsAPILoader, private ngZone: NgZone, private userService: UserService, private _sanitizer: DomSanitizer, private router: Router, private alertService: AlertService, private postService: PostService, private imgService: ImagesService, private _fb: FormBuilder) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.url = "/images"
     this.uploadUrl = this.url + "/uploads/" + this.currentUser._id;
-  }
+     
 
+    window['post-form'] = {
+      component: this,
+      submit: () => this.save(), 
+      test: () => this.loadapi(),
+      valid: () => {return this.myForm.invalid&&this.loading; } , 
+      zone: ngZone
+    };
+  }
 
   sortArr(arr: any[]) {
     arr.sort((a, b) => {
@@ -38,7 +53,8 @@ export class PostFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  save(model) {
+  save() {
+    let model = this.myForm.value;
     this.loading = true;
     let texts: any[] = [];
     let i: number = 0;
@@ -53,11 +69,11 @@ export class PostFormComponent implements OnInit, OnDestroy {
     this.sortArr(data);
     let taggedId = [];
 
-    for(let choosedUser of this.choosedUsers){
+    for (let choosedUser of this.choosedUsers) {
       taggedId.push(choosedUser._id);
     }
 
-    
+
     let post: Post = {
       _id: undefined,
       userId: this.currentUser._id,
@@ -65,6 +81,7 @@ export class PostFormComponent implements OnInit, OnDestroy {
       comments: [],
       taggedUsers: taggedId,
       title: model.title,
+      location: this.marker,
       data: data
     }
 
@@ -81,18 +98,24 @@ export class PostFormComponent implements OnInit, OnDestroy {
         this.loading = false;
       }
     )
-
   }
 
-
   ngOnInit() {
+    this.loadapi();
     this.myForm = this._fb.group({
       title: ['', [Validators.required, Validators.minLength(3)]],
+      location: [""],
       tag: [''],
-      postData: this._fb.array([])
+      postData: this._fb.array([this.initText()])
     });
 
+    this.zoom = 4;
+    this.latitude = 39.8282;
+    this.longitude = -98.5795;
+    this.searchControl = this.myForm.controls['location'];
     this.loadAllUsers();
+    //if(this.searchElementRef)
+    
   }
 
   initText() {
@@ -128,6 +151,73 @@ export class PostFormComponent implements OnInit, OnDestroy {
     this.tagged = !this.tagged;
   }
 
+  /* Map and Location */
+  latitude: number;
+  longitude: number;
+  searchControl;
+  zoom: number;
+  first: boolean = true;
+  showmap: boolean = false;
+  marker: {
+    lat: number,
+    lng: number
+  };
+
+  mapClicked($event) {
+    this.marker = {
+      lat: $event.coords.lat,
+      lng: $event.coords.lng
+    };
+  }
+
+
+  showMap() {
+    this.showmap = !this.showmap;
+    
+  }
+
+  private setCurrentPosition() {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.latitude = position.coords.latitude;
+        this.longitude = position.coords.longitude;
+        this.zoom = 4;
+      });
+    }
+  }
+
+
+  loadapi() {
+    this.mapsAPILoader.load().then(() => {
+      let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement, {
+        types: ["geocode"]
+      });
+      
+      autocomplete.addListener("place_changed", () => {
+        this.ngZone.run(() => {
+          //get the place result
+          let place: google.maps.places.PlaceResult = autocomplete.getPlace();
+
+          //verify result
+          if (place.geometry === undefined || place.geometry === null) {
+            return;
+          }
+
+          //set latitude, longitude and zoom
+          this.latitude = place.geometry.location.lat();
+          this.longitude = place.geometry.location.lng();
+          this.zoom = 12;
+        });
+      });
+    
+    });
+    
+  }
+
+
+
+
+
   /* Tagged Friends */
   friendsList: User[];
   tagger: string;
@@ -136,18 +226,19 @@ export class PostFormComponent implements OnInit, OnDestroy {
     firstName: string,
   }[] = [];
 
+
   observableSource(keyword: any) {
     let filteredList = this.friendsList.filter(el => el._id.startsWith(keyword));
     return Observable.of(filteredList);
   }
 
-  removeFromList(i:number){
-    this.choosedUsers.splice(i,1);
+  removeFromList(i: number) {
+    this.choosedUsers.splice(i, 1);
   }
 
   addTaggedUser(user) {
-   this.myForm.controls['tag'].reset();
-    if (user && this.choosedUsers.findIndex(ele =>{ return user._id == ele._id;} ) < 0) {
+    this.myForm.controls['tag'].reset();
+    if (user && this.choosedUsers.findIndex(ele => { return user._id == ele._id; }) < 0) {
       this.choosedUsers.push({
         _id: user._id,
         firstName: user.firstName,
@@ -157,11 +248,11 @@ export class PostFormComponent implements OnInit, OnDestroy {
   }
 
   private loadAllUsers() {
-    this.userService.getAll().subscribe(users => { 
-      this.friendsList = users; 
+    this.userService.getAll().subscribe(users => {
+      this.friendsList = users;
       let index = this.friendsList.findIndex(ele => ele._id = this.currentUser._id);
-      if(index > -1){
-        this.friendsList.splice(index,1);
+      if (index > -1) {
+        this.friendsList.splice(index, 1);
       }
     });
   }
@@ -170,7 +261,6 @@ export class PostFormComponent implements OnInit, OnDestroy {
     let html = `<span>${data.firstName} ${data.lastName} </span>`;
     return this._sanitizer.bypassSecurityTrustHtml(html);
   }
-
 
 
   /* images */
@@ -244,6 +334,7 @@ export class PostFormComponent implements OnInit, OnDestroy {
       }
     }
   }
+
 }
 
 

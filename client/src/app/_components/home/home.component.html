@@ -17,3 +17,21 @@
         </ul>
     <p><a [routerLink]="['/login']">Logout</a></p>
 </div>
+
+<button type="button" class="btn btn-default" (click)="modal.open()">new post</button>
+
+<modal #modal style="" >
+    <modal-header [show-close]="true">
+        <h4 class="modal-title">new post</h4>
+    </modal-header>
+    <modal-body>
+        <app-post-form></app-post-form>
+    </modal-body>
+    <!-- window.angularComponentRef.zone.run(function () { window.angularComponentRef.componentFn(10)}) -->
+    
+    <modal-footer>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="modal.dismiss()">Cancel</button>
+        <button type="button" class="btn btn-primary" [disabled]="checkValid()" (click)="submit()" (click)= "modal.close()">post</button>
+    </modal-footer>
+</modal>
+

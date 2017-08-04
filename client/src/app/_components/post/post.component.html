@@ -1,0 +1,60 @@
+<div class="jumbotron" *ngIf="post && members">
+  <div class="container">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+      <div class="row">
+      
+
+        <div class="col-md-8 col-sm-8 pull-left" >
+                 <div class="media-left" *ngIf="profilepic">
+                    <img id="profilePic"class="media-object img-rounded" [src]="profilepic" alt="...">
+                </div>
+                <div class="media-body">
+                  <h4 class="media-heading">
+
+               <a routerLink = '../{{members.publisher._id}}' >
+                 <b> {{members.publisher.firstName}} {{members.publisher.lastName}} </b> </a>
+                  <span *ngIf="members.tagged?.length > 0">
+                      <span class="text-muted"> with </span> 
+                       <a routerLink = '../{{members.tagged[0]._id}}' >
+                      {{ members.tagged[0].firstName }} {{ members.tagged[0].lastName }} 
+                      </a>
+                      <span *ngIf="members.tagged?.length == 2">
+                        <span class="text-muted"> and </span> 
+                        <a routerLink = '../{{ members.tagged[1]._id }}'>
+                        {{ members.tagged[1].firstName }} {{ members.tagged[1].lastName }}
+                        </a>
+                      </span> 
+                      <span *ngIf="members.tagged?.length > 2">
+                       <span class="text-muted"> and </span>
+                       <app-userlist [str]='others' [taggedList]="members.tagged"></app-userlist>
+                       
+                      </span> 
+                  </span>
+              </h4>
+               
+               
+              <h4> <b> {{post.title}} </b> </h4> 
+              <small class="text-muted">  {{date | date:'mediumDate'}} at  {{date | date:'shortTime'}} </small>
+               </div>
+          </div>
+
+          <div *ngIf="showmap" id="map" class="col-md-4 col-sm-4 pull-right">
+          <agm-map #map [zoom]="zoom" [latitude]="latitude" [longitude]="longitude" (mapClick)='mapClicked($event)'>
+            <agm-marker *ngIf="marker" [latitude]="marker.lat" [longitude]="marker.lng" >
+            </agm-marker>
+          </agm-map>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body" *ngIf = "galleryImages[0]" >
+        <div *ngIf ="galleryImages[0]?.length > 1">
+          <ngx-gallery [options]="galleryOptions[0]" [images]="galleryImages[0]"></ngx-gallery>
+        </div>
+        <div *ngIf ="galleryImages[0]?.length == 1">
+          <ngx-gallery class = "gallery1" [options]="galleryOptions[0]" [images]="galleryImages[0]"></ngx-gallery>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -8,7 +8,7 @@ var config = require('config.json');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var fileUpload = require('express-fileupload');
-
+var path = require('path');
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -27,36 +27,27 @@ app.use(expressJwt({
 
         return null;
     }
-}).unless({ path: ['/users/authenticate', '/users/register', "/socket.io/"] }));
+}).unless({ path: ['/users/authenticate', '/users/register', "/socket.io/", "/favicon.ico"] }));
 
+var filter = (ele) => { return ele.startsWith('/uploads/'); ;}
 
 io.sockets.on('connection', (socket) => {
-
-    //console.log('user connected');
-
     socket.on('disconnect', function () {
-        //console.log('user disconnected');
     });
 
     socket.on('follow', (user) => {
         io.emit(user, { type: user, text: user });
     });
-
-
-
-
 });
 
 //allow upload and images fetch
 app.use(fileUpload());
-app.use(express.static("uploads"));
+app.use("/uploads", express.static(__dirname + "/uploads"));
 
 // routes
 app.use('/users', require('./controllers/users.controller'));
 app.use('/images', require('./controllers/images.controller'));
 app.use('/posts', require('./controllers/posts.controller'));
-
-
 
 // start server
 var port = process.env.NODE_ENV === 'production' ? 80 : 4000;

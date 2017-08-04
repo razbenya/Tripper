@@ -1,23 +1,24 @@
 <div class="jumbotron">
   <div class="container">
-    <div class="col-sm-12">
-      <div class="col-md-6 col-md-offset-3">
-        <form [formGroup]="myForm" novalidate (ngSubmit)="save(myForm.value)">
-          <div class="form-group">
-            <label>Title</label>
+
+    <form [formGroup]="myForm" novalidate>
+      <div class="form-group">
+        <div class="panel panel-default">
+          <div class="panel-heading">title</div>
+          <div class="panel-body">
             <input type="text" class="form-control" formControlName="title">
             <small *ngIf="!myForm.controls.title.valid" class="text-danger">
-            title is required.
-          </small>
+                  title is required.
+             </small>
+          </div>
+        </div>
 
-            <div class="tagInput" *ngIf="tagged">
-              <label>Choose users to tag</label>
-
-              <input *ngIf="friendsList" 
-                ng2-auto-complete class="form-control" 
-                formControlName="tag" [source]="observableSource.bind(this)"
-                [list-formatter]="autocompleListFormatter" 
-                placeholder="Enter Name" (valueChanged)="addTaggedUser($event)"
+        <div class="tagInput" *ngIf="tagged">
+          <div class="panel panel-default">
+            <div class="panel-heading"> choose users </div>
+            <div class="panel-body">
+              <input *ngIf="friendsList" ng2-auto-complete class="form-control" formControlName="tag" [source]="observableSource.bind(this)"
+                [list-formatter]="autocompleListFormatter" placeholder="Enter Name" (valueChanged)="addTaggedUser($event)"
                 [min-chars]="1">
               <span *ngIf="choosedUsers?.length > 0">  Tagged:  </span>
               <span *ngFor="let user of choosedUsers; let i=index"> 
@@ -25,50 +26,88 @@
                 <span *ngIf="i + 1 < choosedUsers?.length">, </span>
               </span>
             </div>
-            <div class = "map" > 
-                 <agm-map [latitude]="40" [longitude]="30" [disableDefaultUI] = "false"></agm-map>
-  </div> 
           </div>
-          <div formArrayName="postData">
+        </div>
+        <div class="map" [hidden]="!showmap">
+          <div class="panel panel-default">
+            <div class="panel-heading">choose location</div>
+            <div class="panel-body">
+              <agm-map #mymap [zoom]="zoom" [latitude]="latitude" [longitude]="longitude" 
+              (mapClick)="mapClicked($event)"
+              >
+                <agm-marker *ngIf="marker" [latitude]="marker.lat" [longitude]="marker.lng" [label]="test">
+                </agm-marker>
+              </agm-map>
+              <input placeholder="search for location" autocorrect="on" autocapitalize="off" spellcheck="off" type="text" class="form-control"
+                #search [formControl]="searchControl">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div formArrayName="postData">
+
+        <div class="panel panel-default">
+          <div class="panel-heading"></div>
+          <div class="panel-body">
             <div *ngFor="let texts of myForm.controls.postData.controls; let i=index">
               <div [formGroupName]="i">
-                <label>
-                <a (click) = "remove(i)"> x </a> 
-                input: 
-                 <a *ngIf = "i + 1  < myForm.controls.postData.controls?.length " (click)="swap(i,i+1)"> down </a> 
-                 <a *ngIf = "i > 0 " (click)="swap(i,i-1)"> up </a> 
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="col-md-1 col-sm-1 pull-right">
+                      <label>
+                    <button [disabled]= "(i < 1)" class="btn btn-link" (click)="swap(i,i-1)"> <span class="glyphicon glyphicon-triangle-top"></span> </button> 
+                   <button (click) = "remove(i)" class="btn btn-link"> <span class="glyphicon glyphicon-remove"></span> </button>  
+                <button [disabled] = "(i + 1 >= myForm.controls.postData.controls?.length) " class="btn btn-link"
+                 (click)="swap(i,i+1)"> 
+                   <span class="glyphicon glyphicon-triangle-bottom"></span> </button> 
                 </label>
-                <div *ngIf="myForm.controls.postData.controls[i].controls.text">
-                  <app-text-form [group]="myForm.controls.postData.controls[i]"></app-text-form>
-                </div>
-                <div *ngIf="myForm.controls.postData.controls[i].controls.image">
-                  <image-upload [url]="uploadUrl" [preview]="true" [dropBoxMessage]="'Drop your images here!'" [extensions]="['jpeg','png','gif']"
-                    (onFileUploadFinish)="onUploadFinished($event, i)" (onRemove)="imageRemoved($event, i)">
-                  </image-upload>
+                    </div>
+                    <div class="col-md-11 col-sm-11">
+                      <div *ngIf="myForm.controls.postData.controls[i].controls.text">
+                        <app-text-form [group]="myForm.controls.postData.controls[i]"></app-text-form>
+                      </div>
+                      <div *ngIf="myForm.controls.postData.controls[i].controls.image">
+                        <image-upload [url]="uploadUrl" [preview]="true" [dropBoxMessage]="'Drop your images here!'" [extensions]="['jpeg','png','gif']"
+                          (onFileUploadFinish)="onUploadFinished($event, i)" (onRemove)="imageRemoved($event, i)">
+                        </image-upload>
+                      </div>
+                      <div class="clearfix"></div>
+                      <br>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+      </div>
 
+      <div class="row">
+        <div class="col-md-6 col-sm-6">
 
-          <a (click)="addText()" style="cursor: default">
-            AddText +
-          </a>
+          <button type="button" (click)="addText()" class="btn btn-default btn-lg btn-block">
+            <span class="glyphicon glyphicon-pencil"></span>  Add Text
+          </button>
 
-          <a (click)="addImgs()" style="cursor: default">
-            AddImages +
-          </a>
-
-          <a (click)="addTagged()" style="cursor: default">
-            TaggedFriends
-          </a>
-
+          <button type="button" (click)="addImgs()" class="btn btn-default btn-lg btn-block">
+             <span class="glyphicon glyphicon-picture"></span>  Add Images
+          </button>
+        </div>
+        <div class="col-md-6 col-sm-6">
+          <button type="button" (click)="addTagged()" class="btn btn-default btn-lg btn-block">
+              <span class="glyphicon glyphicon-tag"></span>  Tag Friends
+          </button>
+          <button type="button" (click)="showMap(); mymap.triggerResize()" class="btn btn-default btn-lg btn-block">
+            <span class="glyphicon glyphicon-map-marker"></span>  Add Location
+          </button>
+        </div>
+      </div>
+      <!--
           <div class="margin-20">
             <button type="submit" class="btn btn-primary pull-right" [disabled]="!myForm.valid || loading">Submit</button>
           </div>
-          <div class="clearfix"></div>
-        </form>
-      </div>
-    </div>
+          -->
+      <div class="clearfix"></div>
+    </form>
   </div>
 </div>

@@ -16,11 +16,23 @@ export class HomeComponent implements OnInit {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
   }
 
-  
+  submit() {
+    window['post-form'].zone.run(() => {window['post-form'].submit();});
+    this.loadMyPosts();
+  }
+
+ 
+  checkValid() {
+    let invalid;
+    window['post-form'].zone.run(() => { invalid = window['post-form'].valid() });
+    return invalid;
+  }
+
 
   ngOnInit() {
     this.loadAllUsers();
-    this.loadAllPosts();
+    //this.loadAllPosts();
+    this.loadMyPosts();
     this.socketService.observeServer('test2').subscribe(test => {
       this.loadAllUsers();
     })
@@ -30,9 +42,11 @@ export class HomeComponent implements OnInit {
   }
   deletePost(_id){
     this.postService.delete(_id).subscribe(()=> {
-      this.loadAllPosts();
+      this.loadMyPosts();
     })
   }
+
+  
 
   deleteUser(_id: string) {
       this.userService.delete(_id).subscribe(() => { 
@@ -43,6 +57,12 @@ export class HomeComponent implements OnInit {
 
   private loadAllPosts(){
     this.postService.getAll().subscribe(posts => {
+      this.posts = posts;
+    })
+  }
+
+  private loadMyPosts(){
+    this.postService.feedPosts(this.currentUser._id,0,30).subscribe(posts => {
       this.posts = posts;
     })
   }

@@ -13,6 +13,8 @@ service.publish = publish;
 service.getAll = getAll;
 service.delete = _delete;
 service.getById = getById;
+service.getPosts = getPosts;
+
 
 module.exports = service;
 
@@ -20,9 +22,22 @@ function getAll() {
     var deferred = Q.defer();
     db.posts.find().toArray(function (err, posts) {
         if (err) deferred.reject(err.name + ': ' + err.message);
-
         deferred.resolve(posts);
     });
+    return deferred.promise;
+}
+
+
+function getPosts(startIndex,limit,userList,taggedList){
+    var deferred = Q.defer();
+    db.posts.find( {$or: [
+        { userId: {$in: userList} },
+        { _id: {$in: taggedList } }
+    ]}).sort( [['_id', -1]] ).skip(startIndex).limit(limit)
+        .toArray((err, posts) => {
+            if(err) deferred.reject(err.name + ': ' + err.message);
+            deferred.resolve(posts);
+        });
     return deferred.promise;
 }
 
@@ -62,6 +77,5 @@ function publish(post) {
             if (err) deferred.reject(err.name + ': ' + err.message);
             deferred.resolve();
         });
-
     return deferred.promise;
 }

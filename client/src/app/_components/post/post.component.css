@@ -1,0 +1,19 @@
+.sebm-google-map-container {
+       height: 150px;
+       width: 215px;
+}
+
+#profilePic {
+     height: 64px;
+     width: 64px;     
+}
+
+.jumbotron{
+    background-color:white;
+    color:black;
+}
+
+.gallery1  { 
+     max-width:100%;
+     height:auto;
+}

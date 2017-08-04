@@ -14,7 +14,11 @@ import { TextFormComponent } from './_components/text-form/text-form.component';
 import { ImageUploadModule } from "angular2-image-upload";
 import { Ng2AutoCompleteModule } from 'ng2-auto-complete';
 import { AgmCoreModule } from '@agm/core';
-//import {GooglePlaceModule} from "angular2-google-place"
+import { Ng2Bs3ModalModule } from 'ng2-bs3-modal/ng2-bs3-modal';
+import { PostComponent } from './_components/post/post.component';
+import { UserlistComponent } from './_directives/userlist/userlist.component';
+import { NgxGalleryModule } from 'ngx-gallery';
+
 
 // Define the routes
 const ROUTES = [
@@ -22,7 +26,7 @@ const ROUTES = [
   { path: '', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'form', component: PostFormComponent},
+  { path: 'post', component: PostComponent},
   { path: ':id', component: ProfileComponent},
   
   // otherwise redirect to home
@@ -41,6 +45,8 @@ const ROUTES = [
     ProfileComponent,
     PostFormComponent,
     TextFormComponent,
+    PostComponent,
+    UserlistComponent,
   ],
   imports: [
     BrowserModule,
@@ -48,8 +54,11 @@ const ROUTES = [
     HttpModule,
     ReactiveFormsModule,
     Ng2AutoCompleteModule,
+    Ng2Bs3ModalModule,
+    NgxGalleryModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyCOt9ge0TKiOEk_HboTuGOcdaa80U6IJp8'
+      apiKey: 'AIzaSyCOt9ge0TKiOEk_HboTuGOcdaa80U6IJp8',
+      libraries: ["places"]
     }),
     ImageUploadModule.forRoot(),
     RouterModule.forRoot(ROUTES)

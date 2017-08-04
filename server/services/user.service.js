@@ -15,22 +15,33 @@ service.authenticate = authenticate;
 service.getAll = getAll;
 service.getById = getById;
 service.create = create;
-service.update = update;
 service.delete = _delete;
 service.follow = follow;
 service.unfollow = unfollow;
 service.addPostToUser = addPostToUser;
 service.removePostFromUser = removePostFromUser;
+service.getPostMembers = getPostMembers;
 
 module.exports = service;
 
 
+function getPostMembers(post) {
+     var deferred = Q.defer();
+     var usersList = post.taggedUsers;
+     usersList.push(post.userId);
+     db.users.find(
+            {_id: {$in: usersList}}
+        ).toArray((err, users) => {
+             if(err) deferred.reject(err.name + ': ' + err.message);
+            deferred.resolve(users);
+        });
+     return deferred.promise;
+}
+
 function authenticate(email, password) {
     var deferred = Q.defer();
-
     db.users.findOne({ email: email }, function (err, user) {
         if (err) deferred.reject(err.name + ': ' + err.message);
-
         if (user && bcrypt.compareSync(password, user.hash)) {
             deferred.resolve({
                 _id: user._id,
@@ -56,10 +67,8 @@ function authenticate(email, password) {
 
 function getAll() {
     var deferred = Q.defer();
-
     db.users.find().toArray(function (err, users) {
         if (err) deferred.reject(err.name + ': ' + err.message);
-
         // return users (without hashed passwords)
         users = _.map(users, function (user) {
             return _.omit(user, 'hash');
@@ -144,234 +153,104 @@ function create(userParam) {
 }
 
 
-
-function follow(_id, toFollow) {
+function follow(follower, toFollow) {
     var deferred = Q.defer();
-    db.users.findById(_id, function (err, user) {
-        if (err)
-            deferred.reject(err.name + ': ' + err.message);
-        if (user) {
-            db.users.findById(toFollow, function (err, followedUser) {
-                if (err)
-                    deferred.reject(err.name + ': ' + err.message);
-                if (followedUser) {
-                    addFollowing(user);
-                    addFollower(followedUser);
-                }
-            });
-        }
-    });
-
-    function addFollowing(user) {
-        var push = {
-            following: toFollow
-        };
+    db.users.update(
+        { _id: mongo.helper.toObjectID(follower) },
+        { $push: {following: toFollow} },(err,doc) => {
+            if (err) deferred.reject(err.name + ': ' + err.message);
+                updateFollowing();
+        });
+    function updateFollowing(){
         db.users.update(
-            { _id: mongo.helper.toObjectID(_id) },
-            { $push: push },
-            function (err, doc) {
+            {_id: mongo.helper.toObjectID(toFollow) },
+            { $push: { followers: follower } },(err, doc) => {
                 if (err) deferred.reject(err.name + ': ' + err.message);
-                deferred.resolve();
+                    deferred.resolve();
             });
-    }
-    function addFollower(user) {
-        var push = {
-            followers: _id
-        };
-        db.users.update(
-            { _id: mongo.helper.toObjectID(toFollow) },
-            { $push: push },
-            function (err, doc) {
-                if (err) deferred.reject(err.name + ': ' + err.message);
-
-                deferred.resolve();
-            });
-    }
+    }      
     return deferred.promise;
-
 }
+
 
 function unfollow(_id, toFollow) {
-    var deferred = Q.defer();
-    //curr: User;
-    db.users.findById(_id, function (err, user) {
-        if (err)
-            deferred.reject(err.name + ': ' + err.message);
-        if (user) {
-            db.users.findById(toFollow, function (err, followedUser) {
-                if (err)
-                    deferred.reject(err.name + ': ' + err.message);
-                if (followedUser) {
-                    removeFollowing(user);
-                    removeFollower(followedUser);
-                }
-            });
-
-        }
-    });
-
-
-    function removeFollowing(user) {
-        var pull = {
-            following: toFollow
-        };
+   var deferred = Q.defer();
+    db.users.update(
+        { _id: mongo.helper.toObjectID(_id) },
+        { $pull: {following: toFollow} },(err,doc) => {
+            if (err) deferred.reject(err.name + ': ' + err.message);
+                removeFollowing();
+        });
+    function removeFollowing(){
         db.users.update(
-            { _id: mongo.helper.toObjectID(_id) },
-            { $pull: pull },
-            function (err, doc) {
+            {_id: mongo.helper.toObjectID(toFollow) },
+            { $pull: { followers: _id } },(err, doc) => {
                 if (err) deferred.reject(err.name + ': ' + err.message);
-
-                deferred.resolve();
+                    deferred.resolve();
             });
-    }
-    function removeFollower(user) {
-        var pull = {
-            followers: _id
-        };
-        db.users.update(
-            { _id: mongo.helper.toObjectID(toFollow) },
-            { $pull: pull },
-            function (err, doc) {
-                if (err) deferred.reject(err.name + ': ' + err.message);
-
-                deferred.resolve();
-            });
-    }
-    return deferred.promise;
-
-}
-
-function update(_id, userParam) {
-    var deferred = Q.defer();
-
-    // validation
-    db.users.findById(_id, function (err, user) {
-        if (err) deferred.reject(err.name + ': ' + err.message);
-
-        if (user.username !== userParam.username) {
-            // username has changed so check if the new username is already taken
-            db.users.findOne(
-                { username: userParam.username },
-                function (err, user) {
-                    if (err) deferred.reject(err.name + ': ' + err.message);
-
-                    if (user) {
-                        // username already exists
-                        deferred.reject('Username "' + req.body.username + '" is already taken')
-                    } else {
-                        updateUser();
-                    }
-                });
-        } else {
-            updateUser();
-        }
-    });
-
-    function updateUser() {
-        // fields to update
-        var set = {
-            firstName: userParam.firstName,
-            lastName: userParam.lastName,
-        };
-
-        // update password if it was entered
-        if (userParam.password) {
-            set.hash = bcrypt.hashSync(userParam.password, 10);
-        }
-
-        db.users.update(
-            { _id: mongo.helper.toObjectID(_id) },
-            { $set: set },
-            function (err, doc) {
-                if (err) deferred.reject(err.name + ': ' + err.message);
-
-                deferred.resolve();
-            });
-    }
-
+    }      
     return deferred.promise;
 }
+
+
+
+
 
 function removePostFromUser(publisherId, taggedUsers, _postId) {
-    var deferred = Q.defer();
-    db.users.findOne(
-        { _id: publisherId },
-        function (err, user) {
-            if (err) deferred.reject(err.name + ': ' + err.message);
-
-            removeFromPosts(user);
-        });
-    function removeFromPosts(user) {
-        db.users.update(
-                    { _id: mongo.helper.toObjectID(user._id) },
-                    { $pull: { posts: _postId } },
-                    function (err, doc) {
-                        if (err) 
-                            deferred.reject(err.name + ': ' + err.message);
-                        for(taggedUser of taggedUsers)
-                             removeFromTagged(taggedUser);
-                        deferred.resolve();
-                    });
-    }
-    function removeFromTagged(userId) {
-        db.users.findById(userId, (err, user) => {
+     var deferred = Q.defer();
+    db.users.update (
+        { _id: mongo.helper.toObjectID(publisherId) },
+        { $pull: { posts: _postId } },
+        function (err, doc) {
             if (err) 
                 deferred.reject(err.name + ': ' + err.message);
-                db.users.update(
-                    { _id: mongo.helper.toObjectID(userId) },
-                    { $pull: { taggedPosts: _postId } },
-                    function (err, doc) {
-                        if (err) 
-                            deferred.reject(err.name + ': ' + err.message);
-
-                        deferred.resolve();
-                    });
+            removeTaggedUser();       
         });
-    }
-    return deferred.promise;
+    function removeTaggedUser(){ 
+        db.users.update(
+            {_id: {$in: taggedUsers }},
+            {$pull: { taggedPosts: _postId }},
+            {multi: true}, (err, doc) => {
+                if (err)  deferred.reject(err.name + ': ' + err.message);
+                 deferred.resolve();
+            } );   
+        }
+        return deferred.promise;  
 }
+
+
+
 
 function addPostToUser(publisherId, taggedUsers, _postId) {
     var deferred = Q.defer();
-    db.users.findOne(
-        { username: publisherId },
-        function (err, user) {
-            if (err) deferred.reject(err.name + ': ' + err.message);
-            if (user) {
-                addToPosts(user);
-               
-            }
-        });
-    function addToPosts(user) {
-        db.users.update(
-                    { _id: mongo.helper.toObjectID(user._id) },
-                    { $push: { posts: _postId } },
-                    function (err, doc) {
-                        if (err) 
-                            deferred.reject(err.name + ': ' + err.message);
-                        for(taggedUser of taggedUsers){
-                             addToTagged(taggedUser);
-                        }
-                        deferred.resolve();
-                    });
-    }
-    function addToTagged(userId) {
-        db.users.findById(userId, (err, user) => {
+    db.users.update (
+        { _id: mongo.helper.toObjectID(publisherId) },
+        { $push: { posts: _postId } },
+        function (err, doc) {
             if (err) 
                 deferred.reject(err.name + ': ' + err.message);
-                db.users.update(
-                    { _id: mongo.helper.toObjectID(userId) },
-                    { $push: { taggedPosts: _postId } },
-                    function (err, doc) {
-                        if (err) 
-                            deferred.reject(err.name + ': ' + err.message);
-
-                        deferred.resolve();
-                    });
+            addToTaggedUser();       
         });
+    
+    function addToTaggedUser(){ 
+        db.users.update(
+            {_id: {$in: taggedUsers }},
+            {$push: { taggedPosts: _postId }},
+            {multi: true}, (err, doc) => {
+                if (err)  deferred.reject(err.name + ': ' + err.message);
+                 deferred.resolve();
+            } );  
+        }
+        return deferred.promise;    
     }
-    return deferred.promise;
-}
+
+
+
+
+
+
+
+
 
 function _delete(_id) {
     var deferred = Q.defer();
