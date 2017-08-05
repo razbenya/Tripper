@@ -49,6 +49,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.following = "follow";
     this.userService.getById(this.currentUser._id).subscribe(user => {
       this.loading = false;
+      if(user._id == this.userProfile._id)
+        this.following = "Edit profile";
       if (user.following.indexOf(this.userProfile._id) != -1)
         this.following = "Unfollow";
     });
@@ -61,7 +63,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   follow() {
     this.loading = true;
-    if (this.following == "follow") {
+    if (this.following == "Edit profile"){
+      //@TODO add functionality
+    }
+    else if (this.following == "follow") {
       this.userService.follow(this.currentUser, this.userProfile).subscribe(() => {
         this.notifyServer();
         this.loading = false;
