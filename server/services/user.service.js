@@ -23,6 +23,7 @@ service.removePostFromUser = removePostFromUser;
 service.getPostMembers = getPostMembers;
 service.addToLikes = addToLikes;
 service.removeFromLikes = removeFromLikes;
+service.getUsersByIds = getUsersByIds;
 
 module.exports = service;
 
@@ -30,6 +31,20 @@ function getPostMembers(post) {
     var deferred = Q.defer();
     var usersList = post.taggedUsers;
     usersList.push(post.userId);
+    db.users.find(
+        { _id: { $in: usersList } }
+    ).toArray((err, users) => {
+        if (err) deferred.reject(err.name + ': ' + err.message);
+        users = _.map(users, function (user) {
+            return _.omit(user, 'hash');
+        });
+        deferred.resolve(users);
+    });
+    return deferred.promise;
+}
+
+function getUsersByIds(usersList){
+    var deferred = Q.defer();
     db.users.find(
         { _id: { $in: usersList } }
     ).toArray((err, users) => {

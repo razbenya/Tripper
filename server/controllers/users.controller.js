@@ -7,6 +7,7 @@ var userService = require('services/user.service');
 // routes
 router.post('/authenticate', authenticate);
 router.post('/register', register);
+router.post('/getUsers', getUsers);
 router.get('/', getAll);
 router.get('/current', getCurrent);
 router.put('/follow/:_id', follow);
@@ -15,6 +16,16 @@ router.delete('/:_id', _delete);
 router.get('/:_id', getUser);
 
 module.exports = router;
+
+function getUsers(req, res){
+    userService.getUsersByIds(req.body)
+        .then((users) => {
+            res.send(users);
+        })
+        .catch(function (err) {
+            res.status(400).send(err);
+        });
+}
 
 function authenticate(req, res) {
     userService.authenticate(req.body.email, req.body.password)

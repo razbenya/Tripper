@@ -1,0 +1,26 @@
+<div class="container" *ngIf="user">
+  <div class="col-sm-3 col-md-3 col-lg-3 mt-4">
+    <div class="card">
+      <img class="card-img-top" [src]='getProfile()'>
+      <div class="card-block">
+        
+        <h4 class="card-title mt-3"><a href = "/{{user._id}}">
+                <div class="whiteLinkText">{{user.firstName}} {{user.lastName}}
+                </div></a></h4>
+        
+        <div class="meta text-muted">
+            <h5>@{{user.username}}</h5>    
+        </div>
+
+        <div *ngIf="checkFollow()">
+          <button id="btn-follow" [disabled]="loading" (click)='follow()' class="btn btn-info"> Follow </button>
+        </div>
+
+        <div *ngIf="!checkFollow()">
+          <button id="btn-unfollow" [disabled]="loading" (click)='unfollow()' class="btn btn-warning"> Unfollow </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

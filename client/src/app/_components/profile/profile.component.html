@@ -1,12 +1,13 @@
 
-<div class="wrapper">
+<div class="wrapper" *ngIf="userProfile">
   <!-- <div class="container">-->
   <header id="header">
     <div class="profile-banner">
     </div>
-      <nav class="navbar navbar-default" *ngIf="userProfile">
-        
-          <!-- Brand and toggle get grouped for better mobile display navbar-default   ProfileCanopy-navbar u-boxShadow -->
+      <nav class="navbar navbar-default">
+  
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="container">
           <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
               <span class="sr-only">Toggle navigation</span>
@@ -15,28 +16,70 @@
               <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="#"><img class="img-responsive" src="https://pbs.twimg.com/profile_images/464738694918713345/ILxXcRex_400x400.jpeg"></a>
-            <span class="site-name">{{userProfile.firstName}} {{userProfile.lastName}}</span>
+            <span class="site-name">
+              <a routerLink = "/{{userProfile._id}}">
+                <div class="whiteLinkText">{{userProfile.firstName}} {{userProfile.lastName}}</div></a></span>
           </div>
 
-          <!-- Collect the nav links, forms, and other content for toggling bs-example-navbar-collapse-1-->
+          <!-- Collect the nav links, forms, and other content for toggling -->
+
           <div class="collapse navbar-collapse" id="mainNav">
             <ul class="nav main-menu navbar-nav">
-              <li class="active"><a href="#">
+              
+              <li [class]='postClass'><a (click)='changeToPosts()'>
                 <span class="nav-label">Posts</span>
                 <span class="sr-only">(current)</span>
                 <span class="nav-label-val">{{userProfile.posts?.length}}</span></a></li>
-              <li><a href="#">
+
+              <li [class]='followingClass'><a (click)='changeToFollowing()'>
                 <span class="nav-label">Following</span>
                 <span class="nav-label-val">{{userProfile.following?.length}}</span></a></li>
-              <li><a href="#">
+
+              <li [class]='followersClass'><a (click)='changeToFollowers()'>
                 <span class="nav-label">Followers</span>
                 <span class="nav-label-val">{{userProfile.followers?.length}}</span></a></li>
+
             </ul>
-            <button class="btn btn-default pull-right" id="btn-follow">{{following}}</button>
+            <button class="btn btn-default pull-right" (click)='follow()' id="btn-follow">{{following}}</button>
           </div><!-- /.navbar-collapse -->
+          </div>
+
       </nav>
     
   </header>
+
+  <!-- Following list --> 
+  <div class="container" *ngIf="navFollowing">  
+    <div class="row" align="right">
+      <div class="Grid Grid--withGutter" id="gofucingright" *ngFor="let user of profileFollowing">
+        <div class="col-md-3 col-sm-4 col-lg-3">
+          <app-user-card [user]='user'></app-user-card>
+        </div>
+      </div>
+    </div>  
+  </div>
+
+  <div class="container" *ngIf="navFollowers">  
+    <div class="row" align="right">
+      <div class="Grid Grid--withGutter" id="gofucingright" *ngFor="let user of profileFollowers">
+        <div class="col-md-3 col-sm-4 col-lg-3">
+          <app-user-card [user]='user'></app-user-card>
+        </div>
+      </div>
+    </div>  
+  </div>
+
+<!--
+  <ul class="list-inline" *ngIf="profileFollowing">
+    <li *ngFor="let user of profileFollowing; let i=index">
+      <div class="card-item">
+          <app-user-card [user]='user'></app-user-card>
+        </div>
+      
+
+    </li>
+  </ul>
+-->
 </div>
 
 

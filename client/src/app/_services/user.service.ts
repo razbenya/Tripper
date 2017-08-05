@@ -47,4 +47,8 @@ export class UserService {
       return this.http.delete('/users/' + username);
   }
 
+  getUsers(usersIds: string[]){
+      return this.http.post('/users/getUsers', usersIds).map((response: Response) => response.json());
+  }
+
 }

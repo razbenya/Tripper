@@ -19,7 +19,41 @@ export class ProfileComponent implements OnInit, OnDestroy {
   profilePicture: string;
   connection;
   loading = false;
+  profileFollowing: User[];
+  profileFollowers: User[];
+  navFollowing = false;
+  navFollowers = false;
+  navPosts = true;
+  postClass ="active";
+  followingClass="a";
+  followersClass="a";
 
+  changeToFollowing(){
+      this.postClass ="a";
+      this.followingClass="active";
+      this.followersClass="a";
+      this.navFollowing = true;
+      this.navFollowers=false;
+      this.navPosts=false;
+  }
+  
+  changeToFollowers(){
+      this.postClass ="a";
+      this.followingClass="a";
+      this.followersClass="active";
+      this.navFollowers = true;
+      this.navPosts=false;
+      this.navFollowing = false;
+  }
+  changeToPosts(){
+      this.postClass ="active";
+      this.followingClass="a";
+      this.followersClass="a";
+      this.navFollowers = false;
+      this.navPosts=true;
+      this.navFollowing = false;
+  }
+  
 
   constructor(private socketServer: SocketService, private _sanitizer: DomSanitizer, private route: ActivatedRoute, private router: Router, private userService: UserService) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -37,6 +71,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.userService.getById(this.id).subscribe(user => {
       this.userProfile = user;
       this.checkFollow();
+      this.getFollowerList();
+      this.getFollowingList();
     },
       error => {
         this.router.navigate(['']);
@@ -78,6 +114,18 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.loading = false;
       });
     }
+  }
+
+  getFollowingList(){
+    this.userService.getUsers(this.userProfile.following).subscribe((users) => {
+      this.profileFollowing = users; 
+      console.log(this.profileFollowing);
+    })
+  }
+  getFollowerList(){
+    this.userService.getUsers(this.userProfile.followers).subscribe((users) => {
+      this.profileFollowers = users; 
+    })
   }
 
   socketObserverInit() {

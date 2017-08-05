@@ -4,3 +4,4 @@ export * from './register/register.component';
 export * from './profile/profile.component';
 export * from './post-form/post-form.component';
 export * from './text-form/text-form.component';
+export * from './user-card/user-card.component';

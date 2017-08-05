@@ -2,11 +2,15 @@
     margin-bottom: 0;
     margin-top: 0;
     border-radius: 0;
+    border:none;
+        font-family: 'Open Sans Condensed', sans-serif, sans-serif;
 }
 
 .ProfileCanopy-header{
     margin-top: 0px;
 }
+
+
 
 
 
@@ -20,38 +24,20 @@ body{
 h1, h2, h3, h4, h5, h6{
     font-family: 'Open Sans Condensed', sans-serif, sans-serif;
 }
-	
-.container{
-	}
 
-.wrapper{
-	}
+li{
+    display: inline;
+}
+
+.list-group-item{
+    float: left;
+}
 
 #header{
 	border:1px solid #ddd;
 	margin-bottom:20px;
 	}
-	
 
-
-	
-.navbar{
-	border-radius:0;
-	margin-bottom:0;
-	border:none;
-        font-family: 'Open Sans Condensed', sans-serif, sans-serif;
-
-	}
-    
-.navbar > li >a{
-    
-    }
-	
-
-	
-.navbar-header{
-	}
-	
 .navbar-brand{
 width:160px;
 height:160px;
@@ -118,7 +104,7 @@ font-size:2em;
 
 .navbar{
 	border-radius:0;
-	margin-bottom:0;
+    margin-bottom:0;
 	border:none;
 	}
 	
@@ -177,4 +163,57 @@ font-size:2em;
 a span{
     display: block;
     line-height: 0.8;
+}
+
+.container{
+    margin-left: 25px;
+}
+
+.whiteLinkText{
+    color: white;
+}
+
+.card-item{
+    display: inline-block;
+}
+
+app-user-card{
+    display: inline-block;
+}
+
+.Grid{
+    display: block;
+    font-size: 0;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    margin-left: 40px;
+    
+}
+
+.Grid--withGutter {
+    margin: 0 -5px;
+}
+
+.Grid-cell {
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: inline-block;
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    vertical-align: top;
+    width: 100%;
+}
+
+.u-size1of3, .u-size2of6, .u-size4of12 {
+    width: 33.33333333333333%!important;
+}
+.u-size2of3, .u-size4of6, .u-size8of12 {
+    width: 66.66666666666666%!important;
+}
+
+#gofucingright{
+    left: 200px;
 }
