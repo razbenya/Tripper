@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { UserService, SocketService } from "../../_services/index"
 import { User } from "../../_models";
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
-
+import { appConfig } from '../../app.config';
 
 @Component({
   selector: 'app-profile',
@@ -16,7 +16,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   userProfile: User;
   id: string;
   following: string = "follow";
-  profilePicture: string;
+  //profilePicture: string;
   connection;
   loading = false;
   profileFollowing: User[];
@@ -27,6 +27,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   postClass ="active";
   followingClass="a";
   followersClass="a";
+  token;
 
   changeToFollowing(){
       this.postClass ="a";
@@ -56,15 +57,18 @@ export class ProfileComponent implements OnInit, OnDestroy {
   
 
   constructor(private socketServer: SocketService, private _sanitizer: DomSanitizer, private route: ActivatedRoute, private router: Router, private userService: UserService) {
-    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    let user = JSON.parse(localStorage.getItem('currentUser'));
+    this.currentUser = user;
+    this.token = user.token;
     this.route.params.subscribe(params => {
       this.id = params['id'];
     });
   }
 
-  getProfilePic() {
-    let cu:any = this.currentUser; 
-    return this._sanitizer.bypassSecurityTrustStyle(`linear-gradient( rgba(29, 29, 29, 0), rgba(16, 16, 23, 0.5)), url(${"http://localhost:4000/uploads/profiles/" + this.userProfile.profilePic +"?token="+cu.token})`);
+
+
+  getProfile(){
+    return appConfig.apiUrl+"/uploads/"+this.userProfile.profilePic+"?token="+this.token;
   }
 
   getUser() {

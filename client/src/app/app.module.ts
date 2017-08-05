@@ -22,6 +22,7 @@ import { ElasticModule } from 'angular2-elastic';
 import { CommentComponent } from './_components/comment/comment.component';
 import { EditProfileComponent } from './_components/edit-profile/edit-profile.component';
 import { UserCardComponent } from './_components/user-card/user-card.component';
+import { PostsListComponent } from './_components/posts-list/posts-list.component';
 
 
 
@@ -56,7 +57,8 @@ const ROUTES = [
     GalleryComponent,
     CommentComponent,
     EditProfileComponent,
-    UserCardComponent
+    UserCardComponent,
+    PostsListComponent
   ],
   imports: [
     BrowserModule,
