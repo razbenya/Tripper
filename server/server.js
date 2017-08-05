@@ -38,6 +38,10 @@ io.sockets.on('connection', (socket) => {
     socket.on('follow', (user) => {
         io.emit(user, { type: user, text: user });
     });
+
+    socket.on('post', (postId) => {
+        io.emit(postId, {type: 'post',text: 'post' });
+    })
 });
 
 //allow upload and images fetch

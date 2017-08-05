@@ -2,10 +2,28 @@
        height: 150px;
        width: 215px;
 }
+#coomentpic {
+    height: 50px;
+     width: 50px;  
+}
+
+.textBlack{
+    color: black;
+}
 
 #profilePic {
      height: 64px;
      width: 64px;     
+}
+
+textarea{
+    resize: none
+}
+pre{
+    background: transparent;
+    white-space: pre-wrap;
+    white-space: pre-wrap;
+    border: 0;
 }
 
 .jumbotron{

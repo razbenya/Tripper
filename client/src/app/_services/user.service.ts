@@ -26,7 +26,7 @@ export class UserService {
 
   create(user: User) { 
       user._id = user.username;
-      user.likes = 0;
+      user.recivedLikes = 0;
       user.posts = [];
       user.followers = [];
       user.following = [];

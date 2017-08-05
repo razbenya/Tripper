@@ -1,0 +1,40 @@
+<modal #modal>
+  <div class="slider">
+    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+
+      <img class="modal-image" *ngIf="selectedImage" src="{{selectedImage}}">
+
+
+  <a class="left carousel-control" (click)="navigate(false)" role="button" data-slide="prev">
+    <span class="fa fa-angle-left" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+
+  <a class="right carousel-control" (click)="navigate(true)" role="button" data-slide="next">
+    <span class="fa fa-angle-right" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+
+    </div>
+  </div>
+</modal>
+
+
+
+<div class="container pull left">
+  <ul id="thumbnailsList" class="list-group">
+    <!-- i < maxPictures -->
+    <li *ngFor="let image of datasource;let i=index">
+      <div [class]='imageContainer' *ngIf="i < maxPictures" [ngStyle]="{'background-image': 'url(' + image + ')'}" (click)="modal.open()"
+        (click)=setSelectedImage(image)> </div>
+      <!-- show more -->
+      <span *ngIf="i == maxPictures">
+           <div class ="imageContainer3 list-group-item" style="opacity:0.8" [ngStyle]="{'background-image': 'url(' + image + ')'}" (click)="modal.open()"
+          (click)=setSelectedImage(image)> 
+         <a *ngIf="i == maxPictures" class="more"  (click)="modal.open()" (click)="setSelectedImage(image)"><h2> +{{datasource?.length - maxPictures}} more </h2></a>
+        </div>
+      </span>
+
+    </li>
+  </ul>
+</div>

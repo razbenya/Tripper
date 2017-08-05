@@ -17,7 +17,10 @@ import { AgmCoreModule } from '@agm/core';
 import { Ng2Bs3ModalModule } from 'ng2-bs3-modal/ng2-bs3-modal';
 import { PostComponent } from './_components/post/post.component';
 import { UserlistComponent } from './_directives/userlist/userlist.component';
-import { NgxGalleryModule } from 'ngx-gallery';
+import { GalleryComponent } from './_directives/gallery/gallery.component';
+import { ElasticModule } from 'angular2-elastic';
+
+
 
 
 // Define the routes
@@ -47,6 +50,7 @@ const ROUTES = [
     TextFormComponent,
     PostComponent,
     UserlistComponent,
+    GalleryComponent,
   ],
   imports: [
     BrowserModule,
@@ -55,7 +59,7 @@ const ROUTES = [
     ReactiveFormsModule,
     Ng2AutoCompleteModule,
     Ng2Bs3ModalModule,
-    NgxGalleryModule,
+    ElasticModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyCOt9ge0TKiOEk_HboTuGOcdaa80U6IJp8',
       libraries: ["places"]

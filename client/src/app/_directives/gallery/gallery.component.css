@@ -1,0 +1,76 @@
+li { 
+    display:inline; 
+}
+.tn{ 
+    margin:2px 0px;
+    box-shadow:#999 1px 1px 3px 1px; 
+    cursor: pointer 
+}
+
+.list-group-item {
+    float: left;
+}
+
+ .imageContainer3 {
+       width:191px; 
+       height:146px; 
+       background-position:center;
+       margin:2px 0px;
+       box-shadow:#999 1px 1px 3px 1px; 
+       cursor: pointer
+ }
+
+.imageContainer2 {
+       width:286px;  
+       height:220px;
+       background-position:center;
+       margin:2px 0px;
+       box-shadow:#999 1px 1px 3px 1px; 
+       cursor: pointer
+ }
+
+.imageContainer1 {
+       width:573px;   
+       height:350px;
+       background-position:center;
+       margin:2px 0px;
+       box-shadow:#999 1px 1px 3px 1px; 
+       cursor: pointer
+}
+  
+
+.slider, .carousel{
+	max-height:360px;
+	overflow:hidden;
+}
+	
+.carousel-control .fa-angle-left,
+.carousel-control .fa-angle-right {
+position: absolute;
+top: 50%;
+font-size:2em;
+z-index: 5;
+display: inline-block;
+}
+
+
+
+.more {
+  position: relative;
+  opacity:0.7;
+  
+  background: rgba(0, 0, 0, 0.7);
+  width: 191px;
+  right: 5px;
+  bottom: 5px; 
+  height: 146px; 
+  color:white;
+  box-shadow:#999 1px 1px 3px 1px; 
+  text-align: center;
+}
+ 
+    
+.modal-image {
+    width: 100%;
+    max-width: 700px
+}

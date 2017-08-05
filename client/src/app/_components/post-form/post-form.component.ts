@@ -37,7 +37,6 @@ export class PostFormComponent implements OnInit, OnDestroy {
     window['post-form'] = {
       component: this,
       submit: () => this.save(), 
-      test: () => this.loadapi(),
       valid: () => {return this.myForm.invalid&&this.loading; } , 
       zone: ngZone
     };
@@ -139,7 +138,7 @@ export class PostFormComponent implements OnInit, OnDestroy {
     control.removeAt(j + 1);
     this.spwapImg(i, j);
   }
-
+host: {'(window:keydown)': 'hotkeys($event)'};
 
   remove(i: number) {
     const control = <FormArray>this.myForm.controls['postData'];

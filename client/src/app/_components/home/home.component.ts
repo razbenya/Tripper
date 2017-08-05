@@ -33,10 +33,6 @@ export class HomeComponent implements OnInit {
     this.loadAllUsers();
     //this.loadAllPosts();
     this.loadMyPosts();
-    this.socketService.observeServer('test2').subscribe(test => {
-      this.loadAllUsers();
-    })
-    this.socketService.notifyServer("test1","test");
 
 
   }

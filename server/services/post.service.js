@@ -14,6 +14,7 @@ service.getAll = getAll;
 service.delete = _delete;
 service.getById = getById;
 service.getPosts = getPosts;
+service.addLike = addLike;
 
 
 module.exports = service;
@@ -25,6 +26,18 @@ function getAll() {
         deferred.resolve(posts);
     });
     return deferred.promise;
+}
+
+function addLike(postId, userId) {
+    var deferred = Q.defer();
+    db.posts.update(
+        {_id: mongo.helper.toObjectID(postId)},
+        {$push: {likes: userId}}, (err, doc) => {
+            if (err) 
+                deferred.reject(err.name + ': ' + err.message);
+            deferred.resolve();
+        });
+        return deferred.promise;
 }
 
 

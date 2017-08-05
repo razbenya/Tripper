@@ -8,17 +8,44 @@ var userService = require('services/user.service');
 router.post('/publish', newPost);
 router.get('/', getAll);
 router.get('/myPosts', myPosts);
-router.get('/feedPosts',feedPosts);
+router.get('/feedPosts', feedPosts);
+router.get('/:_id', getById);
 router.delete('/:_id', _delete);
-router.post('/members',getMembers);
+router.post('/members', getMembers);
+router.post('/like/:_id', like);
 
 module.exports = router;
+
+function getById(req, res) {
+    postService.getById(req.params._id)
+        .then((post) => {
+            res.send(post);
+        }).catch(err => {
+            res.status(400).send(err);
+        });
+}
+
+function like(req, res) {
+    userId = req.body;
+    postId = req.params._id;
+    postService.addLike(postId, userId)
+        .then(() => {
+            userService.addToLikes(userId)
+                .then(() => {
+                    res.sendStatus(200);
+                }).catch(err => {
+                    res.status(400).send(err);
+                });
+        }).catch(err => {
+            res.status(400).send(err);
+        });
+}
 
 function getMembers(req, res) {
     userService.getPostMembers(req.body)
         .then((users) => {
             res.send(users);
-        }).catch( err => {
+        }).catch(err => {
             res.status(400).send(err);
         });
 }
@@ -26,7 +53,7 @@ function getMembers(req, res) {
 function myPosts(req, res) {
     var parts = url.parse(req.url, true);
     var params = parts.query;
-     userService.getById(params._id)
+    userService.getById(params._id)
         .then((user) => {
             postService.getPosts(parseInt(params.startIndex), parseInt(params.limit), [params._id], user.taggedPosts)
                 .then((posts) => {
@@ -50,6 +77,7 @@ function feedPosts(req, res) {
                 .then((posts) => {
                     res.send(posts);
                 }).catch((err) => {
+                     concolse.log(err);
                     res.status(400).send(err);
                 })
         }).catch((err) => {

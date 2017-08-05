@@ -21,21 +21,36 @@ service.unfollow = unfollow;
 service.addPostToUser = addPostToUser;
 service.removePostFromUser = removePostFromUser;
 service.getPostMembers = getPostMembers;
+service.addToLikes = addToLikes;
 
 module.exports = service;
 
-
 function getPostMembers(post) {
-     var deferred = Q.defer();
-     var usersList = post.taggedUsers;
-     usersList.push(post.userId);
-     db.users.find(
-            {_id: {$in: usersList}}
-        ).toArray((err, users) => {
-             if(err) deferred.reject(err.name + ': ' + err.message);
-            deferred.resolve(users);
+    var deferred = Q.defer();
+    var usersList = post.taggedUsers;
+    usersList.push(post.userId);
+    db.users.find(
+        { _id: { $in: usersList } }
+    ).toArray((err, users) => {
+        if (err) deferred.reject(err.name + ': ' + err.message);
+        users = _.map(users, function (user) {
+            return _.omit(user, 'hash');
         });
-     return deferred.promise;
+        deferred.resolve(users);
+    });
+    return deferred.promise;
+}
+
+function addToLikes(uaerId){
+     var deferred = Q.defer();
+      db.users.update( 
+          { _id: userId },
+          { $inc: { recivedLikes: 1 }}, (err, doc) => {
+            if (err) 
+                deferred.reject(err.name + ': ' + err.message);
+            deferred.resolve();
+          });
+        return deferred.promise;
 }
 
 function authenticate(email, password) {
@@ -54,6 +69,7 @@ function authenticate(email, password) {
                 following: user.following,
                 taggedPosts: user.taggedPosts,
                 likes: user.likes,
+                recivedLikes: user.recivedLikes,
                 token: jwt.sign({ sub: user._id }, config.secret)
             });
         } else {
@@ -73,7 +89,6 @@ function getAll() {
         users = _.map(users, function (user) {
             return _.omit(user, 'hash');
         });
-
         deferred.resolve(users);
     });
 
@@ -157,99 +172,87 @@ function follow(follower, toFollow) {
     var deferred = Q.defer();
     db.users.update(
         { _id: mongo.helper.toObjectID(follower) },
-        { $push: {following: toFollow} },(err,doc) => {
+        { $push: { following: toFollow } }, (err, doc) => {
             if (err) deferred.reject(err.name + ': ' + err.message);
-                updateFollowing();
+            updateFollowing();
         });
-    function updateFollowing(){
+    function updateFollowing() {
         db.users.update(
-            {_id: mongo.helper.toObjectID(toFollow) },
-            { $push: { followers: follower } },(err, doc) => {
+            { _id: mongo.helper.toObjectID(toFollow) },
+            { $push: { followers: follower } }, (err, doc) => {
                 if (err) deferred.reject(err.name + ': ' + err.message);
-                    deferred.resolve();
+                deferred.resolve();
             });
-    }      
+    }
     return deferred.promise;
 }
 
 
 function unfollow(_id, toFollow) {
-   var deferred = Q.defer();
+    var deferred = Q.defer();
     db.users.update(
         { _id: mongo.helper.toObjectID(_id) },
-        { $pull: {following: toFollow} },(err,doc) => {
+        { $pull: { following: toFollow } }, (err, doc) => {
             if (err) deferred.reject(err.name + ': ' + err.message);
-                removeFollowing();
+            removeFollowing();
         });
-    function removeFollowing(){
+    function removeFollowing() {
         db.users.update(
-            {_id: mongo.helper.toObjectID(toFollow) },
-            { $pull: { followers: _id } },(err, doc) => {
+            { _id: mongo.helper.toObjectID(toFollow) },
+            { $pull: { followers: _id } }, (err, doc) => {
                 if (err) deferred.reject(err.name + ': ' + err.message);
-                    deferred.resolve();
+                deferred.resolve();
             });
-    }      
+    }
     return deferred.promise;
 }
 
 
-
-
-
 function removePostFromUser(publisherId, taggedUsers, _postId) {
-     var deferred = Q.defer();
-    db.users.update (
+    var deferred = Q.defer();
+    db.users.update(
         { _id: mongo.helper.toObjectID(publisherId) },
         { $pull: { posts: _postId } },
         function (err, doc) {
-            if (err) 
+            if (err)
                 deferred.reject(err.name + ': ' + err.message);
-            removeTaggedUser();       
+            removeTaggedUser();
         });
-    function removeTaggedUser(){ 
+    function removeTaggedUser() {
         db.users.update(
-            {_id: {$in: taggedUsers }},
-            {$pull: { taggedPosts: _postId }},
-            {multi: true}, (err, doc) => {
-                if (err)  deferred.reject(err.name + ': ' + err.message);
-                 deferred.resolve();
-            } );   
-        }
-        return deferred.promise;  
+            { _id: { $in: taggedUsers } },
+            { $pull: { taggedPosts: _postId } },
+            { multi: true }, (err, doc) => {
+                if (err) deferred.reject(err.name + ': ' + err.message);
+                deferred.resolve();
+            });
+    }
+    return deferred.promise;
 }
-
-
 
 
 function addPostToUser(publisherId, taggedUsers, _postId) {
     var deferred = Q.defer();
-    db.users.update (
+    db.users.update(
         { _id: mongo.helper.toObjectID(publisherId) },
         { $push: { posts: _postId } },
         function (err, doc) {
-            if (err) 
+            if (err)
                 deferred.reject(err.name + ': ' + err.message);
-            addToTaggedUser();       
+            addToTaggedUser();
         });
-    
-    function addToTaggedUser(){ 
+
+    function addToTaggedUser() {
         db.users.update(
-            {_id: {$in: taggedUsers }},
-            {$push: { taggedPosts: _postId }},
-            {multi: true}, (err, doc) => {
-                if (err)  deferred.reject(err.name + ': ' + err.message);
-                 deferred.resolve();
-            } );  
-        }
-        return deferred.promise;    
+            { _id: { $in: taggedUsers } },
+            { $push: { taggedPosts: _postId } },
+            { multi: true }, (err, doc) => {
+                if (err) deferred.reject(err.name + ': ' + err.message);
+                deferred.resolve();
+            });
     }
-
-
-
-
-
-
-
+    return deferred.promise;
+}
 
 
 function _delete(_id) {

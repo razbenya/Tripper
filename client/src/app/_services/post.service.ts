@@ -15,6 +15,14 @@ export class PostService {
     return this.http.post('/posts/members', post).map((response: Response) => response.json());
   }
 
+  public getById(_id) {
+    return this.http.get('/posts/'+_id);
+  }
+
+  public like(post:Post, userId:string){
+    return this.http.post('/posts/like/'+post._id,userId);
+  }
+
   public myPosts(_id,from,limit){
     return this.http.get('/posts/myPosts?_id='+_id+'&startIndex='+from+'&limit='+limit).map((response: Response) => response.json());
   }
