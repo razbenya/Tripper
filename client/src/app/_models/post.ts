@@ -1,10 +1,9 @@
-import { Comments } from "./index";
 
 export class Post {
     _id: any;
     userId: string;
     likes: string[];
-    comments: Comments[];
+    comments: Comment[];
     taggedUsers: string[];
     title: string;
     location: {
@@ -22,4 +21,10 @@ export class ImgData {
 export class TextData {
     index: number;
     text: string;
+}
+
+export class Comment {
+    userId: string;
+    text: string;
+    date: Date;
 }

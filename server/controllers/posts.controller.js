@@ -6,13 +6,16 @@ var postService = require('services/post.service');
 var userService = require('services/user.service');
 // routes
 router.post('/publish', newPost);
+router.post('/members', getMembers);
+router.post('/like/:_id', like);
+router.post('/unlike/:_id',unlike);
+router.post('/comment/:_id',comment);
 router.get('/', getAll);
 router.get('/myPosts', myPosts);
 router.get('/feedPosts', feedPosts);
 router.get('/:_id', getById);
 router.delete('/:_id', _delete);
-router.post('/members', getMembers);
-router.post('/like/:_id', like);
+
 
 module.exports = router;
 
@@ -25,12 +28,39 @@ function getById(req, res) {
         });
 }
 
-function like(req, res) {
-    userId = req.body;
+function comment(req, res){
     postId = req.params._id;
-    postService.addLike(postId, userId)
+    comment = req.body;
+    postService.addComment(postId, comment)
         .then(() => {
-            userService.addToLikes(userId)
+            res.sendStatus(200);
+        }).catch(err => {
+            res.status(400).send(err);
+        });
+}
+
+function like(req, res) {
+    user = req.body;
+    postId = req.params._id;
+    postService.addLike(postId, user._id)
+        .then(() => {
+            userService.addToLikes(user._id)
+                .then(() => {
+                    res.sendStatus(200);
+                }).catch(err => {
+                    res.status(400).send(err);
+                });
+        }).catch(err => {
+            res.status(400).send(err);
+        });
+}
+
+function unlike(req, res) {
+    user = req.body;
+    postId = req.params._id;
+    postService.removeLike(postId, user._id)
+        .then(() => {
+            userService.removeFromLikes(user._id)
                 .then(() => {
                     res.sendStatus(200);
                 }).catch(err => {

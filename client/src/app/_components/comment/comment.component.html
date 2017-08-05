@@ -1,0 +1,18 @@
+<div class="container" *ngIf="user">
+<div class="media">
+  <div class="media-left">
+     <img *ngIf="profilepic" id="coomentpic" class="media-object" [src]="profilepic">
+  </div>
+    <div class="media-body">
+      <a href="/{{user._id}}">
+      <h5 class="media-heading"> <b> {{user.firstName}} {{user.lastName}} </b> </h5>
+      </a>
+
+        <span id="commentText" *ngFor="let line of lines">
+         {{line}} <br>  
+        </span>
+        
+      <small class="text-muted">  {{comment.date | date:'mediumDate'}} at  {{comment.date | date:'shortTime'}} </small>
+    </div>
+</div>
+</div>

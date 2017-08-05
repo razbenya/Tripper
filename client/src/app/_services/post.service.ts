@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Post, User } from '../_models/index';
+import { Post, User, Comment } from '../_models/index';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 
 @Injectable()
@@ -16,11 +16,19 @@ export class PostService {
   }
 
   public getById(_id) {
-    return this.http.get('/posts/'+_id);
+    return this.http.get('/posts/'+_id).map((response: Response) => response.json());;
   }
 
-  public like(post:Post, userId:string){
-    return this.http.post('/posts/like/'+post._id,userId);
+  public like(post:Post, user:User){ 
+    return this.http.post('/posts/like/'+post._id, user);
+  }
+
+  public writeComment(post:Post, comment:Comment){
+    return this.http.post('/posts/comment/'+post._id, comment);
+  }
+
+  public unlike(post:Post, userId:string){
+    return this.http.post('/posts/unlike/'+post._id, userId);
   }
 
   public myPosts(_id,from,limit){

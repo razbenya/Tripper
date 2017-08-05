@@ -22,6 +22,7 @@ service.addPostToUser = addPostToUser;
 service.removePostFromUser = removePostFromUser;
 service.getPostMembers = getPostMembers;
 service.addToLikes = addToLikes;
+service.removeFromLikes = removeFromLikes;
 
 module.exports = service;
 
@@ -41,11 +42,25 @@ function getPostMembers(post) {
     return deferred.promise;
 }
 
-function addToLikes(uaerId){
+function addToLikes(userId){
+     var deferred = Q.defer();
+     console.log(userId);
+      db.users.update( 
+          { _id: mongo.helper.toObjectID(userId) },
+          { $inc: { recivedLikes: 1 }}, (err, doc) => {
+          
+            if (err) 
+                deferred.reject(err.name + ': ' + err.message);
+            deferred.resolve();
+          });
+        return deferred.promise;
+}
+
+function removeFromLikes(userId){ 
      var deferred = Q.defer();
       db.users.update( 
-          { _id: userId },
-          { $inc: { recivedLikes: 1 }}, (err, doc) => {
+          { _id: mongo.helper.toObjectID(userId) },
+          { $inc: { recivedLikes: -1 }}, (err, doc) => {
             if (err) 
                 deferred.reject(err.name + ': ' + err.message);
             deferred.resolve();
@@ -69,6 +84,7 @@ function authenticate(email, password) {
                 following: user.following,
                 taggedPosts: user.taggedPosts,
                 likes: user.likes,
+                profilePic: user.profilePic,
                 recivedLikes: user.recivedLikes,
                 token: jwt.sign({ sub: user._id }, config.secret)
             });
@@ -257,7 +273,6 @@ function addPostToUser(publisherId, taggedUsers, _postId) {
 
 function _delete(_id) {
     var deferred = Q.defer();
-
     db.users.remove(
         { _id: mongo.helper.toObjectID(_id) },
         function (err) {

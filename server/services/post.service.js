@@ -15,7 +15,8 @@ service.delete = _delete;
 service.getById = getById;
 service.getPosts = getPosts;
 service.addLike = addLike;
-
+service.removeLike = removeLike;
+service.addComment = addComment;
 
 module.exports = service;
 
@@ -28,11 +29,35 @@ function getAll() {
     return deferred.promise;
 }
 
+function addComment(postId, comment){
+    var deferred = Q.defer();
+    db.posts.update(
+        {_id: mongo.helper.toObjectID(postId) },
+        {$push: {comments: comment }}, (err, doc) => {
+            if (err) 
+                deferred.reject(err.name + ': ' + err.message);
+            deferred.resolve();
+        });
+        return deferred.promise;
+}
+
 function addLike(postId, userId) {
     var deferred = Q.defer();
     db.posts.update(
+        {_id: mongo.helper.toObjectID(postId) },
+        {$push: {likes: userId }}, (err, doc) => {
+            if (err) 
+                deferred.reject(err.name + ': ' + err.message);
+            deferred.resolve();
+        });
+        return deferred.promise;
+}
+
+function removeLike(postId, userId){
+     var deferred = Q.defer();
+    db.posts.update(
         {_id: mongo.helper.toObjectID(postId)},
-        {$push: {likes: userId}}, (err, doc) => {
+        {$pull: {likes: userId}}, (err, doc) => {
             if (err) 
                 deferred.reject(err.name + ': ' + err.message);
             deferred.resolve();

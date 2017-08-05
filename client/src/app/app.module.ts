@@ -19,6 +19,8 @@ import { PostComponent } from './_components/post/post.component';
 import { UserlistComponent } from './_directives/userlist/userlist.component';
 import { GalleryComponent } from './_directives/gallery/gallery.component';
 import { ElasticModule } from 'angular2-elastic';
+import { CommentComponent } from './_components/comment/comment.component';
+import { EditProfileComponent } from './_components/edit-profile/edit-profile.component';
 
 
 
@@ -29,7 +31,7 @@ const ROUTES = [
   { path: '', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'post', component: PostComponent},
+  { path: 'edit', component: EditProfileComponent},
   { path: ':id', component: ProfileComponent},
   
   // otherwise redirect to home
@@ -51,6 +53,8 @@ const ROUTES = [
     PostComponent,
     UserlistComponent,
     GalleryComponent,
+    CommentComponent,
+    EditProfileComponent,
   ],
   imports: [
     BrowserModule,
