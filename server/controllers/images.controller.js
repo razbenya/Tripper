@@ -10,25 +10,23 @@ router.post('/delete', deleteImg);
 
 module.exports = router;
 
-
-
 function uploadImg(req, res) {
-console.log(req.body.image);
-    if (req.files) {
+    if(req.files){
         let img = req.files.image;
         let id = req.params._id;
         img.name = uuidv1() + id + img.name;
         img.mv('uploads/' + img.name, function (err) {
+              console.log(err);
             if (err)
                 return res.status(500).send(err);
             res.send(img.name);
+            return;
         });
-    } else if(req.body.image.startsWith('data')){
+    } 
+    else if(req.body.image.startsWith('data')){
         let index = req.body.image.indexOf(',');
         let id = req.params._id;
         var base64Data = req.body.image.substr(index+1);
-        console.log(base64Data);
-       //var base64Data = req.body.image.replace(/^data:image\/jpeg;base64,/, "");
         var name = uuidv1() + "-"+id + '-profilePic.jpg';
         fs.writeFile('uploads/'+name, base64Data, 'base64', function (err) {
             if(err){
