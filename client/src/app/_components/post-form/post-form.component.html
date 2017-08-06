@@ -67,7 +67,7 @@
                         <app-text-form [group]="myForm.controls.postData.controls[i]"></app-text-form>
                       </div>
                       <div *ngIf="myForm.controls.postData.controls[i].controls.image">
-                        <image-upload [maxsize]="" [url]="uploadUrl" [preview]="true" [dropBoxMessage]="'Drop your images here!'" [extensions]="['jpeg','png','gif']"
+                        <image-upload [maxFileSize]="3882000" [url]="uploadUrl" [preview]="true" [dropBoxMessage]="'Drop your images here!'" [extensions]="['jpeg','png','gif']"
                           (onFileUploadFinish)="onUploadFinished($event, i)" (onRemove)="imageRemoved($event, i)">
                         </image-upload>
                       </div>
