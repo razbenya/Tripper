@@ -10,7 +10,6 @@ import { ImageCropperComponent, CropperSettings } from 'ng2-img-cropper';
   styleUrls: ['./edit-profile.component.css']
 })
 export class EditProfileComponent implements OnInit {
-
   constructor(private router: Router, private userService: UserService, private imgService: ImagesService) { }
   currentProfilePicture;
   newpicture;
@@ -21,6 +20,7 @@ export class EditProfileComponent implements OnInit {
   cropperSettings;
   imageUploaded = false;
   imageName: string;
+  loading:boolean = false;
 
   @ViewChild('cropper', undefined)
   cropper: ImageCropperComponent;
@@ -47,6 +47,7 @@ export class EditProfileComponent implements OnInit {
     var file: File = fileEvent.file;
     var myReader: FileReader = new FileReader();
     var that = this;
+  
     myReader.onloadend = function (loadEvent: any) {
       image.src = loadEvent.target.result;
       that.cropper.setImage(image);
@@ -64,6 +65,7 @@ export class EditProfileComponent implements OnInit {
   }
 
   save() {
+    this.loading = true;
     this.imgService.postImage(this.uploadUrl, this.data).subscribe((res) => {
       if (this.oldpicture != "default.jpg")
         this.imgService.deleteImage('/images', this.oldpicture).subscribe();
@@ -72,6 +74,7 @@ export class EditProfileComponent implements OnInit {
       this.userService.update({ firstName: this.currentUser.firstName, lastName: this.currentUser.lastName, profilePic: this.newpicture }, this.currentUser._id).subscribe(() => {
         this.currentUser.profilePic = this.newpicture;
         localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+        this.loading=false;
         this.router.navigate(['/']);
       });
     });

@@ -42,7 +42,7 @@
           </form>
         </div>
       </div>
-      <button class="btn submit btn-primary pull-right" (click)='save()'>save</button>
+      <button class="btn submit btn-primary pull-right" [disabled]="loading" (click)='save()'>save</button>
     </div>
 
 
