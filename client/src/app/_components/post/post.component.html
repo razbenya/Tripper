@@ -61,16 +61,16 @@
         </div>
         <hr>
         <div class="row">
-          <div id = "Like" class= "col-sm-3 col-md-2 col-lg-3">
+          <div id = "Like" class= "col-sm-2 col-md-2 col-lg-2">
           <button (click)='like()' class="btn-link"> <div class="textBlack"> <b> <span [class]='likeIcon'></span> {{likeText}}</b> </div>
           </button><span class="badge">{{post.likes?.length}}</span>
           </div> 
-          <div id= "comment" class= "col-sm-6 col-md-3 col-lg-6">
+          <div id= "comment" class= "col-sm-3 col-md-3 col-lg-3">
             <button class="btn-link" (click)='openComments()'> <div class="textBlack"><b> <span class="glyphicon glyphicon-comment"></span> comment </b> </div>
             </button> <span class="badge">{{post.comments?.length}}</span>
           </div>
-          <div id= "deletePost" *ngIf="post.userId == currentUser._id" class= "col-sm-1 col-md-1 col-lg-1">
-            <button class="btn-danger pull-right" (click)='remove()'> <div class="textBlack">delete</div>
+          <div id= "deletePost" *ngIf="post.userId == currentUser._id" >
+            <button class="btn-default pull-right" (click)='remove()'> delete
           </button>
           </div>
         </div>

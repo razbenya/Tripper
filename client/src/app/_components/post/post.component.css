@@ -7,6 +7,10 @@
      width: 50px;  
 }
 
+#deletePost{
+    margin-right: 10px;
+}
+
 .textBlack{
     color: black;
 }
