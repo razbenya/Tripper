@@ -17,16 +17,20 @@ export class UserService {
   }
 
   follow(current: User, user: User){
+    current.following.push(user._id);
+    localStorage.setItem('currentUser', JSON.stringify(current));
     return this.http.put('/users/follow/' + current._id, user);
   }
 
   unfollow(current: User, user: User){
+    current.following.splice(current.following.indexOf(user._id));
+    localStorage.setItem('currentUser', JSON.stringify(current));
     return this.http.put('/users/unfollow/' + current._id, user);
   }
 
   create(user: User) { 
       user._id = user.username;
-      user.recivedLikes = 0;
+      user.followersNum = 0;
       user.posts = [];
       user.followers = [];
       user.following = [];
@@ -49,6 +53,11 @@ export class UserService {
 
   getUsers(usersIds: string[]){
       return this.http.post('/users/getUsers', usersIds).map((response: Response) => response.json());
+  }
+
+  getPopular(user: User, limit: number){
+      return this.http.post('/users/getPopularUsers?limit='+limit, user)
+      .map((response: Response) => response.json());
   }
 
 }

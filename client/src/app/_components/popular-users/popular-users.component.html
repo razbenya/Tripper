@@ -1,0 +1,33 @@
+
+    <!-- List group -->
+<div class="panel panel-default">
+  <div class="panel-body">
+    <h4><b>Who to follow</b></h4>
+ <br />
+
+    <ul class="list-group" *ngIf="popularUsers">
+      <li class="user-item list-unstyled" *ngFor="let user of popularUsers; let i=index">
+        <div class="row" >
+        <div class="col-md-9 col-sm-6">
+          <div class="media">
+            <div class="media-left">
+                <img class="media-object" [src]="getProfile(user)">
+            </div>
+            <div class="media-body">
+              <h4 class="media-heading"> <a routerLink='../{{user._id}}'> {{user.firstName}} {{user.lastName}} </a> </h4>
+              <div class="text-muted"> {{user.followers.length}} followers </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6" *ngIf="checkFollow(user)">
+          <button id="follow" [disabled]="loading" (click)='follow(user)' class="btn btn-info"> follow </button>
+        </div>
+
+        </div>
+        <hr>
+      </li>
+    </ul>
+
+  </div>
+</div>

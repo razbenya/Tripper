@@ -24,6 +24,7 @@ import { EditProfileComponent } from './_components/edit-profile/edit-profile.co
 import { UserCardComponent } from './_components/user-card/user-card.component';
 import { PostsListComponent } from './_components/posts-list/posts-list.component';
 import {ImageCropperComponent, CropperSettings} from 'ng2-img-cropper';
+import { PopularUsersComponent } from './_components/popular-users/popular-users.component';
 
 
 
@@ -34,8 +35,9 @@ const ROUTES = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'edit', component: EditProfileComponent},
+  { path: 'pop', component: PopularUsersComponent},
   { path: ':id', component: ProfileComponent},
-  
+    
   // otherwise redirect to home
   { path: '**', redirectTo: '' }
 ];
@@ -59,7 +61,8 @@ const ROUTES = [
     EditProfileComponent,
     UserCardComponent,
     PostsListComponent,
-    ImageCropperComponent
+    ImageCropperComponent,
+    PopularUsersComponent
   ],
   imports: [
     BrowserModule,

@@ -25,6 +25,7 @@ service.addToLikes = addToLikes;
 service.removeFromLikes = removeFromLikes;
 service.getUsersByIds = getUsersByIds;
 service.update = update;
+service.getPopularUsers = getPopularUsers;
 
 module.exports = service;
 
@@ -70,6 +71,37 @@ function getUsersByIds(usersList){
     return deferred.promise;
 }
 
+//TO CHECK
+/*
+function getPopularUsers(user, limit){
+    var deferred = Q.defer();
+    var followingList = user.following;
+    db.users.find(
+        { _id: { $not: { $in: {followingList } } } }
+    ).order("-followers.length").asList().limit(limit)
+        .toArray((err, users) => {
+            if(err) deferred.reject(err.name + ': ' + err.message);
+            deferred.resolve(users);
+        });
+    return deferred.promise;
+}*/
+
+function getPopularUsers(user, limit){
+    var deferred = Q.defer();
+    var followingList = user.following;
+    followingList.push(user._id);
+    db.users.find(
+            { _id: { $not: { $in: followingList } } })
+            .sort({ followersNum: -1 })
+            .limit(limit)
+            .toArray((err, users) => {
+                if(err) deferred.reject(err.name + ': ' + err.message);
+                deferred.resolve(users);
+            });
+    return deferred.promise;
+}
+
+
 function addToLikes(userId){
      var deferred = Q.defer();
      console.log(userId);
@@ -113,7 +145,7 @@ function authenticate(email, password) {
                 taggedPosts: user.taggedPosts,
                 likes: user.likes,
                 profilePic: user.profilePic,
-                recivedLikes: user.recivedLikes,
+               followersNum: user.followersNum,
                 token: jwt.sign({ sub: user._id }, config.secret)
             });
         } else {
@@ -223,7 +255,9 @@ function follow(follower, toFollow) {
     function updateFollowing() {
         db.users.update(
             { _id: mongo.helper.toObjectID(toFollow) },
-            { $push: { followers: follower } }, (err, doc) => {
+            { $push: { followers: follower } , 
+            $inc: { followersNum: 1} }, 
+            (err, doc) => {
                 if (err) deferred.reject(err.name + ': ' + err.message);
                 deferred.resolve();
             });
@@ -243,7 +277,9 @@ function unfollow(_id, toFollow) {
     function removeFollowing() {
         db.users.update(
             { _id: mongo.helper.toObjectID(toFollow) },
-            { $pull: { followers: _id } }, (err, doc) => {
+            { $pull: { followers: _id } , 
+            $inc: { followersNum: -1} },
+            (err, doc) => {
                 if (err) deferred.reject(err.name + ': ' + err.message);
                 deferred.resolve();
             });
