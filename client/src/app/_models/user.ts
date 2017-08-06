@@ -6,10 +6,10 @@ export class User {
     username: string;
     password: string;
     image: string;
-    recivedLikes: number;
     posts: number[];
     following: string[];
     followers: string[];
     taggedPosts: any[];
     profilePic: string;
+    followersNum: number; 
 }

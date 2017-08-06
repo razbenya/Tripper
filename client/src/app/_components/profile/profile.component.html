@@ -40,7 +40,7 @@
                 <span class="nav-label-val">{{userProfile.followers?.length}}</span></a></li>
 
             </ul>
-            <button class="btn btn-default pull-right" (click)='follow()' id="btn-follow">{{following}}</button>
+            <button class="btn btn-default pull-right" [disabled]="loading" (click)='follow()' id="btn-follow">{{following}}</button>
           </div><!-- /.navbar-collapse -->
           </div>
 
@@ -58,32 +58,44 @@
       </div>
     </div>  
   </div--> 
-  <ul id=test class="list-unstyled" *ngIf="navFollowing">
-    <li id="test2" *ngFor="let user of profileFollowing">
-      <app-user-card [user]='user'></app-user-card>
-    </li>
-    </ul>
-
-
-  <div class="container" *ngIf="navFollowers">  
-    <div class="row" align="right">
-      <div class="Grid Grid--withGutter" id="gofucingright" *ngFor="let user of profileFollowers">
-        <div class="col-md-3 col-sm-4 col-lg-3">
-          <app-user-card [user]='user'></app-user-card>
-        </div>
-      </div>
-    </div>  
-  </div>
-
-  <div class="posts-disp" *ngIf="navPosts">  
-    <app-posts-list [user]='userProfile' [isFeed]='false'></app-posts-list>
-  </div>
-
-</div>
-
 <modal #modal>
-  <app-edit-profile></app-edit-profile>
+    <app-edit-profile></app-edit-profile>
 </modal>
+
+<div class="container">
+  <div class="row">
+
+    <div class="col-md-8 col-sm-8 col-xs-8">
+      
+      <ul id=test class="list-unstyled" *ngIf="navFollowing">
+        <li id="test2" *ngFor="let user of profileFollowing">
+          <app-user-card [user]='user'></app-user-card>
+        </li>
+      </ul>
+
+      <div class="container" *ngIf="navFollowers">  
+        <div class="row" align="right">
+          <div class="Grid Grid--withGutter" id="gofucingright" *ngFor="let user of profileFollowers">
+            <div class="col-md-3 col-sm-4 col-lg-3">
+              <app-user-card [user]='user'></app-user-card>
+            </div>
+          </div>
+        </div>  
+      </div>
+
+      <div class="posts-disp" *ngIf="navPosts">  
+        <app-posts-list [user]='userProfile' [isFeed]='false'></app-posts-list>
+      </div>
+
+    </div>
+
+    <div class="col-md-4 col-sm-4 col-xs-4">
+        <app-popular-users></app-popular-users>
+    </div>
+
+  </div>
+</div>
+  
 
 
 

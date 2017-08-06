@@ -2,12 +2,14 @@ var config = require('config.json');
 var express = require('express');
 var router = express.Router();
 var userService = require('services/user.service');
+var url = require('url');
 
 
 // routes
 router.post('/authenticate', authenticate);
 router.post('/register', register);
 router.post('/getUsers', getUsers);
+router.post('/getPopularUsers', getPopularUsers);
 router.get('/', getAll);
 router.get('/current', getCurrent);
 router.put('/follow/:_id', follow);
@@ -34,6 +36,20 @@ function getUsers(req, res){
             res.send(users);
         })
         .catch(function (err) {
+            res.status(400).send(err);
+        });
+}
+
+function getPopularUsers(req, res){
+    var parts = url.parse(req.url, true);
+    var params = parts.query;
+    var limit  = parseInt(params.limit);
+    console.log(req.body);
+    userService.getPopularUsers(req.body, limit)
+        .then((users) => {
+            res.send(users);
+        })
+        .catch((err) => {
             res.status(400).send(err);
         });
 }
