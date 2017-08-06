@@ -12,10 +12,21 @@ router.get('/', getAll);
 router.get('/current', getCurrent);
 router.put('/follow/:_id', follow);
 router.put('/unfollow/:_id', unfollow);
+router.put('/:_id',update);
 router.delete('/:_id', _delete);
 router.get('/:_id', getUser);
 
 module.exports = router;
+
+function update(req, res){
+    userService.update(req.params._id, req.body)
+        .then(()=>{
+            res.sendStatus(200);
+        }).catch((err) => {
+            res.status(400).send(err);
+        });
+    
+}
 
 function getUsers(req, res){
     userService.getUsersByIds(req.body)

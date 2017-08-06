@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component,ElementRef,  OnInit,  ViewChild, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UserService, SocketService } from "../../_services/index"
 import { User } from "../../_models";
@@ -11,7 +11,8 @@ import { appConfig } from '../../app.config';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit, OnDestroy {
-
+  
+   @ViewChild("modal") modal;
   currentUser: User;
   userProfile: User;
   id: string;
@@ -104,7 +105,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   follow() {
     this.loading = true;
     if (this.following == "Edit profile"){
-      //@TODO add functionality
+      this.modal.open();
     }
     else if (this.following == "follow") {
       this.userService.follow(this.currentUser, this.userProfile).subscribe(() => {

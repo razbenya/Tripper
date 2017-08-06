@@ -37,7 +37,7 @@ export class PostFormComponent implements OnInit, OnDestroy {
     window['post-form'] = {
       component: this,
       submit: () => this.save(), 
-      valid: () => {return this.myForm.invalid&&this.loading; } , 
+      valid: () => {return this.myForm.invalid && !this.loading; } , 
       zone: ngZone
     };
   }
@@ -88,7 +88,12 @@ export class PostFormComponent implements OnInit, OnDestroy {
     this.postService.create(post).subscribe(
       succ => {
         this.submit = true;
+        this.loading = false;
         this.alertService.success("post published successfully", true);
+        const control = <FormArray>this.myForm.controls['postData'];
+        for(let i=0;i<control.length;i++)
+          control.removeAt(i);
+        this.myForm.reset();
         this.router.navigate(['/']);
       },
       error => {

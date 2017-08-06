@@ -12,6 +12,7 @@ export class ImagesService {
      if (!url || url === '') {
       throw new Error('Url is not set! Please set it before doing queries');
     }
+    console.log(imageName);
     return this.http.post(url+ "/delete/", {path: imageName});
   }
 

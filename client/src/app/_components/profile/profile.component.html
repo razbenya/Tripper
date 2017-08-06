@@ -48,7 +48,7 @@
     
   </header>
 
-  <!-- Following list --> 
+  <!-- Following list 
   <div class="container" *ngIf="navFollowing">  
     <div class="row" align="right">
       <div class="Grid Grid--withGutter" id="gofucingright" *ngFor="let user of profileFollowing">
@@ -57,7 +57,13 @@
         </div>
       </div>
     </div>  
-  </div>
+  </div--> 
+  <ul id=test class="list-unstyled" *ngIf="navFollowing">
+    <li id="test2" *ngFor="let user of profileFollowing">
+      <app-user-card [user]='user'></app-user-card>
+    </li>
+    </ul>
+
 
   <div class="container" *ngIf="navFollowers">  
     <div class="row" align="right">
@@ -73,20 +79,11 @@
     <app-posts-list [user]='userProfile' [isFeed]='false'></app-posts-list>
   </div>
 
-<!--
-  <ul class="list-inline" *ngIf="profileFollowing">
-    <li *ngFor="let user of profileFollowing; let i=index">
-      <div class="card-item">
-          <app-user-card [user]='user'></app-user-card>
-        </div>
-      
-
-    </li>
-  </ul>
--->
 </div>
 
-
+<modal #modal>
+  <app-edit-profile></app-edit-profile>
+</modal>
 
 
 

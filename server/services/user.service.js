@@ -24,8 +24,21 @@ service.getPostMembers = getPostMembers;
 service.addToLikes = addToLikes;
 service.removeFromLikes = removeFromLikes;
 service.getUsersByIds = getUsersByIds;
+service.update = update;
 
 module.exports = service;
+
+function update(userId, params){
+     var deferred = Q.defer();
+     console.log(params);
+     db.users.update(
+         {_id: mongo.helper.toObjectID(userId)},
+         {$set: params}, (err, doc) => {
+              if (err) deferred.reject(err.name + ': ' + err.message);
+              deferred.resolve();
+         });
+        return deferred.promise;;
+}
 
 function getPostMembers(post) {
     var deferred = Q.defer();

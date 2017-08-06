@@ -13,8 +13,6 @@
 
 
 
-
-
 @import url(https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,400,700);
 
 body{
@@ -112,8 +110,6 @@ font-size:2em;
 	left:0;
 	position:relative;
 	}
-
-
 }
 
 @media (max-width: 490px) {
@@ -158,6 +154,12 @@ font-size:2em;
     font-size: 16px;
     font-weight: bold;
 }
+modal {
+    overflow:hidden;
+    position: fixed;
+}
+
+
 
 
 a span{
@@ -206,6 +208,12 @@ app-user-card{
     vertical-align: top;
     width: 100%;
 }
+#test {
+    display: flex;
+}
+#test2{
+    left: 10px;
+}
 
 .u-size1of3, .u-size2of6, .u-size4of12 {
     width: 33.33333333333333%!important;
@@ -216,4 +224,5 @@ app-user-card{
 
 #gofucingright{
     left: 200px;
+    display: flex;
 }

@@ -9,6 +9,7 @@
     height: 60%;
     margin-bottom: 20px;
     padding-bottom: 10px;
+    margin-left: 20px
 }
 
 .card-block {
@@ -45,3 +46,4 @@
     margin: 0 auto;
   
 }
+

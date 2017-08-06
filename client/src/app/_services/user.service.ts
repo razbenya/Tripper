@@ -39,8 +39,8 @@ export class UserService {
       return this.http.post('/users/',ref);
   }
 
-  update(user: User) {
-      return this.http.put('/users/' + user.username, user);
+  update(update,_id) {
+      return this.http.put('/users/' + _id, update);
   }
 
   delete(username: string) {

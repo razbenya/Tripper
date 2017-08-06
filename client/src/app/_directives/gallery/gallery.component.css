@@ -40,7 +40,7 @@ li {
   
 
 .slider, .carousel{
-	max-height:360px;
+
 	overflow:hidden;
 }
 	
@@ -72,5 +72,5 @@ display: inline-block;
     
 .modal-image {
     width: 100%;
-    max-width: 700px
+    
 }

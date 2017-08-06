@@ -42,7 +42,7 @@ function uploadImg(req, res) {
 
 function deleteImg(req, res) {
     var path = req.body.path;
-    fs.unlink("./public/"+path , (err) => {
+    fs.unlink("./uploads/"+path , (err) => {
         if (err) {
             return res.status(400).send(err);
         } else {

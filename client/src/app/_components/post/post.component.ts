@@ -164,12 +164,18 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
 
-
   openComments() {
     if(this.showComments)
       this.end = 2;
     this.showComments = !this.showComments;
     //this.ci.nativeElement.focus();
+  }
+
+  remove(){
+    this.postService.delete(this.post._id).subscribe(()=> {
+      this.socketService.notifyServer('follow', this.post.userId);
+    })
+
   }
 
   ngOnDestroy() {

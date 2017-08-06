@@ -1,28 +1,39 @@
-<div class="container">
-  <div class="panel panel-default">
-  <div class="panel-heading">edit profile</div>
-  <div class="panel-body">
-    
-    
-<div class="panel panel-default">
-  <div class="panel-heading">
-      <h3 class="panel-title">edit profile picutre</h3>
+<div class="jumbotron">
+  <div class="panel panel-warning">
+    <div class="panel-heading">edit profile</div>
+    <div class="panel-body">
+      <div class="panel panel-warning">
+        <div class="panel-heading">
+          <h3 class="panel-title">edit profile picutre</h3>
+        </div>
+        <div class="panel-body">
+            <img [src]="currentProfilePicture" class="img-thumbnail">
+
+          <image-upload [url]="uploadUrl" [max]="1" [preview]="true"  [dropBoxMessage]="'Drop your image here!'" [extensions]="['jpeg','png','gif']"
+            (onFileUploadFinish)="onUploadFinished($event)" (onRemove)="imageRemoved($event)">
+          </image-upload>
+        </div>
+      </div>
+      <div class="panel panel-warning">
+        <div class="panel-heading">
+          <h3 class="panel-title">edit personal information</h3>
+        </div>
+        <div class="panel-body">
+          <form name="form" (ngSubmit)="edit()" #f="ngForm" novalidate>
+            <div class="form-group">
+              <label for="fname">first Name</label>
+              <input type="text" [(ngModel)]='currentUser.firstName' class="form-control" name="fname" />
+            </div>
+            <div class="form-group">
+              <label for="lname">last name</label>
+              <input type="text" [(ngModel)]='currentUser.lastName' class="form-control" name="lname" />
+            </div>
+          </form>
+        </div>
+      </div>
+      <button class="btn submit btn-primary pull-right" (click)='save()'>save</button>
+    </div>
+  
+          
   </div>
-  <div class="panel-body">
-    Panel content
-  </div>
-</div>
-
-
-<div class="panel panel-default">
-  <div class="panel-heading"><h3 class="panel-title">edit personal informatione</h3></div>
-  <div class="panel-body">
-    Panel content
-  </div>
-</div>
-
-
-
-  </div>
-</div>
 </div>

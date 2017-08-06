@@ -14,6 +14,7 @@ export class PostsListComponent implements OnInit {
   numPostsToShow = 2;
   count = 0; //number of time pressed show more
   posts: Post[];
+  userObserver;
 
 
   constructor(private socketService: SocketService, private postService: PostService) {
@@ -34,9 +35,8 @@ export class PostsListComponent implements OnInit {
     }
     
   }
-
-  ngOnInit() {
-    if(this.isFeed){
+  init(){
+     if(this.isFeed){
       this.postService.feedPosts(this.user._id, this.count, this.numPostsToShow).subscribe((posts) =>{
         this.posts = posts;
       });
@@ -46,6 +46,14 @@ export class PostsListComponent implements OnInit {
         this.posts = posts;
       });
     }
+  }
+
+  ngOnInit() {
+   
+    this.init();
+    this.userObserver = this.socketService.observeServer(this.user._id).subscribe(data => {
+      this.init();
+    });
   }
 
 }
