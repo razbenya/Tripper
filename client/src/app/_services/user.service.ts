@@ -17,14 +17,10 @@ export class UserService {
   }
 
   follow(current: User, user: User){
-    current.following.push(user._id);
-    localStorage.setItem('currentUser', JSON.stringify(current));
     return this.http.put('/users/follow/' + current._id, user);
   }
 
   unfollow(current: User, user: User){
-    current.following.splice(current.following.indexOf(user._id));
-    localStorage.setItem('currentUser', JSON.stringify(current));
     return this.http.put('/users/unfollow/' + current._id, user);
   }
 

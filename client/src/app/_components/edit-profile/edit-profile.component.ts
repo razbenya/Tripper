@@ -20,7 +20,7 @@ export class EditProfileComponent implements OnInit {
   cropperSettings;
   imageUploaded = false;
   imageName: string;
-  loading:boolean = false;
+  loading: boolean = false;
 
   @ViewChild('cropper', undefined)
   cropper: ImageCropperComponent;
@@ -47,7 +47,7 @@ export class EditProfileComponent implements OnInit {
     var file: File = fileEvent.file;
     var myReader: FileReader = new FileReader();
     var that = this;
-  
+
     myReader.onloadend = function (loadEvent: any) {
       image.src = loadEvent.target.result;
       that.cropper.setImage(image);
@@ -66,21 +66,26 @@ export class EditProfileComponent implements OnInit {
 
   save() {
     this.loading = true;
-    this.imgService.postImage(this.uploadUrl, this.data).subscribe((res) => {
-      if (this.oldpicture != "default.jpg")
-        this.imgService.deleteImage('/images', this.oldpicture).subscribe();
-      this.newpicture = res['_body'];
-      console.log(this.newpicture);
-      this.userService.update({ firstName: this.currentUser.firstName, lastName: this.currentUser.lastName, profilePic: this.newpicture }, this.currentUser._id).subscribe(() => {
-        this.currentUser.profilePic = this.newpicture;
+    if (this.imageUploaded) {
+      this.imgService.postImage(this.uploadUrl, this.data).subscribe((res) => {
+        if (this.oldpicture != "default.jpg")
+          this.imgService.deleteImage('/images', this.oldpicture).subscribe();
+        this.newpicture = res['_body'];
+        this.userService.update({ firstName: this.currentUser.firstName, lastName: this.currentUser.lastName, profilePic: this.newpicture }, this.currentUser._id).subscribe(() => {
+          this.currentUser.profilePic = this.newpicture;
+          localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+          this.loading = false;
+          this.router.navigate(['/']);
+        });
+      });
+    } else {
+      this.userService.update({ firstName: this.currentUser.firstName, lastName: this.currentUser.lastName}, this.currentUser._id).subscribe(() => {
         localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
-        this.loading=false;
+        this.loading = false;
         this.router.navigate(['/']);
       });
-    });
+    }
   }
-
-
   initCropper() {
     this.cropperSettings = new CropperSettings();
     this.cropperSettings.noFileInput = true;
@@ -88,7 +93,6 @@ export class EditProfileComponent implements OnInit {
     this.cropperSettings.croppedHeight = 160;
     this.cropperSettings.canvasWidth = 400;
     this.cropperSettings.canvasHeight = 300;
-    //this.cropperSettings.preserveSize = true;
     this.data = {};
   }
 }

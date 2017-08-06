@@ -22,16 +22,16 @@ export class PopularUsersComponent implements OnInit {
   follow(user){
     this.loading = true;
     this.userService.follow(this.currentUser, user).subscribe(() => {
-        this.loading = false;
         this.notifyServer(user);
+        this.updateFollowing();
     });
   }
 
   unfollow(user){
     this.loading = true;
     this.userService.unfollow(this.currentUser, user).subscribe(() => {
-        this.loading = false;
         this.notifyServer(user);
+        this.updateFollowing();
     })
   }
 
@@ -57,8 +57,8 @@ export class PopularUsersComponent implements OnInit {
       let newCurrentUser = user;
       newCurrentUser.token = this.currentUser.token;
       this.currentUser = newCurrentUser;
-      console.log(this.currentUser.following);
       this.getPopularList();
+       this.loading = false;
     });
   }
 
@@ -70,9 +70,7 @@ export class PopularUsersComponent implements OnInit {
 
   ngOnInit() {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    
-    this.currentUserFollowing = this.currentUser.following;
-
+    this.updateFollowing();
     this.connection = this.socketService.observeServer(this.currentUser._id).subscribe(data => {
           this.updateFollowing();
     });

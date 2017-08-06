@@ -60,12 +60,20 @@ export class ProfileComponent implements OnInit, OnDestroy {
   constructor(private socketServer: SocketService, private _sanitizer: DomSanitizer, private route: ActivatedRoute, private router: Router, private userService: UserService) {
     let user = JSON.parse(localStorage.getItem('currentUser'));
     this.currentUser = user;
+    this.getUpdateCurrentUser();
     this.token = user.token;
     this.route.params.subscribe(params => {
       this.id = params['id'];
     });
   }
 
+  getUpdateCurrentUser(){
+    this.userService.getById(this.currentUser._id).subscribe((user) => {
+      let newCurrentUser = user;
+      newCurrentUser.token = JSON.parse(localStorage.getItem('currentUser')).token;
+      this.currentUser = newCurrentUser;
+    });
+  }
 
 
   getProfile(){
@@ -75,9 +83,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
   getUser() {
     this.userService.getById(this.id).subscribe(user => {
       this.userProfile = user;
+       this.getUpdateCurrentUser();
       this.checkFollow();
       this.getFollowerList();
       this.getFollowingList();
+      this.loading = false;
     },
       error => {
         this.router.navigate(['']);
@@ -106,25 +116,23 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.loading = true;
     if (this.following == "Edit profile"){
       this.modal.open();
+      this.loading = false;
     }
     else if (this.following == "follow") {
       this.userService.follow(this.currentUser, this.userProfile).subscribe(() => {
         this.notifyServer();
-        this.loading = false;
       });
     }
     else {
       this.userService.unfollow(this.currentUser, this.userProfile).subscribe(() => {
         this.notifyServer();
-        this.loading = false;
       });
     }
   }
 
-  getFollowingList(){
+ getFollowingList(){
     this.userService.getUsers(this.userProfile.following).subscribe((users) => {
       this.profileFollowing = users; 
-      console.log(this.profileFollowing);
     })
   }
   getFollowerList(){
