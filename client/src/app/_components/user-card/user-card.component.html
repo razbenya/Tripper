@@ -15,7 +15,7 @@
           <button id="btn-follow" [disabled]="loading" (click)='follow()' class="btn btn-info"> Follow </button>
         </div>
 
-        <div *ngIf="!checkFollow()">
+        <div *ngIf="!checkFollow() && currentUser._id != user._id">
           <button id="btn-unfollow" [disabled]="loading" (click)='unfollow()' class="btn btn-warning"> Unfollow </button>
         </div>
 

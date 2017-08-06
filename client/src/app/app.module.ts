@@ -23,7 +23,7 @@ import { CommentComponent } from './_components/comment/comment.component';
 import { EditProfileComponent } from './_components/edit-profile/edit-profile.component';
 import { UserCardComponent } from './_components/user-card/user-card.component';
 import { PostsListComponent } from './_components/posts-list/posts-list.component';
-
+import {ImageCropperComponent, CropperSettings} from 'ng2-img-cropper';
 
 
 
@@ -58,7 +58,8 @@ const ROUTES = [
     CommentComponent,
     EditProfileComponent,
     UserCardComponent,
-    PostsListComponent
+    PostsListComponent,
+    ImageCropperComponent
   ],
   imports: [
     BrowserModule,

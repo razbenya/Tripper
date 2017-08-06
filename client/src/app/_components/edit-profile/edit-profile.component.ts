@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService, ImagesService } from '../../_services/index'
 import { appConfig } from '../../app.config';
 import { Router } from '@angular/router';
+import {ImageCropperComponent, CropperSettings} from 'ng2-img-cropper';
 
 @Component({
   selector: 'app-edit-profile',
@@ -16,7 +17,9 @@ export class EditProfileComponent implements OnInit {
   oldpicture;
   currentUser;
   uploadUrl;
-
+  data;
+  cropperSettings;
+  imageUploaded = false;
 
   ngOnInit() {
     
@@ -24,16 +27,20 @@ export class EditProfileComponent implements OnInit {
     this.currentProfilePicture = appConfig.apiUrl + "/uploads/" + this.currentUser.profilePic + "?token=" + this.currentUser.token;
     this.newpicture = this.currentUser.profilePic;
     this.uploadUrl = "/images/uploads/" + this.currentUser._id;
+    this.initCropper();
   }
 
 
 
   onUploadFinished(file) {
     let imgUrl: string = file.serverResponse._body;
+    this.data = file.file;
+    this.imageUploaded = true;
     this.oldpicture = this.newpicture;
     this.newpicture = imgUrl;
     this.currentProfilePicture = appConfig.apiUrl + "/uploads/" + imgUrl + "?token=" + this.currentUser.token;
   }
+
   imageRemoved(file) {
     this.imgService.deleteImage("/images", file.serverResponse._body).subscribe();
     this.newpicture = this.oldpicture;
@@ -48,4 +55,16 @@ export class EditProfileComponent implements OnInit {
     });
   }
 
+
+  initCropper(){
+    this.cropperSettings = new CropperSettings();
+    this.cropperSettings.width = 100;
+    this.cropperSettings.height = 100;
+    this.cropperSettings.croppedWidth =100;
+    this.cropperSettings.croppedHeight = 100;
+    this.cropperSettings.canvasWidth = 400;
+    this.cropperSettings.canvasHeight = 300;
+
+    this.data = {};
+  }
 }
