@@ -57,25 +57,18 @@
 
     <div class="col-md-8 col-sm-8 col-xs-8">
       <!-- Following list -->
-      <ul id=all-user-cards class="list-unstyled" *ngIf="navFollowing">
-    
-          <li class="user-card" *ngFor="let user of profileFollowing">
-    
-              <app-user-card [user]='user'></app-user-card>
-         
-          </li>
+       <div class="card-deck" *ngIf="navFollowing">
+         <div class="user-card col-md-3" *ngFor="let user of profileFollowing">
+           <app-user-card [user]='user'></app-user-card>
+          </div>
+       </div>
 
-      </ul>
       <!-- Followers list -->
-      <ul id=followers-cards class="list-unstyled" *ngIf="navFollowers">
-        <div class="row">
-          <li class="user-card" *ngFor="let user of profileFollowers">
-            <div class="col-md-3 col-sm-3 col-xs-3">
-              <app-user-card [user]='user'></app-user-card>
-            </div>
-          </li>
+      <div class="card-deck" *ngIf="navFollowers">
+        <div class="user-card col-md-3" *ngFor="let user of profileFollowers">
+          <app-user-card [user]='user'></app-user-card>
         </div>
-      </ul>
+      </div>
 <!--
       <div class="container" *ngIf="navFollowers">  
         <div class="row" align="right">
