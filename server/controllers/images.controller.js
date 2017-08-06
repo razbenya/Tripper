@@ -15,7 +15,7 @@ function uploadImg(req, res) {
         let img = req.files.image;
         let id = req.params._id;
         img.name = uuidv1() + id + img.name;
-        img.mv('uploads/' + img.name, function (err) {
+        img.mv('uploads/' + img.name, (err) => {
               console.log(err);
             if (err)
                 return res.status(500).send(err);

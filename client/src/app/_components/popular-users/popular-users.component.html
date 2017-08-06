@@ -19,8 +19,8 @@
             </div>
           </div>
         </div>
-
         <div class="col-md-3 col-sm-6" *ngIf="checkFollow(user)">
+    
           <button id="follow" [disabled]="loading" (click)='follow(user)' class="btn btn-info"> follow </button>
         </div>
 

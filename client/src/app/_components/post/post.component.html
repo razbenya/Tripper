@@ -2,9 +2,9 @@
 <!--div class="col-md-8 col-sm-8 col-lg-8"-->
     <div class="panel panel-warning">
       <div class="panel-heading">
+        <div class="container">
         <div class="row">
-
-          <div class="col-md-8 col-sm-8 pull-left">
+          <div class="col-md-8 col-sm-6 pull-left">
             <div class="media-left" *ngIf="profilepic">
               <img id="profilePic" class="media-object img-rounded" [src]="profilepic" alt="...">
             </div>
@@ -33,13 +33,14 @@
               <small class="text-muted">  {{date | date:'mediumDate'}} at  {{date | date:'shortTime'}} </small>
             </div>
           </div>
-          <div *ngIf="showmap" id="map" class="col-md-4 col-sm-4 pull-right">
+          <div *ngIf="showmap" id="map" class="col-md-4 col-sm-6 pull-right">
             <agm-map #map [zoom]="zoom" [latitude]="latitude" [longitude]="longitude" (mapClick)='mapClicked($event)'>
               <agm-marker *ngIf="marker" [latitude]="marker.lat" [longitude]="marker.lng">
               </agm-marker>
             </agm-map>
           </div>
         </div>
+      </div>
       </div>
       <div class="panel-body">
         <div *ngFor="let postData of post.data; let i=index">

@@ -41,11 +41,9 @@ export class PopularUsersComponent implements OnInit {
   }
 
   checkFollow(user){
-    if(this.currentUserFollowing.indexOf(user._id)<0){
-      
+    if(this.currentUser.following.indexOf(user._id)<0){ 
       return this.currentUser._id!=user._id;
     }
-      this.followStr = "Unfollow";
     return false;
   }
 
@@ -56,20 +54,25 @@ export class PopularUsersComponent implements OnInit {
 
   updateFollowing(){
     this.userService.getById(this.currentUser._id).subscribe(user => {
-      this.currentUserFollowing = user.following;
+      let newCurrentUser = user;
+      newCurrentUser.token = this.currentUser.token;
+      this.currentUser = newCurrentUser;
+      console.log(this.currentUser.following);
+      this.getPopularList();
     });
   }
 
   getPopularList(){
     this.userService.getPopular(this.currentUser, this.limit).subscribe((users) => {
       this.popularUsers = users; 
-      console.log(this.popularUsers);
     })
   }
 
   ngOnInit() {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    
     this.currentUserFollowing = this.currentUser.following;
+
     this.connection = this.socketService.observeServer(this.currentUser._id).subscribe(data => {
           this.updateFollowing();
     });

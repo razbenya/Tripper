@@ -232,7 +232,7 @@ host: {'(window:keydown)': 'hotkeys($event)'};
 
 
   observableSource(keyword: any) {
-    let filteredList = this.friendsList.filter(el => el._id.startsWith(keyword));
+    let filteredList = this.friendsList.filter(el => el._id.startsWith(keyword) && el._id!=this.currentUser._id);
     return Observable.of(filteredList);
   }
 
@@ -242,7 +242,7 @@ host: {'(window:keydown)': 'hotkeys($event)'};
 
   addTaggedUser(user) {
     this.myForm.controls['tag'].reset();
-    if (user && this.choosedUsers.findIndex(ele => { return user._id == ele._id; }) < 0) {
+    if (user) {
       this.choosedUsers.push({
         _id: user._id,
         firstName: user.firstName,

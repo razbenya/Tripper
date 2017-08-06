@@ -59,6 +59,7 @@ export class UserCardComponent implements OnInit {
   updateFollowing(){
     this.userService.getById(this.currentUser._id).subscribe(user => {
       this.currentUserFollowing = user.following;
+      this.checkFollow();
     });
   }
 
@@ -70,6 +71,7 @@ export class UserCardComponent implements OnInit {
     this.updateFollowing();
     this.connection = this.socketService.observeServer(this.currentUser._id).subscribe(data => {
           this.updateFollowing();
+          
     });
     this.checkFollow();
   }
