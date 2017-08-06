@@ -208,10 +208,13 @@ app-user-card{
     vertical-align: top;
     width: 100%;
 }
-#test {
+#all-user-cards {
     display: flex;
 }
-#test2{
+#followers-cards{
+    display: flex;
+}
+.user-card{
     left: 10px;
 }
 

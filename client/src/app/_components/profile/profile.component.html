@@ -48,31 +48,35 @@
     
   </header>
 
-  <!-- Following list 
-  <div class="container" *ngIf="navFollowing">  
-    <div class="row" align="right">
-      <div class="Grid Grid--withGutter" id="gofucingright" *ngFor="let user of profileFollowing">
-        <div class="col-md-3 col-sm-4 col-lg-3">
-          <app-user-card [user]='user'></app-user-card>
-        </div>
-      </div>
-    </div>  
-  </div--> 
-<modal #modal>
-    <app-edit-profile></app-edit-profile>
-</modal>
+  <modal #modal>
+      <app-edit-profile></app-edit-profile>
+  </modal>
 
 <div class="container">
   <div class="row">
 
     <div class="col-md-8 col-sm-8 col-xs-8">
-      
-      <ul id=test class="list-unstyled" *ngIf="navFollowing">
-        <li id="test2" *ngFor="let user of profileFollowing">
-          <app-user-card [user]='user'></app-user-card>
-        </li>
-      </ul>
+      <!-- Following list -->
+      <ul id=all-user-cards class="list-unstyled" *ngIf="navFollowing">
+    
+          <li class="user-card" *ngFor="let user of profileFollowing">
+    
+              <app-user-card [user]='user'></app-user-card>
+         
+          </li>
 
+      </ul>
+      <!-- Followers list -->
+      <ul id=followers-cards class="list-unstyled" *ngIf="navFollowers">
+        <div class="row">
+          <li class="user-card" *ngFor="let user of profileFollowers">
+            <div class="col-md-3 col-sm-3 col-xs-3">
+              <app-user-card [user]='user'></app-user-card>
+            </div>
+          </li>
+        </div>
+      </ul>
+<!--
       <div class="container" *ngIf="navFollowers">  
         <div class="row" align="right">
           <div class="Grid Grid--withGutter" id="gofucingright" *ngFor="let user of profileFollowers">
@@ -81,14 +85,15 @@
             </div>
           </div>
         </div>  
-      </div>
-
+      </div> -->
+      <!-- Posts list -->
       <div class="posts-disp" *ngIf="navPosts">  
         <app-posts-list [user]='userProfile' [isFeed]='false'></app-posts-list>
       </div>
 
     </div>
 
+    <!-- Popular Users sidebar -->
     <div class="col-md-4 col-sm-4 col-xs-4">
         <app-popular-users></app-popular-users>
     </div>
