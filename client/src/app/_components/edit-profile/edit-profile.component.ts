@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component,ViewChild, OnInit } from '@angular/core';
 import { UserService, ImagesService } from '../../_services/index'
 import { appConfig } from '../../app.config';
 import { Router } from '@angular/router';
@@ -20,6 +20,10 @@ export class EditProfileComponent implements OnInit {
   data;
   cropperSettings;
   imageUploaded = false;
+  imageName: string;
+
+  @ViewChild('cropper', undefined)
+  cropper:ImageCropperComponent;
 
   ngOnInit() {
     
@@ -30,41 +34,57 @@ export class EditProfileComponent implements OnInit {
     this.initCropper();
   }
 
-
-
-  onUploadFinished(file) {
-    let imgUrl: string = file.serverResponse._body;
-    this.data = file.file;
+  onUploadFinished(fileEvent) {
+   /* let imgUrl: string = fileEvent.serverResponse._body;
     this.imageUploaded = true;
     this.oldpicture = this.newpicture;
     this.newpicture = imgUrl;
-    this.currentProfilePicture = appConfig.apiUrl + "/uploads/" + imgUrl + "?token=" + this.currentUser.token;
+    this.currentProfilePicture = appConfig.apiUrl + "/uploads/" + imgUrl + "?token=" + this.currentUser.token;*/
+    
+    this.oldpicture = this.newpicture;
+    this.imageUploaded = true;
+    var image:any = new Image();
+    var file:File = fileEvent.file;
+    var myReader:FileReader = new FileReader();
+    var that = this;
+    myReader.onloadend = function (loadEvent:any) {
+        image.src = loadEvent.target.result;
+        that.cropper.setImage(image);
+    };
+    myReader.readAsDataURL(file);
+
+
   }
 
   imageRemoved(file) {
-    this.imgService.deleteImage("/images", file.serverResponse._body).subscribe();
     this.newpicture = this.oldpicture;
     this.currentProfilePicture = appConfig.apiUrl + "/uploads/" + this.oldpicture+ "?token=" + this.currentUser.token;
   }
 
   save(){
-    this.userService.update({firstName: this.currentUser.firstName, lastName:this.currentUser.lastName, profilePic: this.newpicture },this.currentUser._id).subscribe(()=>{
+    this.imgService.postImage(this.uploadUrl,this.data).subscribe((res)=> {
+      if(this.oldpicture != "default.jpg")
+        this.imgService.deleteImage('/images',this.oldpicture).subscribe();
+      this.newpicture = res['_body'];
+      console.log(this.newpicture);
+       this.userService.update({firstName: this.currentUser.firstName, lastName:this.currentUser.lastName, profilePic: this.newpicture },this.currentUser._id).subscribe(()=>{
         this.currentUser.profilePic = this.newpicture;
         localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
          this.router.navigate(['/']);
     });
+    });
+   
   }
 
 
   initCropper(){
     this.cropperSettings = new CropperSettings();
-    this.cropperSettings.width = 100;
-    this.cropperSettings.height = 100;
-    this.cropperSettings.croppedWidth =100;
-    this.cropperSettings.croppedHeight = 100;
+    this.cropperSettings.noFileInput = true;
+    this.cropperSettings.croppedWidth = 160;
+    this.cropperSettings.croppedHeight = 160;
     this.cropperSettings.canvasWidth = 400;
     this.cropperSettings.canvasHeight = 300;
-
+    //this.cropperSettings.preserveSize = true;
     this.data = {};
   }
 }

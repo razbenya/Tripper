@@ -7,16 +7,21 @@
           <h3 class="panel-title">edit profile picutre</h3>
         </div>
         <div class="panel-body">
-          <img [src]="currentProfilePicture" class="img-thumbnail">
 
-          <image-upload [url]="uploadUrl" [max]="1" [preview]="true"  [dropBoxMessage]="'Drop your image here!'" [extensions]="['jpeg','png','gif']"
+          
+          <img *ngIf="!data.image" [src]="currentProfilePicture" class="img-thumbnail">
+          <img *ngIf="data.image" [src]="data.image" class="img-thumbnail">
+          
+          <image-upload [max]="1" [preview]="true"  [dropBoxMessage]="'Drop your image here!'" [extensions]="['jpeg','png','gif']"
             (onFileUploadFinish)="onUploadFinished($event)" (onRemove)="imageRemoved($event)">
           </image-upload>
           
-          <div class="image-cropping" *ngIf="imageUploaded">
-            <img-cropper [image]="data" [settings]="cropperSettings"></img-cropper><br>
+
+          <img-cropper *ngIf="imageUploaded" #cropper [image]="data" [settings]="cropperSettings"></img-cropper>
+          <br>
+         <!-- <span class="result rounded" *ngIf="data.image">
             <img [src]="data.image" [width]="cropperSettings.croppedWidth" [height]="cropperSettings.croppedHeight">
-          </div>
+        </span> -->
 
         </div>
       </div>
@@ -39,7 +44,7 @@
       </div>
       <button class="btn submit btn-primary pull-right" (click)='save()'>save</button>
     </div>
-  
-          
+
+
   </div>
 </div>
