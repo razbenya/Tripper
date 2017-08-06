@@ -44,7 +44,6 @@ function getPopularUsers(req, res){
     var parts = url.parse(req.url, true);
     var params = parts.query;
     var limit  = parseInt(params.limit);
-    console.log(req.body);
     userService.getPopularUsers(req.body, limit)
         .then((users) => {
             res.send(users);

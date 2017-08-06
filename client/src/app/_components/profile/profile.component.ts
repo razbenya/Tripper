@@ -1,4 +1,4 @@
-import { Component,ElementRef,  OnInit,  ViewChild, OnDestroy } from '@angular/core';
+import {NgZone, Component,ElementRef,  OnInit,  ViewChild, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UserService, SocketService } from "../../_services/index"
 import { User } from "../../_models";
@@ -16,7 +16,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   currentUser: User;
   userProfile: User;
   id: string;
-  following: string = "follow";
+  following: string;
   //profilePicture: string;
   connection;
   loading = false;
@@ -57,7 +57,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
   
 
-  constructor(private socketServer: SocketService, private _sanitizer: DomSanitizer, private route: ActivatedRoute, private router: Router, private userService: UserService) {
+  constructor(private ngZone: NgZone,private socketServer: SocketService, private _sanitizer: DomSanitizer, private route: ActivatedRoute, private router: Router, private userService: UserService) {
     let user = JSON.parse(localStorage.getItem('currentUser'));
     this.currentUser = user;
     this.getUpdateCurrentUser();
@@ -65,6 +65,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.route.params.subscribe(params => {
       this.id = params['id'];
     });
+
+    window['profile'] = {
+      component: this,
+      refreshProfile: () => this.getUser(), 
+      zone: ngZone
+    };
   }
 
   getUpdateCurrentUser(){
@@ -83,10 +89,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
   getUser() {
     this.userService.getById(this.id).subscribe(user => {
       this.userProfile = user;
-       this.getUpdateCurrentUser();
-      this.checkFollow();
+      this.getUpdateCurrentUser();
       this.getFollowerList();
       this.getFollowingList();
+      this.checkFollow();
       this.loading = false;
     },
       error => {
@@ -97,13 +103,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   checkFollow() {
     this.loading = true;
-    this.following = "follow";
+    
     this.userService.getById(this.currentUser._id).subscribe(user => {
-      this.loading = false;
       if(user._id == this.userProfile._id)
         this.following = "Edit profile";
-      if (user.following.indexOf(this.userProfile._id) != -1)
+      else if (user.following.indexOf(this.userProfile._id) != -1)
         this.following = "Unfollow";
+      else
+        this.following = "follow";
+       this.loading = false;
     });
   }
 
@@ -114,6 +122,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   follow() {
     this.loading = true;
+   // if(window['poplist'])
+      window['poplist'].zone.run(() => { window['poplist'].refreshList() });
     if (this.following == "Edit profile"){
       this.modal.open();
       this.loading = false;
@@ -121,12 +131,18 @@ export class ProfileComponent implements OnInit, OnDestroy {
     else if (this.following == "follow") {
       this.userService.follow(this.currentUser, this.userProfile).subscribe(() => {
         this.notifyServer();
-      });
+        this.getUser();
+      },error => {
+        this.loading = false;
+    });
     }
     else {
       this.userService.unfollow(this.currentUser, this.userProfile).subscribe(() => {
         this.notifyServer();
-      });
+        this.getUser();
+      },error => {
+        this.loading = false;
+    });
     }
   }
 
@@ -140,16 +156,18 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.profileFollowers = users; 
     })
   }
-
+  currentConnection;
   socketObserverInit() {
       this.connection = this.socketServer.observeServer(this.id).subscribe(data => {
           this.getUser();
       });
+
   }
 
   ngOnInit() {
+     this.socketObserverInit();
     this.getUser();
-    this.socketObserverInit();
+   
   }
 
   ngOnDestroy(): void {

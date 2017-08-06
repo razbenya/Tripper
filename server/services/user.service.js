@@ -145,7 +145,7 @@ function authenticate(email, password) {
                 taggedPosts: user.taggedPosts,
                 likes: user.likes,
                 profilePic: user.profilePic,
-               followersNum: user.followersNum,
+                followersNum: user.followers.length,
                 token: jwt.sign({ sub: user._id }, config.secret)
             });
         } else {
@@ -178,8 +178,11 @@ function getById(_id) {
     db.users.findById(_id, function (err, user) {
         if (err) deferred.reject(err.name + ': ' + err.message);
         if (user) {
+            //ensure followersNum is valid.
+            user.followersNum = user.followers.length;
             // return user (without hashed password)
             deferred.resolve(_.omit(user, 'hash'));
+            
         } else {
             // user not found
             deferred.resolve();
@@ -248,14 +251,14 @@ function follow(follower, toFollow) {
     var deferred = Q.defer();
     db.users.update(
         { _id: mongo.helper.toObjectID(follower) },
-        { $push: { following: toFollow } }, (err, doc) => {
+        { $addToSet: { following: toFollow } }, (err, doc) => {
             if (err) deferred.reject(err.name + ': ' + err.message);
             updateFollowing();
         });
     function updateFollowing() {
         db.users.update(
             { _id: mongo.helper.toObjectID(toFollow) },
-            { $push: { followers: follower } , 
+            { $addToSet: { followers: follower } , 
             $inc: { followersNum: 1} }, 
             (err, doc) => {
                 if (err) deferred.reject(err.name + ': ' + err.message);
