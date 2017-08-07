@@ -92,12 +92,12 @@ export class PostComponent implements OnInit, OnDestroy {
       this.getPostMembers();
       let timeStamp = parseInt(this.post._id.toString().substr(0, 8), 16) * 1000
       this.date = new Date(timeStamp);
-      this.initImages();
+     // this.initImages();
 
       this.postObserver = this.socketService.observeServer(this.post._id).subscribe((data) => {
         this.postService.getById(this.post._id).subscribe((post) => {
           this.post = post;
-          this.initImages();
+          //this.initImages();
           this.checkLike();
         });
       });
@@ -105,6 +105,18 @@ export class PostComponent implements OnInit, OnDestroy {
     this.userObserver = this.socketService.observeServer(JSON.parse(localStorage.getItem('currentUser'))._id).subscribe(data => {
       this.getPostMembers();
     });
+  }
+
+  getImgsUrl(i) {
+    let imgData = this.post.data.find(ele => ele.index == i);
+    let token = this.currentUser.token;
+    let imagesUrl = [];
+    if(imgData){
+      for (let imageUrl of imgData.imgsUrl) {
+        imagesUrl.push(appConfig.apiUrl + "/uploads/" + imageUrl + "?token=" + token);
+      } 
+    }
+      return imagesUrl;
   }
   
 
@@ -133,18 +145,7 @@ export class PostComponent implements OnInit, OnDestroy {
     }
   }
 
-  initImages() {
-    let token = JSON.parse(localStorage.getItem('currentUser')).token;
-    for (let data of this.post.data) {
-      if (data.imgsUrl) {
-        let urls = [];
-        for (let url of data.imgsUrl) {
-          urls.push(appConfig.apiUrl + "/uploads/" + url + "?token=" + token);
-        }
-        data.imgsUrl = urls;
-      }
-    }
-  }
+ 
 
   //comments 
   showComments: boolean = false;

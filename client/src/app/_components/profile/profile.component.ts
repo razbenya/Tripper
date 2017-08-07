@@ -161,11 +161,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
     })
   }
   currentConnection;
+  
   socketObserverInit() {
       this.connection = this.socketServer.observeServer(this.id).subscribe(data => {
           this.getUser();
       });
-
   }
 
   ngOnInit() {

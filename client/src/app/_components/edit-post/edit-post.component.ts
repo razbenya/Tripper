@@ -1,4 +1,4 @@
-import { NgZone, ElementRef, Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { NgZone, ElementRef, Component, OnInit, OnDestroy, ViewChild,Input,Output ,EventEmitter } from '@angular/core';
 import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { Post, User, ImgData, TextData } from '../../_models/index';
@@ -16,9 +16,11 @@ import 'rxjs/add/observable/of';
 })
 export class EditPostComponent implements OnInit, OnDestroy {
 
-  //@Input() post:Post
+  @Input() post:Post
+  //post: Post;
+  @Input() modal;
 
-  post: Post;
+  @Output() onModalClose: EventEmitter<string> = new EventEmitter();
 
   @ViewChild("search") searchElementRef: ElementRef;
   public myForm: FormGroup;
@@ -28,7 +30,7 @@ export class EditPostComponent implements OnInit, OnDestroy {
   currentUser;
   address;
   loading = false;
-  tagged = false;
+ 
 
   /* Map and Location */
   latitude: number;
@@ -47,6 +49,8 @@ export class EditPostComponent implements OnInit, OnDestroy {
     _id: string,
     firstName: string,
   }[] = [];
+   tagged = false;
+
 
 
   /* images */
@@ -58,14 +62,6 @@ export class EditPostComponent implements OnInit, OnDestroy {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.url = "/images"
     this.uploadUrl = this.url + "/uploads/" + this.currentUser._id;
-
-
-    window['edit-post'] = {
-      component: this,
-      submit: () => this.save(),
-      valid: () => { return this.myForm.invalid && !this.loading; },
-      zone: ngZone
-    };
   }
 
   sortArr(arr: any[]) {
@@ -105,14 +101,21 @@ export class EditPostComponent implements OnInit, OnDestroy {
       location: this.marker,
       data: data
     }
-    //todo update
+    
+    this.postService.update(newpost,this.post._id).subscribe((succ) => {
+      this.loading = false;
+      this.postService.getById(this.post._id).subscribe((post) => {
+        this.post = post;
+        this.onModalClose.emit('closed');
+        this.modal.close();
+      })
+    }, (error) => {
+      this.loading = false;
+      this.alertService.error(error);
+    });
   }
 
   ngOnInit() {
-    //getPostForTesting
-    this.postService.getById(this.currentUser.posts[0]).subscribe(post => {
-      this.post = post;
-
       this.myForm = this._fb.group({
         title: [this.post.title, [Validators.required, Validators.minLength(3)]],
         location: [""],
@@ -124,9 +127,16 @@ export class EditPostComponent implements OnInit, OnDestroy {
       this.initTagged();
       this.initData();
 
-    });
+
 
   }
+    cancel(){
+      this.postService.getById(this.post._id).subscribe((post) => {
+        this.post = post;
+        this.onModalClose.emit('closed');
+        this.modal.close();
+      })
+    }
 
   initMap() {
     this.loadapi();
@@ -195,6 +205,8 @@ export class EditPostComponent implements OnInit, OnDestroy {
           firstName: user.firstName
         })
       }
+      if(this.choosedUsers.length > 0)
+         this.tagged = true;
     });
   }
 
@@ -290,14 +302,15 @@ export class EditPostComponent implements OnInit, OnDestroy {
 
   getImagesUrl(i) {
     let imgData = this.images.find(ele => ele.index == i);
-      let token = this.currentUser.token;
-      var imagesUrl = [];
+    let token = this.currentUser.token;
+    let editImgsUrl = [];
     if(imgData){
       for (let imageUrl of imgData.imgsUrl) {
-        imagesUrl.push(appConfig.apiUrl + "/uploads/" + imageUrl + "?token=" + token);
+        editImgsUrl.push(appConfig.apiUrl + "/uploads/" + imageUrl + "?token=" + token);
+        //imagesUrl.push(imageUrl);
       } 
     }
-      return imagesUrl;
+      return editImgsUrl;
   }
 
 

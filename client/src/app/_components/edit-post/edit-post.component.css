@@ -5,6 +5,7 @@
 .pac-container { z-index: 100000; }
 
 .jumbotron{
-    background-color:white;
-    color:black;
+    background: transparent;
+    padding: 0;
+    padding-bottom: 1;
 }

@@ -15,6 +15,10 @@ export class PostService {
     return this.http.post('/posts/members', post).map((response: Response) => response.json());
   }
 
+  public update(newpost,_id) {
+    return this.http.put('/posts/update/'+_id, newpost);
+  }
+
   public getById(_id) {
     return this.http.get('/posts/'+_id).map((response: Response) => response.json());;
   }

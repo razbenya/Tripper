@@ -49,7 +49,7 @@
               <pre><p>{{postData.text}}</p></pre>
           </div>
           <div *ngIf="postData.imgsUrl">
-          <app-gallery [maxPictures] = 2 [datasource]='postData.imgsUrl'></app-gallery>
+          <app-gallery [maxPictures] = 2 [datasource]='getImgsUrl(i)'></app-gallery>
           </div>
         </div>
         <div *ngIf="i == maxElements && !showMoreElements">
@@ -61,7 +61,7 @@
         </div>
         <hr>
         <div class="row">
-          <div id = "Like" class= "col-sm-2 col-md-2 col-lg-2">
+          <div id = "Like" class= "col-sm-3 col-md-3 col-lg-3">
           <button (click)='like()' class="btn-link"> <div class="textBlack"> <b> <span [class]='likeIcon'></span> {{likeText}}</b> </div>
           </button><span class="badge">{{post.likes?.length}}</span>
           </div> 
@@ -72,8 +72,12 @@
           <div id= "deletePost" *ngIf="post.userId == currentUser._id" >
             <button class="btn-default pull-right" (click)='remove()'> delete
           </button>
+            <div id= "editPost" *ngIf="post.userId == currentUser._id" >
+            <button class="btn-default pull-right" (click)='modal.open()'> edit
+          </button>
           </div>
         </div>
+      </div>
       </div>
       <div [hidden]='!showComments' class="panel-footer">
         <div class="media">
@@ -97,3 +101,7 @@
     </div>
   <!--/div-->
 </div>
+</div>
+  <modal #modal>
+    <app-edit-post [modal]='modal' [post]='post' (onModalClose)="notifyLike()"></app-edit-post>
+  </modal>

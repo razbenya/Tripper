@@ -23,7 +23,7 @@ import { CommentComponent } from './_components/comment/comment.component';
 import { EditProfileComponent } from './_components/edit-profile/edit-profile.component';
 import { UserCardComponent } from './_components/user-card/user-card.component';
 import { PostsListComponent } from './_components/posts-list/posts-list.component';
-import {ImageCropperComponent, CropperSettings} from 'ng2-img-cropper';
+import { ImageCropperComponent, CropperSettings} from 'ng2-img-cropper';
 import { PopularUsersComponent } from './_components/popular-users/popular-users.component';
 import { EditPostComponent } from './_components/edit-post/edit-post.component';
 import { PopularPostsComponent } from './_components/popular-posts/popular-posts.component';
@@ -37,7 +37,6 @@ const ROUTES = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'edit', component: EditPostComponent},
-  { path: 'pop', component: PopularPostsComponent},
   { path: ':id', component: ProfileComponent},
   { path: ':id/following', component: ProfileComponent},
   { path: ':id/followers', component: ProfileComponent},

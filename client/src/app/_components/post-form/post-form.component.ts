@@ -19,6 +19,7 @@ export class PostFormComponent implements OnInit, OnDestroy {
 
   @ViewChild("search") searchElementRef: ElementRef;
 
+
   public myForm: FormGroup;
   uploadUrl: string;
   url: string;
@@ -95,7 +96,6 @@ export class PostFormComponent implements OnInit, OnDestroy {
         for(let i=0;i<control.length;i++)
           control.removeAt(i);
         this.myForm.reset();
-        this.router.navigate(['/']);
       },
       error => {
         this.alertService.error(error);
