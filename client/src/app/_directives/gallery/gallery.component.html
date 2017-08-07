@@ -25,13 +25,13 @@
   <ul id="thumbnailsList" class="list-group">
     <!-- i < maxPictures -->
     <li *ngFor="let image of datasource;let i=index">
-      <div [class]='imageContainer' *ngIf="i < maxPictures" [ngStyle]="{'background-image': 'url(' + image + ')'}" (click)="modal.open()"
+      <div [class]='imageContainer' *ngIf="i < maxPictures || i == maxPictures &&  maxPictures + 1 == datasource?.length" [ngStyle]="{'background-image': 'url(' + image + ')'}" (click)="modal.open()"
         (click)=setSelectedImage(image)> </div>
       <!-- show more -->
-      <span *ngIf="i == maxPictures">
+      <span *ngIf="i == maxPictures && maxPictures + 1 < datasource?.length">
            <div class ="imageContainer3 list-group-item" style="opacity:0.8" [ngStyle]="{'background-image': 'url(' + image + ')'}" (click)="modal.open()"
           (click)=setSelectedImage(image)> 
-         <a *ngIf="i == maxPictures" class="more"  (click)="modal.open()" (click)="setSelectedImage(image)"><h2> +{{datasource?.length - maxPictures}} more </h2></a>
+         <a  class="more"  (click)="modal.open()" (click)="setSelectedImage(image)"><h2> +{{datasource?.length - maxPictures}} more </h2></a>
         </div>
       </span>
 

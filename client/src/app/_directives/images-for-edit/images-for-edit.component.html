@@ -1,0 +1,15 @@
+<div class="container pull left">
+  <!--ul id="thumbnailsList" class="list-group"-->
+  <div class="col-md-8 col-sm-8 col-xs-8">
+    <div class="card-deck">
+    <!--li-->
+     <div class="user-card col-md-4"  *ngFor="let image of images;let i=index">
+      <div (mouseenter)='mouseOver=true' (mouseleave)='mouseOver=false' class="card imageContainer" [ngStyle]="{'background-image': 'url(' + image + ')'}" > 
+          <button [hidden]="!mouseOver" (click)="delete(image)"  class="close" ><span aria-hidden="true" class="test glyphicon glyphicon-remove" ></span></button>
+      </div>
+   </div>
+    </div>
+  </div>
+  
+
+</div>

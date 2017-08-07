@@ -144,7 +144,6 @@ export class PostFormComponent implements OnInit, OnDestroy {
     control.removeAt(j + 1);
     this.spwapImg(i, j);
   }
-host: {'(window:keydown)': 'hotkeys($event)'};
 
   remove(i: number) {
     const control = <FormArray>this.myForm.controls['postData'];
@@ -294,7 +293,12 @@ host: {'(window:keydown)': 'hotkeys($event)'};
   }
 
   removeAllImgs(i: number) {
-    let index = this.images.findIndex(ele => { return ele.index == i; });
+   let index = this.images.findIndex(ele => { return ele.index == i; });
+    // find next image index..
+    let next = this.images.find(ele=> ele.index > i );
+    if(next)
+      next.index = i;
+    console.log(index);
     if (index >= 0)
       this.images.splice(index, 1);
   }

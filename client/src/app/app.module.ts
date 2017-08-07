@@ -7,7 +7,7 @@ import { customHttpProvider } from './custom-http';
 import { AppComponent } from './app.component';
 import { RegisterComponent, HomeComponent, LoginComponent, ProfileComponent, PostFormComponent } from './_components/index';
 import { RouterModule } from '@angular/router';
-import { AlertComponent } from './_directives/index';
+import { AlertComponent , ImagesForEditComponent } from './_directives/index';
 import { PostService, ImagesService, AlertService, AuthenticationService, UserService, SocketService } from './_services/index';
 import { AuthGuard } from './_guards/index';
 import { TextFormComponent } from './_components/text-form/text-form.component';
@@ -36,7 +36,7 @@ const ROUTES = [
   { path: '', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'edit', component: EditProfileComponent},
+  { path: 'edit', component: EditPostComponent},
   { path: 'pop', component: PopularPostsComponent},
   { path: ':id', component: ProfileComponent},
   { path: ':id/following', component: ProfileComponent},
@@ -54,6 +54,7 @@ const ROUTES = [
     HomeComponent,
     LoginComponent,
     RegisterComponent,
+    ImagesForEditComponent,
     AlertComponent,
     ProfileComponent,
     PostFormComponent,
