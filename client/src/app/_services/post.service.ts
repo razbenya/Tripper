@@ -46,8 +46,8 @@ export class PostService {
       return this.http.get('/posts').map((response: Response) => response.json());
   }
 
-  public getPopular(limit: number){
-      return this.http.get('/posts//getPopularPosts?limit='+limit)
+  public getPopular(startIndex:number, limit: number){
+      return this.http.get('/posts/getPopularPosts?startIndex='+startIndex+'&limit='+limit)
       .map((response: Response) => response.json());
   }
 

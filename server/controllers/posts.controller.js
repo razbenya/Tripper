@@ -13,8 +13,8 @@ router.post('/comment/:_id',comment);
 router.get('/', getAll);
 router.get('/myPosts', myPosts);
 router.get('/feedPosts', feedPosts);
-router.get('/:_id', getById);
 router.get('/getPopularPosts', getPopular);
+router.get('/:_id', getById);
 router.delete('/:_id', _delete);
 
 
@@ -32,8 +32,9 @@ function getById(req, res) {
 function getPopular(req, res){
     var parts = url.parse(req.url, true);
     var params = parts.query;
+    var startIndex = parseInt(params.startIndex);
     var limit  = parseInt(params.limit);
-    postService.getPopular(limit)
+    postService.getPopular(startIndex, limit)
         .then((posts) => {
             res.send(posts);
         })

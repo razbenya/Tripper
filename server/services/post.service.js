@@ -30,13 +30,15 @@ function getAll() {
     return deferred.promise;
 }
 
-function getPopular(limit){
+function getPopular(startIndex, limit){
     var deferred = Q.defer();
-    db.posts.sort({ likesNum: -1 })
+    db.posts.find()
+            .sort({ likesNum: -1 })
+            .skip(startIndex)
             .limit(limit)
-            .toArray((err, users) => {
+            .toArray((err, posts) => {
                 if(err) deferred.reject(err.name + ': ' + err.message);
-                deferred.resolve(users);
+                deferred.resolve(posts);
             });
     return deferred.promise;
 }

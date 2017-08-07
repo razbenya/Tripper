@@ -26,6 +26,7 @@ import { PostsListComponent } from './_components/posts-list/posts-list.componen
 import {ImageCropperComponent, CropperSettings} from 'ng2-img-cropper';
 import { PopularUsersComponent } from './_components/popular-users/popular-users.component';
 import { EditPostComponent } from './_components/edit-post/edit-post.component';
+import { PopularPostsComponent } from './_components/popular-posts/popular-posts.component';
 
 
 
@@ -36,7 +37,7 @@ const ROUTES = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'edit', component: EditProfileComponent},
-  { path: 'pop', component: PopularUsersComponent},
+  { path: 'pop', component: PopularPostsComponent},
   { path: ':id', component: ProfileComponent},
     
   // otherwise redirect to home
@@ -64,7 +65,8 @@ const ROUTES = [
     PostsListComponent,
     ImageCropperComponent,
     PopularUsersComponent,
-    EditPostComponent
+    EditPostComponent,
+    PopularPostsComponent
   ],
   imports: [
     BrowserModule,
