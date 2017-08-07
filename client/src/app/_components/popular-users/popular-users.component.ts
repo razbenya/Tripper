@@ -19,11 +19,11 @@ export class PopularUsersComponent implements OnInit {
 
   constructor(private ngZone: NgZone, private socketService: SocketService, private userService: UserService) {
 
-    window["poplist"] = {
+  /*  window["poplist"] = {
       component: this,
       refreshList: () => this.updateFollowing(),
       zone: ngZone
-    };
+    };*/
   }
 
   follow(user) {
@@ -31,7 +31,7 @@ export class PopularUsersComponent implements OnInit {
     this.userService.follow(this.currentUser, user).subscribe(() => {
       this.notifyServer(user);
       this.updateFollowing();
-      window['profile'].zone.run(() => { window['profile'].refreshProfile(); });
+     // window['profile'].zone.run(() => { window['profile'].refreshProfile(); });
     });
   }
 

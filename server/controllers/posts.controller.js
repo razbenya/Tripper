@@ -117,9 +117,11 @@ function feedPosts(req, res) {
     userService.getById(params._id)
         .then((user) => {
             var userList = user.following;
+           
             userList.push(user._id);
             postService.getPosts(parseInt(params.startIndex), parseInt(params.limit), userList, user.taggedPosts)
                 .then((posts) => {
+                    console.log(posts);
                     res.send(posts);
                 }).catch((err) => {
                      concolse.log(err);

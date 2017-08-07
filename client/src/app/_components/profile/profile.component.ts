@@ -57,7 +57,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
   
 
-  constructor(private ngZone: NgZone,private socketServer: SocketService, private _sanitizer: DomSanitizer, private route: ActivatedRoute, private router: Router, private userService: UserService) {
+  constructor(private ngZone: NgZone,private socketServer: SocketService, private _sanitizer: DomSanitizer, 
+    private route: ActivatedRoute, private router: Router, private userService: UserService) {
     let user = JSON.parse(localStorage.getItem('currentUser'));
     this.currentUser = user;
     this.getUpdateCurrentUser();
@@ -65,12 +66,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.route.params.subscribe(params => {
       this.id = params['id'];
     });
-
-    window['profile'] = {
+    //var x = this.router.parseUrl(this.router.url).root.children;
+    console.log(this.router.url);
+   /* window['profile'] = {
       component: this,
       refreshProfile: () => this.getUser(), 
       zone: ngZone
-    };
+    };*/
   }
 
   getUpdateCurrentUser(){
@@ -123,7 +125,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   follow() {
     this.loading = true;
    // if(window['poplist'])
-      window['poplist'].zone.run(() => { window['poplist'].refreshList() });
+     // window['poplist'].zone.run(() => { window['poplist'].refreshList() });
     if (this.following == "Edit profile"){
       this.modal.open();
       this.loading = false;

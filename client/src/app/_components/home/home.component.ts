@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { User, Post} from '../../_models/index';
 import { PostService, UserService, SocketService } from '../../_services/index';
+import { appConfig } from '../../app.config';
 
 @Component({
   selector: 'app-home',
@@ -11,9 +12,30 @@ export class HomeComponent implements OnInit {
   currentUser: User;
   users: User[] = [];
   posts: Post[] = [];
+  token;
+
+  navFeed = true;
+  navPopular = false;
+  feedClass ="nav-link active";
+  popularClass="nav-link";
 
   constructor(private postService: PostService, private userService: UserService, private socketService: SocketService) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  }
+
+
+  changeToFeed(){
+      this.feedClass ="nav-link active";
+      this.popularClass="nav-link";
+      this.navFeed = true;
+      this.navPopular = false;
+  }
+
+  changeToPopular(){
+      this.feedClass ="nav-link";
+      this.popularClass="nav-link active";
+      this.navFeed = false;
+      this.navPopular = true;
   }
 
   submit() {
@@ -30,9 +52,13 @@ export class HomeComponent implements OnInit {
 
 
   ngOnInit() {
+    this.userService.getById(this.currentUser._id).subscribe((user) => {
+      this.currentUser = user;
+    });
     this.loadAllUsers();
     //this.loadAllPosts();
     this.loadMyPosts();
+    this.token = JSON.parse(localStorage.getItem('currentUser')).token;
 
 
   }
@@ -65,6 +91,10 @@ export class HomeComponent implements OnInit {
 
   private loadAllUsers() {
       this.userService.getAll().subscribe(users => { this.users = users; });
+  }
+
+  getProfile(){
+    return appConfig.apiUrl+"/uploads/"+this.currentUser.profilePic+"?token="+this.token;
   }
 
 }

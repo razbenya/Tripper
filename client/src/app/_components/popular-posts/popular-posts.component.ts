@@ -11,25 +11,33 @@ export class PopularPostsComponent implements OnInit {
   
   loading = false;
   connection;
-  popularPosts: Post[];
+  popularPosts: Post[]= [];
+  morePosts: Post[] =[];
+  isMore = false;
   limit = 2;
   count = 0; //number of time pressed show more
 
   constructor(private socketService: SocketService, private postService: PostService) { }
   
-  showMore(){
-    this.count++;
-    var currentIndex = this.limit * this.count;
+  getMore(){
+    var currentIndex = this.popularPosts.length;
     this.postService.getPopular(currentIndex, this.limit).subscribe((posts) => {
-      this.popularPosts = this.popularPosts.concat(posts);
+      this.morePosts = posts;
+      this.isMore = this.morePosts.length > 0;
     });
+  }
+
+  showMore(){
+    this.popularPosts = this.popularPosts.concat(this.morePosts); 
+    this.getMore();
   }
 
   init(){
     this.postService.getPopular(this.count, this.limit).subscribe((posts) => {
       this.popularPosts = posts;
+      this.getMore();
     });
-    console.log(this.popularPosts); 
+    
   }
 
   ngOnInit() {

@@ -1,39 +1,100 @@
-<div class="col-md-8">
-    <h1>Hi {{currentUser.firstName}}!</h1>
-    <p>You're logged in with the MEAN Stack & Angular 2!!</p>
-    <h3>All registered users:</h3>
-    <ul>
-        <li *ngFor="let user of users">
-         <a routerLink = {{user._id}} > {{user.username}} </a> ({{user.firstName}} {{user.lastName}})
-            - <a (click)="deleteUser(user.username)">Delete</a>
-        </li>
-    </ul>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 col-sm-4 col-xs-4">
+            <!--<app-user-card [user]='currentUser'></app-user-card>-->
+            <div class="card" style="width: 20rem;">
+                <img class="card-img-top" [src]='getProfile()' alt="Card image cap">
+                <div class="card-block">
+                    <h4 class="card-title">
+                        <a href = "/{{currentUser._id}}">
+                            {{currentUser.firstName}} {{currentUser.lastName}}
+                        </a></h4>
+                        <div class="meta text-muted">
+                            <h5>@{{currentUser.username}}</h5>    
+                        </div>
+                        
+                        <ul class="card-block list-unstyled">
+              
+                            <li [class]='postClass'><a (click)='changeToPosts()'>
+                                <span class="nav-label">Posts</span>
+                                <span class="sr-only">(current)</span>
+                                <span class="nav-label-val">{{currentUser.posts?.length}}</span></a></li>
 
-    <h3>posts:</h3>
-    <ul>
-        <li *ngFor="let post of posts">
-            {{post.title}} - 
-            <a (click)= "deletePost(post._id)"> Delete </a>
-           
-        </li>
-        </ul>
-    <p><a [routerLink]="['/login']">Logout</a></p>
+                            <li [class]='followingClass'><a (click)='changeToFollowing()'>
+                                <span class="nav-label">Following</span>
+                                <span class="nav-label-val">{{currentUser.following?.length}}</span></a></li>
+
+                            <li [class]='followersClass'><a (click)='changeToFollowers()'>
+                                <span class="nav-label">Followers</span>
+                                <span class="nav-label-val">{{currentUser.followers?.length}}</span></a></li>
+
+                        </ul>
+                </div>
+            </div>
+
+            <ul class="nav nav-pills nav-stacked">
+                <li [class]="feedClass">
+                    <a (click)='changeToFeed()'>News Feed</a>
+                </li>
+                <li [class]="popularClass">
+                    <a (click)='changeToPopular()'>Popular Posts</a>
+                </li>
+            </ul>
+            <br>
+            <button type="button" class="btn btn-info" id="btn-new-post" (click)="modal.open()">new post</button>
+            <p><a [routerLink]="['/login']">Logout</a></p>
+
+            <app-popular-users></app-popular-users>
+            
+        </div>
+
+        <div class="col-md-8 col-sm-8 col-xs-8">
+            <div class="feed" *ngIf="navFeed">
+                <app-posts-list [user]='currentUser' [isFeed]='true'></app-posts-list>
+            </div>
+            <div class="popular" *ngIf="navPopular">
+                <app-popular-posts></app-popular-posts>
+            </div>
+            
+            <!--
+            <h1>Hi {{currentUser.firstName}}!</h1>
+            <p>You're logged in with the MEAN Stack & Angular 2!!</p>
+            <h3>All registered users:</h3>
+            <ul>
+                <li *ngFor="let user of users">
+                <a routerLink = {{user._id}} > {{user.username}} </a> ({{user.firstName}} {{user.lastName}})
+                    - <a (click)="deleteUser(user.username)">Delete</a>
+                </li>
+            </ul>
+
+            <h3>posts:</h3>
+            <ul>
+                <li *ngFor="let post of posts">
+                    {{post.title}} - 
+                    <a (click)= "deletePost(post._id)"> Delete </a>
+                
+                </li>
+                </ul>
+            -->
+        </div>
+
+        
+    </div>
+
+    <modal #modal>
+            <modal-header [show-close]="true">
+                <h4 class="modal-title">new post</h4>
+            </modal-header>
+            <modal-body>
+                <app-post-form></app-post-form>
+            </modal-body>
+            <!-- window.angularComponentRef.zone.run(function () { window.angularComponentRef.componentFn(10)}) -->
+            
+            <modal-footer>
+                <button type="button" class="btn btn-default" data-dismiss="modal" (click)="modal.dismiss()">Cancel</button>
+                <button type="button" class="btn btn-primary" [disabled]="checkValid()" (click)="submit()" (click)= "modal.close()">post</button>
+            </modal-footer>
+        </modal>
 </div>
-
-<button type="button" class="btn btn-default" (click)="modal.open()">new post</button>
-
-<modal #modal  >
-    <modal-header [show-close]="true">
-        <h4 class="modal-title">new post</h4>
-    </modal-header>
-    <modal-body>
-        <app-post-form></app-post-form>
-    </modal-body>
-    <!-- window.angularComponentRef.zone.run(function () { window.angularComponentRef.componentFn(10)}) -->
-    
-    <modal-footer>
-        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="modal.dismiss()">Cancel</button>
-        <button type="button" class="btn btn-primary" [disabled]="checkValid()" (click)="submit()" (click)= "modal.close()">post</button>
-    </modal-footer>
-</modal>
+        
 
