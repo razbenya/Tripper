@@ -81,7 +81,8 @@ export class PostFormComponent implements OnInit, OnDestroy {
       taggedUsers: taggedId,
       title: model.title,
       location: this.marker,
-      data: data
+      data: data,
+      likesNum: 0
     }
 
 

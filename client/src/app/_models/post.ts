@@ -11,6 +11,7 @@ export class Post {
         lng: number
     }
     data: any[];
+    likesNum: number;
 }
 
 export class ImgData {

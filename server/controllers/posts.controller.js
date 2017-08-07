@@ -14,6 +14,7 @@ router.get('/', getAll);
 router.get('/myPosts', myPosts);
 router.get('/feedPosts', feedPosts);
 router.get('/:_id', getById);
+router.get('/getPopularPosts', getPopular);
 router.delete('/:_id', _delete);
 
 
@@ -24,6 +25,19 @@ function getById(req, res) {
         .then((post) => {
             res.send(post);
         }).catch(err => {
+            res.status(400).send(err);
+        });
+}
+
+function getPopular(req, res){
+    var parts = url.parse(req.url, true);
+    var params = parts.query;
+    var limit  = parseInt(params.limit);
+    postService.getPopular(limit)
+        .then((posts) => {
+            res.send(posts);
+        })
+        .catch((err) => {
             res.status(400).send(err);
         });
 }

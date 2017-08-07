@@ -17,6 +17,7 @@ service.getPosts = getPosts;
 service.addLike = addLike;
 service.removeLike = removeLike;
 service.addComment = addComment;
+service.getPopular = getPopular; 
 
 module.exports = service;
 
@@ -29,11 +30,22 @@ function getAll() {
     return deferred.promise;
 }
 
+function getPopular(limit){
+    var deferred = Q.defer();
+    db.posts.sort({ likesNum: -1 })
+            .limit(limit)
+            .toArray((err, users) => {
+                if(err) deferred.reject(err.name + ': ' + err.message);
+                deferred.resolve(users);
+            });
+    return deferred.promise;
+}
+
 function addComment(postId, comment){
     var deferred = Q.defer();
     db.posts.update(
         {_id: mongo.helper.toObjectID(postId) },
-        {$push: {comments: comment }}, (err, doc) => {
+        {$addToSet: {comments: comment }}, (err, doc) => {
             if (err) 
                 deferred.reject(err.name + ': ' + err.message);
             deferred.resolve();
@@ -45,7 +57,9 @@ function addLike(postId, userId) {
     var deferred = Q.defer();
     db.posts.update(
         {_id: mongo.helper.toObjectID(postId) },
-        {$push: {likes: userId }}, (err, doc) => {
+        {$addToSet: {likes: userId },
+        $inc: { likesNum: 1} }, 
+        (err, doc) => {
             if (err) 
                 deferred.reject(err.name + ': ' + err.message);
             deferred.resolve();
@@ -57,7 +71,9 @@ function removeLike(postId, userId){
      var deferred = Q.defer();
     db.posts.update(
         {_id: mongo.helper.toObjectID(postId)},
-        {$pull: {likes: userId}}, (err, doc) => {
+        {$pull: {likes: userId},
+        $inc: { likesNum: -1} }, 
+        (err, doc) => {
             if (err) 
                 deferred.reject(err.name + ': ' + err.message);
             deferred.resolve();

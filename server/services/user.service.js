@@ -71,21 +71,6 @@ function getUsersByIds(usersList){
     return deferred.promise;
 }
 
-//TO CHECK
-/*
-function getPopularUsers(user, limit){
-    var deferred = Q.defer();
-    var followingList = user.following;
-    db.users.find(
-        { _id: { $not: { $in: {followingList } } } }
-    ).order("-followers.length").asList().limit(limit)
-        .toArray((err, users) => {
-            if(err) deferred.reject(err.name + ': ' + err.message);
-            deferred.resolve(users);
-        });
-    return deferred.promise;
-}*/
-
 function getPopularUsers(user, limit){
     var deferred = Q.defer();
     var followingList = user.following;
