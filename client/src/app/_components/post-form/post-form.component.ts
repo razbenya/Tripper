@@ -110,7 +110,7 @@ export class PostFormComponent implements OnInit, OnDestroy {
       title: ['', [Validators.required, Validators.minLength(3)]],
       location: [""],
       tag: [''],
-      postData: this._fb.array([this.initText()])
+      postData: this._fb.array([])
     });
 
     this.zoom = 4;

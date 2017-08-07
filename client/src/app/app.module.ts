@@ -25,6 +25,7 @@ import { UserCardComponent } from './_components/user-card/user-card.component';
 import { PostsListComponent } from './_components/posts-list/posts-list.component';
 import {ImageCropperComponent, CropperSettings} from 'ng2-img-cropper';
 import { PopularUsersComponent } from './_components/popular-users/popular-users.component';
+import { EditPostComponent } from './_components/edit-post/edit-post.component';
 
 
 
@@ -62,7 +63,8 @@ const ROUTES = [
     UserCardComponent,
     PostsListComponent,
     ImageCropperComponent,
-    PopularUsersComponent
+    PopularUsersComponent,
+    EditPostComponent
   ],
   imports: [
     BrowserModule,
