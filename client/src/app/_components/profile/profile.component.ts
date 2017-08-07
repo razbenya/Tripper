@@ -29,6 +29,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   followingClass="a";
   followersClass="a";
   token;
+  nav = "posts";
 
   changeToFollowing(){
       this.postClass ="a";
@@ -67,7 +68,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.id = params['id'];
     });
     //var x = this.router.parseUrl(this.router.url).root.children;
-    console.log(this.router.url);
+    
+    
    /* window['profile'] = {
       component: this,
       refreshProfile: () => this.getUser(), 
@@ -169,6 +171,16 @@ export class ProfileComponent implements OnInit, OnDestroy {
   ngOnInit() {
      this.socketObserverInit();
     this.getUser();
+
+    let x = this.router.url.substr(1);
+    this.nav = x.substr(x.indexOf("/")+1);
+    console.log(this.nav);
+    if(this.nav=="following"){
+      this.changeToFollowing();
+    }
+    else if (this.nav == "followers"){
+      this.changeToFollowers();
+    }
    
   }
 

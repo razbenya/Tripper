@@ -26,16 +26,18 @@
           <div class="collapse navbar-collapse" id="mainNav">
             <ul class="nav main-menu navbar-nav">
               
-              <li [class]='postClass'><a (click)='changeToPosts()'>
+              <li [class]='postClass'><a routerLink='/{{userProfile._id}}'>
                 <span class="nav-label">Posts</span>
                 <span class="sr-only">(current)</span>
                 <span class="nav-label-val">{{userProfile.posts?.length}}</span></a></li>
 
-              <li [class]='followingClass'><a (click)='changeToFollowing()'>
+              <li [class]='followingClass'>
+                <a routerLink='/{{userProfile._id}}/following'>
+                
                 <span class="nav-label">Following</span>
                 <span class="nav-label-val">{{userProfile.following?.length}}</span></a></li>
 
-              <li [class]='followersClass'><a (click)='changeToFollowers()'>
+              <li [class]='followersClass'><a routerLink='/{{userProfile._id}}/followers'>
                 <span class="nav-label">Followers</span>
                 <span class="nav-label-val">{{userProfile.followers?.length}}</span></a></li>
 

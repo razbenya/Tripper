@@ -40,6 +40,7 @@ const ROUTES = [
   { path: 'pop', component: PopularPostsComponent},
   { path: ':id', component: ProfileComponent},
   { path: ':id/following', component: ProfileComponent},
+  { path: ':id/followers', component: ProfileComponent},
     
   // otherwise redirect to home
   { path: '**', redirectTo: '' }
