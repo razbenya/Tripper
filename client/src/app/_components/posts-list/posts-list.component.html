@@ -1,6 +1,6 @@
   <ul class="list-unstyled">
       <li class="post-item" *ngFor="let post of posts; let i=index">
-        <app-post [post]='post'></app-post>
+        <app-post (ondelete)="deletePost($event)" [post]='post'></app-post>
         <div class="btn-show-more" *ngIf="isMore && i==posts.length-1">
 
           <button class="btn btn-link" (click)='showMore()' id="btn-show-more">Show More</button>

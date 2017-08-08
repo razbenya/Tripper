@@ -1,4 +1,4 @@
-<app-main-navbar></app-main-navbar>
+<app-main-navbar (postadded)="newpost()" ></app-main-navbar>
 <div class="wrapper" *ngIf="userProfile">
   <!-- <div class="container">-->
   <header id="header">
@@ -74,7 +74,7 @@
 
       <!-- Posts list -->
       <div class="posts-disp" *ngIf="navPosts">  
-        <app-posts-list [user]='userProfile' [isFeed]='false'></app-posts-list>
+        <app-posts-list #newpost [user]='userProfile' [isFeed]='false'></app-posts-list>
       </div>
 
     </div>

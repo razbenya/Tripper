@@ -20,7 +20,7 @@ export class PostFormComponent implements OnInit, OnDestroy {
   @ViewChild("search") searchElementRef: ElementRef;
   @Input() modal;
   @Output() onclose: EventEmitter<string> = new EventEmitter();
-  
+  @Output() onsubmit: EventEmitter<string> = new EventEmitter();
 
   public myForm: FormGroup;
   uploadUrl: string;
@@ -94,6 +94,7 @@ export class PostFormComponent implements OnInit, OnDestroy {
         this.images = [];
         this.choosedUsers =[];
         this.onclose.emit('close');
+        this.onsubmit.emit('newpost');
         this.modal.close();
       },
       error => {

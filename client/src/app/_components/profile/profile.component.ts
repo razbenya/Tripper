@@ -13,6 +13,9 @@ import { appConfig } from '../../app.config';
 export class ProfileComponent implements OnInit, OnDestroy {
   
    @ViewChild("modal") modal;
+   @ViewChild("newpost") postlist;
+
+
   currentUser: User;
   userProfile: User;
   id: string;
@@ -55,6 +58,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.navFollowers = false;
       this.navPosts=true;
       this.navFollowing = false;
+  }
+
+  newpost(){
+    this.postlist.getNew();
   }
   
 

@@ -38,16 +38,22 @@ export class PostsListComponent implements OnInit {
     }
     
   }
+  
+  onlyUnique(value, index, self) { 
+    return self.findIndex(ele =>ele._id == value._id) == index;
+  }
 
   getNew(){
     if(this.isFeed){
       this.postService.feedPosts(this.user._id, 0, this.posts.length+1).subscribe((posts) =>{
-        this.posts.unshift(posts[0]);
+          this.posts.unshift(posts[0]);
+          this.posts = this.posts.filter(this.onlyUnique);
       });
     }
     else{
       this.postService.myPosts(this.user._id, 0, this.posts.length+1).subscribe((posts) =>{
-        this.posts.unshift(posts[0]);
+          this.posts.unshift(posts[0]);
+          this.posts = this.posts.filter(this.onlyUnique);
       });
     }
   }
@@ -56,10 +62,14 @@ export class PostsListComponent implements OnInit {
     let index = this.posts.findIndex(ele => ele._id == postId);
     if(index >= 0)
       this.posts.splice(index,1);  
+    this.getMore();
+    this.showMore();
   }
 
+
   showMore(){
-    this.posts = this.posts.concat(this.morePosts); 
+    this.posts = this.posts.concat(this.morePosts);
+    this.posts = this.posts.filter(this.onlyUnique);
     this.getMore();
   }
 
@@ -77,8 +87,8 @@ export class PostsListComponent implements OnInit {
         this.getMore();
       });
     }
-    
   }
+
   deletePostObserver;
   ngOnInit() {
     this.init();

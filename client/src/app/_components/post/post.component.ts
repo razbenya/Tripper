@@ -1,4 +1,4 @@
-import { ViewChild, Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { ViewChild, Component, OnInit, Input, OnDestroy,Output,EventEmitter } from '@angular/core';
 import { User, Post, ImgData, TextData, Comment } from '../../_models/index';
 import { PostService, SocketService, UserService, ImagesService } from '../../_services/index'
 import { DatePipe } from '@angular/common';
@@ -12,6 +12,7 @@ import { appConfig } from '../../app.config';
 })
 export class PostComponent implements OnInit, OnDestroy {
   @Input() post: Post;
+  @Output() ondelete: EventEmitter<string> = new EventEmitter();
 
   currentUser;
   showMoreElements = false;
@@ -183,6 +184,7 @@ export class PostComponent implements OnInit, OnDestroy {
   remove(){
     this.postService.delete(this.post._id).subscribe(()=> {
       this.socketService.notifyServer('deletePost', this.post._id);
+      this.ondelete.emit(this.post._id);
     })
 
   }

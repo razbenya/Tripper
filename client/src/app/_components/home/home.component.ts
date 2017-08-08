@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ViewChild } from '@angular/core';
 import { User, Post } from '../../_models/index';
 import { PostService, UserService, SocketService } from '../../_services/index';
 import { appConfig } from '../../app.config';
@@ -9,6 +9,9 @@ import { appConfig } from '../../app.config';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+
+ @ViewChild('newpost') postlist;
+
   currentUser: User;
   token;
   navFeed = true;
@@ -19,6 +22,10 @@ export class HomeComponent implements OnInit {
 
   constructor(private postService: PostService, private userService: UserService, private socketService: SocketService) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  }
+
+  newPost(){
+    this.postlist.getNew();
   }
 
 

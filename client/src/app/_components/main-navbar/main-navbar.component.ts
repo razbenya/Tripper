@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { appConfig } from '../../app.config';
-import { UserService,AlertService } from '../../_services/index';
+import { UserService,AlertService, SocketService } from '../../_services/index';
 import { Router } from '@angular/router';
 
 @Component({
@@ -12,9 +12,11 @@ export class MainNavbarComponent implements OnInit {
 
   user;
   query;
+  
+  @Output() postadded :EventEmitter<string> = new EventEmitter();
   //connection;
 
-  constructor(private router: Router,private userService: UserService, private alertService: AlertService){
+  constructor(private socketService: SocketService, private router: Router,private userService: UserService, private alertService: AlertService){
       this.user = JSON.parse(localStorage.getItem('currentUser'));
 
 
@@ -31,9 +33,10 @@ export class MainNavbarComponent implements OnInit {
     return appConfig.apiUrl+"/uploads/"+this.user.profilePic+"?token="+this.user.token;
   }
 
-  /*
-  search(){
-    this.router.navigate(['search?query='+this.query]);
-    
-  }*/
+  newpost(){
+    this.socketService.notifyServer("newPost", this.user._id);
+    this.postadded.emit("newpost");
+  }
+
+ 
 }
