@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { User } from "../../_models";
-import { UserService } from "../../_services/index"
+import { UserService } from "../../_services/index";
+import { appConfig } from '../../app.config';
 
 @Component({
   selector: 'app-search',
@@ -12,9 +13,10 @@ export class SearchComponent implements OnInit {
 
   query;
   usersResult: User[]; 
+  currentUser;
 
   constructor(private route: ActivatedRoute, private userService: UserService,private router: Router) {
-    
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
   }
 
   ngOnInit() {
@@ -30,6 +32,10 @@ export class SearchComponent implements OnInit {
       );
     });
     
+  }
+
+  getProfile() {
+    return appConfig.apiUrl + "/uploads/" + this.currentUser.profilePic + "?token=" + this.currentUser.token;
   }
 
 }

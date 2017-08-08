@@ -1,5 +1,49 @@
-      <div class="card-deck" *ngIf="usersResult">
-          <div class="user-card col-md-3" *ngFor="let user of usersResult">
-            <app-user-card [user]='user'></app-user-card>
+<app-main-navbar></app-main-navbar><br>
+  <div class="container">
+    <div class="row">
+        <div class="col-md-4 col-sm-4 col-xs-4">
+            <!--<app-user-card [user]='currentUser'></app-user-card>-->
+            <div class="card" style="width: 20rem;">
+                <img class="card-img-top" [src]='getProfile()' alt="Card image cap">
+                <div class="card-block">
+                    <h4 class="card-title">
+                        <a href = "/{{currentUser._id}}">
+                            {{currentUser.firstName}} {{currentUser.lastName}}
+                        </a></h4>
+                        <div class="meta text-muted">
+                            <h5>@{{currentUser.username}}</h5>    
+                        </div>
+                        
+                        <ul class="card-block list-unstyled">
+              
+                            <li [class]='postClass'><a routerLink='/{{currentUser._id}}'>
+                                <span class="nav-label">Posts</span>
+                                <span class="sr-only">(current)</span>
+                                <span class="nav-label-val">{{currentUser.posts?.length}}</span></a></li>
+
+                            <li [class]='followingClass'><a routerLink="/{{currentUser._id}}/following">
+                                <span class="nav-label">Following</span>
+                                <span class="nav-label-val">{{currentUser.following?.length}}</span></a></li>
+
+                            <li [class]='followersClass'><a routerLink="/{{currentUser._id}}/followers">
+                                <span class="nav-label">Followers</span>
+                                <span class="nav-label-val">{{currentUser.followers?.length}}</span></a></li>
+
+                        </ul>
+                </div>
+            </div>
+            <app-popular-users></app-popular-users>
+        </div>
+
+        <div class="col-md-8 col-sm-8 col-xs-8">
+
+          <h4>Users</h4>
+          <hr>
+          <div class="card-deck" *ngIf="usersResult">
+              <div class="user-card col-md-3" *ngFor="let user of usersResult">
+                <app-user-card [user]='user'></app-user-card>
+              </div>
           </div>
-      </div>
+        </div>
+    </div>
+</div>

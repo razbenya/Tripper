@@ -1,0 +1,32 @@
+.card {
+    font-size: 1em;
+    overflow: hidden;
+    padding: 0;
+    border: none;
+    border-radius: .28571429rem;
+    box-shadow: 0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5;
+    width: 160px;
+    height: 100%;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    margin-left: 80px;
+}
+
+
+.card-block {
+    font-size: 1em;
+    position: relative;
+    margin: 0;
+    padding: 1em;
+    border: none;
+    border-top: 1px solid rgba(34, 36, 38, .1);
+    box-shadow: none;
+    height: 150px;
+    background: #fff;
+}
+
+.card-img-top {
+    display: block;
+    width: 100%;
+    height: auto;
+}

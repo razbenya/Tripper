@@ -38,10 +38,10 @@ function search(query){
     if(data.length > 1){
         db.users.find(
             { $or: [
-                { username : {$regex : ".*"+query+".*"} },
+                { username : {$regex : query, $options: 'i'} },
                 { email :  query },
                 { $and: [
-                    { firstName:  data[0] },  
+                    { firstName:  {$regex : data[0], $options: 'i'}},  
                     { lastName: {$regex : data[1], $options: 'i'}}]
                 }]})
                 .toArray((err, users) => {
@@ -55,7 +55,7 @@ function search(query){
     else{
         db.users.find(
         { $or: [
-            { username : {$regex : ".*"+query+".*"} },
+            { username : {$regex : query, $options: 'i'} },
             { email :  query },
             { firstName: query }
             ]})
