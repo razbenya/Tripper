@@ -8,13 +8,14 @@ var userService = require('services/user.service');
 router.post('/publish', newPost);
 router.post('/members', getMembers);
 router.post('/like/:_id', like);
-router.post('/unlike/:_id',unlike);
-router.post('/comment/:_id',comment);
+router.post('/unlike/:_id', unlike);
+router.post('/comment/:_id', comment);
 router.get('/', getAll);
 router.get('/myPosts', myPosts);
 router.get('/feedPosts', feedPosts);
 router.get('/getPopularPosts', getPopular);
 router.get('/:_id', getById);
+router.put('/update/:_id', update);
 router.delete('/:_id', _delete);
 
 
@@ -29,11 +30,25 @@ function getById(req, res) {
         });
 }
 
-function getPopular(req, res){
+function update(req, res) {
+    postService.update(req.params._id, req.body)
+        .then(() => {
+            userService.updateTaggedUsers(req.params._id, req.body.toAdd, req.body.toRemove)
+                .then(() => {
+                    res.sendStatus(200);
+                }).catch(err => {
+                    res.status(400).send(err);
+                });
+        }).catch(err => {
+            res.status(400).send(err);
+        });
+}
+
+function getPopular(req, res) {
     var parts = url.parse(req.url, true);
     var params = parts.query;
     var startIndex = parseInt(params.startIndex);
-    var limit  = parseInt(params.limit);
+    var limit = parseInt(params.limit);
     postService.getPopular(startIndex, limit)
         .then((posts) => {
             res.send(posts);
@@ -43,7 +58,7 @@ function getPopular(req, res){
         });
 }
 
-function comment(req, res){
+function comment(req, res) {
     postId = req.params._id;
     comment = req.body;
     postService.addComment(postId, comment)
@@ -117,14 +132,13 @@ function feedPosts(req, res) {
     userService.getById(params._id)
         .then((user) => {
             var userList = user.following;
-           
+
             userList.push(user._id);
             postService.getPosts(parseInt(params.startIndex), parseInt(params.limit), userList, user.taggedPosts)
                 .then((posts) => {
-                    console.log(posts);
                     res.send(posts);
                 }).catch((err) => {
-                     concolse.log(err);
+                    concolse.log(err);
                     res.status(400).send(err);
                 })
         }).catch((err) => {

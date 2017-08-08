@@ -26,12 +26,12 @@ service.removeFromLikes = removeFromLikes;
 service.getUsersByIds = getUsersByIds;
 service.update = update;
 service.getPopularUsers = getPopularUsers;
+service.updateTaggedUsers = updateTaggedUsers;
 
 module.exports = service;
 
 function update(userId, params){
      var deferred = Q.defer();
-     console.log(params);
      db.users.update(
          {_id: mongo.helper.toObjectID(userId)},
          {$set: params}, (err, doc) => {
@@ -89,7 +89,6 @@ function getPopularUsers(user, limit){
 
 function addToLikes(userId){
      var deferred = Q.defer();
-     console.log(userId);
       db.users.update( 
           { _id: mongo.helper.toObjectID(userId) },
           { $inc: { recivedLikes: 1 }}, (err, doc) => {
@@ -313,7 +312,7 @@ function addPostToUser(publisherId, taggedUsers, _postId) {
     function addToTaggedUser() {
         db.users.update(
             { _id: { $in: taggedUsers } },
-            { $push: { taggedPosts: _postId } },
+            { $addToSet: { taggedPosts: _postId } },
             { multi: true }, (err, doc) => {
                 if (err) deferred.reject(err.name + ': ' + err.message);
                 deferred.resolve();
@@ -322,6 +321,27 @@ function addPostToUser(publisherId, taggedUsers, _postId) {
     return deferred.promise;
 }
 
+function updateTaggedUsers(_postId, toAdd, toRemove) {
+  var deferred = Q.defer();
+  db.users.update(
+            { _id: { $in: toRemove } },
+            { $pull: { taggedPosts: _postId } },
+            { multi: true }, (err, doc) => {
+                if (err) 
+                    deferred.reject(err.name + ': ' + err.message);
+                 addToTaggedUser();
+            });
+   function addToTaggedUser() {
+        db.users.update(
+            { _id: { $in: toAdd } },
+            { $push: { taggedPosts: _postId } },
+            { multi: true }, (err, doc) => {
+                if (err) deferred.reject(err.name + ': ' + err.message);
+                deferred.resolve();
+            });
+    }
+    return deferred.promise;
+}
 
 function _delete(_id) {
     var deferred = Q.defer();

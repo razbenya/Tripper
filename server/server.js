@@ -32,8 +32,8 @@ app.use(expressJwt({
 var filter = (ele) => { return ele.startsWith('/uploads/'); ;}
 
 io.sockets.on('connection', (socket) => {
-    socket.on('disconnect', function () {
-    });
+    
+    socket.on('disconnect', function () {});
 
     socket.on('follow', (user) => {
         io.emit(user, { type: user, text: user });

@@ -8,6 +8,7 @@ const uuidv1 = require('uuid/v1');
 router.post('/uploads/:_id', uploadImg);
 router.post('/delete', deleteImg);
 
+
 module.exports = router;
 
 function uploadImg(req, res) {

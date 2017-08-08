@@ -18,6 +18,7 @@ service.addLike = addLike;
 service.removeLike = removeLike;
 service.addComment = addComment;
 service.getPopular = getPopular; 
+service.update = update;
 
 module.exports = service;
 
@@ -29,6 +30,24 @@ function getAll() {
     });
     return deferred.promise;
 }
+
+function update(_id, newpost) {
+    var deferred = Q.defer();
+    toUpdate = {
+        title: newpost.title,
+        taggedUsers: newpost.taggedUsers,
+        location: newpost.location,
+        data: newpost.data
+    }
+    db.posts.update(
+        {_id: mongo.helper.toObjectID(_id) },
+        {$set: toUpdate }, (err, doc) => {
+              if (err) deferred.reject(err.name + ': ' + err.message);
+              deferred.resolve();
+         });
+        return deferred.promise;;
+}
+
 
 function getPopular(startIndex, limit){
     var deferred = Q.defer();
