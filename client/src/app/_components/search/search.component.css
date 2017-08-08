@@ -30,3 +30,11 @@
     width: 100%;
     height: auto;
 }
+
+.well{
+    background: #ff8533;
+}
+
+h3{
+    color: white;
+}

@@ -19,8 +19,61 @@ service.removeLike = removeLike;
 service.addComment = addComment;
 service.getPopular = getPopular; 
 service.update = update;
+service.search = search;
 
 module.exports = service;
+
+function search(query){
+    var deferred = Q.defer();
+    var allData = query.split(" ");
+    var data = [];
+    //create unique data array
+    $.each(allData, function(i, el){
+        if($.inArray(el, data) === -1) data.push(el);
+    });
+}
+//////////////////////////////////////////////////////////
+/*
+function search(query){
+    var deferred = Q.defer();
+    var data = [];
+    data = query.split(" "); 
+    if(data.length > 1){
+        db.users.find(
+            { $or: [
+                { username : {$regex : query, $options: 'i'} },
+                { email :  query },
+                { $and: [
+                    { firstName:  {$regex : data[0], $options: 'i'}},  
+                    { lastName: {$regex : data[1], $options: 'i'}}]
+                }]})
+                .toArray((err, users) => {
+                    if (err) deferred.reject(err.name + ': ' + err.message);
+                    users = _.map(users, function (user) {
+                        return _.omit(user, 'hash');
+                    });
+                    deferred.resolve(users);
+                });
+    }
+    else{
+        db.users.find(
+        { $or: [
+            { username : {$regex : query, $options: 'i'} },
+            { email :  query },
+            { firstName: query }
+            ]})
+            .toArray((err, users) => {
+                if (err) deferred.reject(err.name + ': ' + err.message);
+                users = _.map(users, function (user) {
+                    return _.omit(user, 'hash');
+                });
+                deferred.resolve(users);
+            });
+    }
+    return deferred.promise;
+}
+*/
+//////////////////////////////////////////////////////////
 
 function getAll() {
     var deferred = Q.defer();
