@@ -31,6 +31,13 @@ export class PostComponent implements OnInit, OnDestroy {
   };
   profilepic: any;
   others: string;
+  likesUsersList: User[] = [];
+
+  getLikesUsersList() {
+    this.userService.getUsers(this.post.likes).subscribe(users=>{
+      this.likesUsersList = users;
+    })
+  }
 
   like() {
     if(this.likeText == "like"){
@@ -85,19 +92,20 @@ export class PostComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.latitude = 50;
     this.longitude = 50;
-
+    this.checkLike() 
     /* for testing */
-
+    this.getLikesUsersList();
       this.initMap();
       this.getPostMembers();
       let timeStamp = parseInt(this.post._id.toString().substr(0, 8), 16) * 1000
       this.date = new Date(timeStamp);
-     // this.initImages();
+  
 
       this.postObserver = this.socketService.observeServer(this.post._id).subscribe((data) => {
         this.postService.getById(this.post._id).subscribe((post) => {
           this.post = post;
-          //this.initImages();
+          this.getPostMembers();
+          this.getLikesUsersList() 
           this.checkLike();
         });
       });
@@ -174,7 +182,7 @@ export class PostComponent implements OnInit, OnDestroy {
 
   remove(){
     this.postService.delete(this.post._id).subscribe(()=> {
-      this.socketService.notifyServer('follow', this.post.userId);
+      this.socketService.notifyServer('deletePost', this.post._id);
     })
 
   }

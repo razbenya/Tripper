@@ -14,6 +14,7 @@ export class SocketService {
     this.socket.emit(key, value);
   }
 
+
   observeServer(key) {
     let observable = new Observable(observer => {
         this.socket = io.connect(appConfig.apiUrl);

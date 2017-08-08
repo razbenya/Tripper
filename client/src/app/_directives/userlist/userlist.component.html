@@ -1,7 +1,6 @@
-<a (click)="modal.open()"> {{str}}  </a>
 
-<modal #modal id="test">
     <!-- List group -->
+<div class="userlist" *ngIf="taggedList">
 <div class="panel panel-default">
   <div class="panel-heading">
       <button (click)="modal.close()" type="button" class="close pull-right" aria-label="Close"><span aria-hidden="true">&times;</span></button><br>
@@ -29,4 +28,4 @@
     </ul>
     </div>
   </div>
-</modal>
+</div>

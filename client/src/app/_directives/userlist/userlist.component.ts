@@ -9,7 +9,7 @@ import { UserService, SocketService } from '../../_services/index'
 })
 export class UserlistComponent {
 
-   @Input() str: string;
+   @Input() modal;
    @Input() taggedList: User[];
    currentUser;
    loading = false;

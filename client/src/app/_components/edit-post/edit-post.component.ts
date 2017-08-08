@@ -136,9 +136,11 @@ export class EditPostComponent implements OnInit, OnDestroy {
     this.initTagged(post);
     this.initData(post);
   }
+  
   ngOnInit() {
     this.init(this.post);
   }
+
   cancel() {
     this.postService.getById(this.post._id).subscribe((post) => {
       this.post = post;

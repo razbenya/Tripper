@@ -39,6 +39,25 @@ export class PostsListComponent implements OnInit {
     
   }
 
+  getNew(){
+    if(this.isFeed){
+      this.postService.feedPosts(this.user._id, 0, this.posts.length+1).subscribe((posts) =>{
+        this.posts.unshift(posts[0]);
+      });
+    }
+    else{
+      this.postService.myPosts(this.user._id, 0, this.posts.length+1).subscribe((posts) =>{
+        this.posts.unshift(posts[0]);
+      });
+    }
+  }
+
+  deletePost(postId) {
+    let index = this.posts.findIndex(ele => ele._id == postId);
+    if(index >= 0)
+      this.posts.splice(index,1);  
+  }
+
   showMore(){
     this.posts = this.posts.concat(this.morePosts); 
     this.getMore();
@@ -60,12 +79,22 @@ export class PostsListComponent implements OnInit {
     }
     
   }
-
+  deletePostObserver;
   ngOnInit() {
     this.init();
     this.userObserver = this.socketService.observeServer(this.user._id).subscribe(data => {
-      this.getMore();
+      if(data['type'] == 'newPost'){
+        this.getNew();
+      } else {
+         this.getMore();
+      }
     });
+
+    this.deletePostObserver = this.socketService.observeServer('deletePost').subscribe(data => {
+        this.deletePost(data['post']);
+    })
+
+
   }
 
 }
