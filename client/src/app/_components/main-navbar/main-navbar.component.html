@@ -24,7 +24,7 @@
       </form>
       
       <ul class="nav navbar-nav navbar-right">
-        <li><button class="btn btn-warning" id="new-post-btn">New Post</button></li>
+        <li><button (click)='modal.open()' class="btn btn-warning" id="new-post-btn">New Post</button></li>
         <li><a [routerLink]="['/login']">Logout</a></li>
         <li><a class="navbar-brand" routerLink = "/{{user._id}}">
           <img class="img-responsive" id="nav-brand-profile" [src]='getProfile()' height="40" width="40">
@@ -34,3 +34,7 @@
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
+
+    <modal #modal>
+                <app-post-form [modal]='modal' (onclose)='newpost($event)' ></app-post-form>
+    </modal>

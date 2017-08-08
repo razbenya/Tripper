@@ -1,4 +1,4 @@
-import { NgZone, ElementRef, Component, OnInit, OnDestroy, Input, ViewChild } from '@angular/core';
+import { NgZone, ElementRef, Component, OnInit, OnDestroy, Input, ViewChild,Output, EventEmitter } from '@angular/core';
 import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { Post, User, ImgData, TextData } from '../../_models/index';
@@ -19,6 +19,8 @@ export class PostFormComponent implements OnInit, OnDestroy {
 
   @ViewChild("search") searchElementRef: ElementRef;
   @Input() modal;
+  @Output() onclose: EventEmitter<string> = new EventEmitter();
+  
 
   public myForm: FormGroup;
   uploadUrl: string;
@@ -90,6 +92,7 @@ export class PostFormComponent implements OnInit, OnDestroy {
           control.removeAt(i);
         this.myForm.reset();
         this.images = [];
+        this.onclose.emit('close');
         this.modal.close();
       },
       error => {
@@ -114,8 +117,6 @@ export class PostFormComponent implements OnInit, OnDestroy {
     this.longitude = -98.5795;
     this.searchControl = this.myForm.controls['location'];
     this.loadAllUsers();
-    //if(this.searchElementRef)
-    
   }
 
   cancel() {

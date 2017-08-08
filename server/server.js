@@ -36,13 +36,17 @@ io.sockets.on('connection', (socket) => {
     socket.on('disconnect', function () {});
 
     socket.on('follow', (user) => {
-        io.emit(user, { type: user, text: user });
+        io.emit(user, { type: 'follow', text: user });
     });
-    /*
-    socket.on('userState', (userState) => {
-        io.emit('userState', {});
+
+    socket.on('deletePost', postId => {
+        io.emit('deletePost', {type:'delete', post: postId});
     });
-*/
+
+    socket.on('newPost',(userId)=>{
+        io.emit(userId, {type:'newPost' , text: 'newPost'});
+    });
+
     socket.on('post', (postId) => {
         io.emit(postId, {type: 'post',text: 'post' });
     })

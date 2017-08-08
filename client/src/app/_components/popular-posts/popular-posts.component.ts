@@ -15,7 +15,7 @@ export class PopularPostsComponent implements OnInit {
   morePosts: Post[] =[];
   isMore = false;
   limit = 2;
-  count = 0; //number of time pressed show more
+  deletePostObserver;
 
   constructor(private socketService: SocketService, private postService: PostService) { }
   
@@ -27,21 +27,31 @@ export class PopularPostsComponent implements OnInit {
     });
   }
 
+
   showMore(){
     this.popularPosts = this.popularPosts.concat(this.morePosts); 
     this.getMore();
   }
 
   init(){
-    this.postService.getPopular(this.count, this.limit).subscribe((posts) => {
+    this.postService.getPopular(0, this.limit).subscribe((posts) => {
       this.popularPosts = posts;
       this.getMore();
     });
     
   }
 
+  deletePost(postId) {
+    let index = this.popularPosts.findIndex(ele => ele._id == postId);
+    if(index >= 0)
+      this.popularPosts.splice(index,1);  
+  }
+
   ngOnInit() {
     this.init();
+     this.deletePostObserver = this.socketService.observeServer('deletePost').subscribe(data => {
+        this.deletePost(data['post']);
+    })
   }
 
 }

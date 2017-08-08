@@ -166,6 +166,8 @@ a span{
 
 .container{
     margin-left: 25px;
+    position: relative;
+    margin-left: 107px;
 }
 
 .whiteLinkText{

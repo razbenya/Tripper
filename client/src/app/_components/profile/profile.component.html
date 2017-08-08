@@ -5,7 +5,7 @@
     <div class="profile-banner">
     </div>
       <nav class="navbar navbar-default">
-  
+        
           <!-- Brand and toggle get grouped for better mobile display -->
           <div class="container">
           <div class="navbar-header">
@@ -66,21 +66,12 @@
        </div>
 
       <!-- Followers list -->
-      <div class="card-deck" *ngIf="navFollowers">
+      <div class="card-deck"s *ngIf="navFollowers">
         <div class="user-card col-md-3" *ngFor="let user of profileFollowers">
           <app-user-card [user]='user'></app-user-card>
         </div>
       </div>
-<!--
-      <div class="container" *ngIf="navFollowers">  
-        <div class="row" align="right">
-          <div class="Grid Grid--withGutter" id="gofucingright" *ngFor="let user of profileFollowers">
-            <div class="col-md-3 col-sm-4 col-lg-3">
-              <app-user-card [user]='user'></app-user-card>
-            </div>
-          </div>
-        </div>  
-      </div> -->
+
       <!-- Posts list -->
       <div class="posts-disp" *ngIf="navPosts">  
         <app-posts-list [user]='userProfile' [isFeed]='false'></app-posts-list>
@@ -95,40 +86,3 @@
 
   </div>
 </div>
-  
-
-
-
-<!-- 
-<div *ngIf="userProfile" class="main">
-  <header>
-    <figure class="profile-banner" >
-      <img src="" alt="Profile banner" />
-    </figure>
-    <figure class="profile-picture">
-      <img ng-src = "getProfilePic()">
-    </figure>
-    <div class= "profile-name">
-       <a routerLink = "/{{userProfile._id}}" >
-        {{userProfile.firstName}} {{userProfile.lastName}}
-        </a>
-      </div>
-    <div class="profile-stats">
-      <ul>
-        <li> Posts <span > {{userProfile.posts?.length}}  </span> </li>
-        <li> Following <span> {{userProfile.following?.length}} </span> </li>
-        <li> Followers <span> {{userProfile.followers?.length}} </span> </li>
-        <li> Likes <span> {{userProfile.likes}}  </span> </li>
-        <li> taggedIn <span> {{userProfile.taggedPosts?.length}} posts </span> </li>
-      </ul>
-       <div *ngIf="currentUser._id != userProfile._id">
-      <button [disabled]="loading" class="btn btn-primary" (click)="follow()">
-                {{following}} {{userProfile.firstName}}
-      </button>
-     </div>
-    </div>
-  </header>
-</div>
-
-
--->

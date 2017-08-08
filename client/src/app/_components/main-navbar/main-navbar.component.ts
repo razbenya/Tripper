@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { appConfig } from '../../app.config';
-//import { SocketService } from '../../_services/index';
+import { SocketService } from '../../_services/index';
 
 @Component({
   selector: 'app-main-navbar',
@@ -12,9 +12,8 @@ export class MainNavbarComponent implements OnInit {
   user;
   //connection;
 
-  constructor(/*private socketService: SocketService*/){
+  constructor(private socketService: SocketService){
       this.user = JSON.parse(localStorage.getItem('currentUser'));
-
 
   }
 
@@ -23,6 +22,9 @@ export class MainNavbarComponent implements OnInit {
     this.connection = this.socketService.observeServer("userState").subscribe( () => {
       this.user = JSON.parse(localStorage.getItem('currentUser'));
     })*/
+  }
+  newpost(){
+    this.socketService.notifyServer("newPost", this.user._id);
   }
 
   getProfile(){

@@ -1,8 +1,8 @@
-<div  *ngIf="post && members">
-<!--div class="col-md-8 col-sm-8 col-lg-8"-->
-    <div class="panel panel-warning">
-      <div class="panel-heading">
-        <div class="container">
+<div *ngIf="post && members">
+  <!--div class="col-md-8 col-sm-8 col-lg-8"-->
+  <div class="panel panel-warning">
+    <div class="panel-heading">
+      <div class="container">
         <div class="row">
           <div class="col-md-8 col-sm-6 pull-left">
             <div class="media-left" *ngIf="profilepic">
@@ -25,7 +25,11 @@
                 </span>
                 <span *ngIf="members.tagged?.length > 2">
                        <span class="text-muted"> and </span>
-                <app-userlist [str]='others' [taggedList]="members.tagged.slice(1)"></app-userlist>
+                       <a (click)="modalothers.open()">{{members.tagged.length -1}} others</a>
+                <modal #modalothers>
+                  <app-userlist [modal]='modalothers' [taggedList]="members.tagged.slice(1)"></app-userlist>
+                </modal>
+
                 </span>
                 </span>
               </h4>
@@ -41,67 +45,75 @@
           </div>
         </div>
       </div>
-      </div>
-      <div class="panel-body">
-        <div *ngFor="let postData of post.data; let i=index">
-          <div *ngIf="i < maxElements || showMoreElements">
+    </div>
+    <div class="panel-body">
+      <div *ngFor="let postData of post.data; let i=index">
+        <div *ngIf="i < maxElements || showMoreElements">
           <div *ngIf="postData.text">
-              <pre><p>{{postData.text}}</p></pre>
+            <pre><p>{{postData.text}}</p></pre>
           </div>
           <div *ngIf="postData.imgsUrl">
-          <app-gallery [maxPictures] = 2 [datasource]='getImgsUrl(i)'></app-gallery>
+            <app-gallery [maxPictures]=2 [datasource]='getImgsUrl(i)'></app-gallery>
           </div>
         </div>
         <div *ngIf="i == maxElements && !showMoreElements">
           <button class="btn btn-link" (click)="showMoreElements = true"> show more </button>
         </div>
-         <div *ngIf="i == post.data?.length-1 && showMoreElements">
+        <div *ngIf="i == post.data?.length-1 && showMoreElements">
           <button class="btn btn-link" (click)="showMoreElements = false"> show less </button>
         </div>
-        </div>
-        <hr>
-        <div class="row">
-          <div id = "Like" class= "col-sm-3 col-md-3 col-lg-3">
-          <button (click)='like()' class="btn-link"> <div class="textBlack"> <b> <span [class]='likeIcon'></span> {{likeText}}</b> </div>
-          </button><span class="badge">{{post.likes?.length}}</span>
-          </div> 
-          <div id= "comment" class= "col-sm-3 col-md-3 col-lg-3">
-            <button class="btn-link" (click)='openComments()'> <div class="textBlack"><b> <span class="glyphicon glyphicon-comment"></span> comment </b> </div>
-            </button> <span class="badge">{{post.comments?.length}}</span>
-          </div>
-          <div id= "deletePost" *ngIf="post.userId == currentUser._id" >
-            <button class="btn-default pull-right" (click)='remove()'> delete
-          </button>
-            <div id= "editPost" *ngIf="post.userId == currentUser._id" >
-            <button class="btn-default pull-right" (click)='modal.open()'> edit
-          </button>
-          </div>
-        </div>
       </div>
-      </div>
-      <div [hidden]='!showComments' class="panel-footer">
-        <div class="media">
-          <div class="media-left media-top">
-            <a href="#">
-              <img id="coomentpic" *ngIf='currentUserprofilepic' class="media-object" [src]="currentUserprofilepic">
+      <hr>
+      <div class="row">
+        <div id="Like" class="col-sm-4 col-md-4 col-lg-4">
+          <button (click)='like()' class="btn-link"> <div class="textBlack"> <b> <span [class]='likeIcon'></span> {{likeText}}</b> </div></button>
+            <a *ngIf="post.likes?.length>0" (click)="modallikes.open()">
+          <span class="badge">{{post.likes?.length}}</span>
             </a>
+          <modal #modallikes>
+                  <app-userlist [modal]='modallikes' [taggedList]="likesUsersList"></app-userlist>
+                </modal>
+          
+        
+        </div>
+        <div id="comment" class="col-sm-3 col-md-3 col-lg-3">
+          <button class="btn-link" (click)='openComments()'> <div class="textBlack"><b> <span class="glyphicon glyphicon-comment"></span> comment </b> </div>
+            </button> <span class="badge">{{post.comments?.length}}</span>
+        </div>
+        <div id="deletePost" *ngIf="post.userId == currentUser._id">
+          <button class="btn btn-default pull-right" (click)='remove()'> delete
+          </button>
+          <div id="editPost" *ngIf="post.userId == currentUser._id">
+            <button class="btn btn-default pull-right" (click)='modal.open()'> edit
+          </button>
           </div>
-            <div class="media-body">
-                 <textarea cols="85%" autofocus rows="3" [(ngModel)]="commentText" #commentInput placeholder="write your comment.." (keydown.enter)="writeComment();false"></textarea>
-           </div>
-          <ul class="list-unstyled">
-              <li *ngFor="let comment of post.comments| slice:start:end; let i = index;">
-                <app-comment [comment]='comment'></app-comment>
-              <span *ngIf="i + 1 == end && i < post.comments?.length-1">
-                <button class="btn btn-link" (click)="end=end+2"> load more.. </button>
-                </span>
-              </li>
-          </ul>  
+        </div>
       </div>
     </div>
-  <!--/div-->
-</div>
-</div>
+    <div [hidden]='!showComments' class="panel-footer">
+      <div class="media">
+        <div class="media-left media-top">
+          <a href="#">
+              <img id="coomentpic" *ngIf='currentUserprofilepic' class="media-object" [src]="currentUserprofilepic">
+            </a>
+        </div>
+        <div class="media-body">
+          <textarea cols="85%" autofocus rows="3" [(ngModel)]="commentText" #commentInput placeholder="write your comment.." (keydown.enter)="writeComment();false"></textarea>
+        </div>
+        <ul class="list-unstyled">
+          <li *ngFor="let comment of post.comments| slice:start:end; let i = index;">
+            <app-comment [comment]='comment'></app-comment>
+            <span *ngIf="i + 1 == end && i < post.comments?.length-1">
+                <button class="btn btn-link" (click)="end=end+2"> load more.. </button>
+                </span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!--/div-->
+  </div>
+
   <modal #modal>
     <app-edit-post [modal]='modal' [post]='post' (onModalClose)="notifyLike()"></app-edit-post>
   </modal>
+</div>
