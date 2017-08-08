@@ -1,4 +1,4 @@
-import { NgZone, ElementRef, Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { NgZone, ElementRef, Component, OnInit, OnDestroy, Input, ViewChild } from '@angular/core';
 import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { Post, User, ImgData, TextData } from '../../_models/index';
@@ -18,7 +18,7 @@ export class PostFormComponent implements OnInit, OnDestroy {
 
 
   @ViewChild("search") searchElementRef: ElementRef;
-
+  @Input() modal;
 
   public myForm: FormGroup;
   uploadUrl: string;
@@ -34,13 +34,6 @@ export class PostFormComponent implements OnInit, OnDestroy {
     this.url = "/images"
     this.uploadUrl = this.url + "/uploads/" + this.currentUser._id;
      
-
-    window['post-form'] = {
-      component: this,
-      submit: () => this.save(), 
-      valid: () => {return this.myForm.invalid && !this.loading; } , 
-      zone: ngZone
-    };
   }
 
   sortArr(arr: any[]) {
@@ -96,6 +89,8 @@ export class PostFormComponent implements OnInit, OnDestroy {
         for(let i=0;i<control.length;i++)
           control.removeAt(i);
         this.myForm.reset();
+        this.images = [];
+        this.modal.close();
       },
       error => {
         this.alertService.error(error);
@@ -121,6 +116,15 @@ export class PostFormComponent implements OnInit, OnDestroy {
     this.loadAllUsers();
     //if(this.searchElementRef)
     
+  }
+
+  cancel() {
+     const control = <FormArray>this.myForm.controls['postData'];
+        for(let i=0;i<control.length;i++)
+          control.removeAt(i);
+        this.myForm.reset();
+        this.images = [];
+        this.modal.close();
   }
 
   initText() {
@@ -298,7 +302,6 @@ export class PostFormComponent implements OnInit, OnDestroy {
     let next = this.images.find(ele=> ele.index > i );
     if(next)
       next.index = i;
-    console.log(index);
     if (index >= 0)
       this.images.splice(index, 1);
   }

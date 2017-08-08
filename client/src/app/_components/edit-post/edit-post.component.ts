@@ -1,4 +1,4 @@
-import { NgZone, ElementRef, Component, OnInit, OnDestroy, ViewChild,Input,Output ,EventEmitter } from '@angular/core';
+import { NgZone, ElementRef, Component, OnInit, OnDestroy, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { Post, User, ImgData, TextData } from '../../_models/index';
@@ -16,7 +16,7 @@ import 'rxjs/add/observable/of';
 })
 export class EditPostComponent implements OnInit, OnDestroy {
 
-  @Input() post:Post
+  @Input() post: Post
   //post: Post;
   @Input() modal;
 
@@ -30,7 +30,7 @@ export class EditPostComponent implements OnInit, OnDestroy {
   currentUser;
   address;
   loading = false;
- 
+
 
   /* Map and Location */
   latitude: number;
@@ -49,13 +49,14 @@ export class EditPostComponent implements OnInit, OnDestroy {
     _id: string,
     firstName: string,
   }[] = [];
-   tagged = false;
-   addedTags: Set<string> = new Set([]);
-   removedTags: Set<string> = new Set([]);
+  tagged = false;
+  addedTags: Set<string> = new Set([]);
+  removedTags: Set<string> = new Set([]);
 
   /* images */
   images: ImgData[] = [];
   deletedImages: string[] = [];
+  deleteOnCancel: string[] = [];
 
   constructor(private mapsAPILoader: MapsAPILoader, private ngZone: NgZone, private userService: UserService, private _sanitizer: DomSanitizer, private router: Router, private alertService: AlertService, private postService: PostService, private imgService: ImagesService, private _fb: FormBuilder) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -93,7 +94,6 @@ export class EditPostComponent implements OnInit, OnDestroy {
       taggedId.push(choosedUser._id);
     }
 
-
     let newpost = {
       title: model.title,
       location: this.marker,
@@ -102,49 +102,62 @@ export class EditPostComponent implements OnInit, OnDestroy {
       toAdd: Array.from(this.addedTags),
       toRemove: Array.from(this.removedTags)
     }
-    
-    this.postService.update(newpost,this.post._id).subscribe((succ) => {
+
+    this.postService.update(newpost, this.post._id).subscribe((succ) => {
       this.loading = false;
       this.postService.getById(this.post._id).subscribe((post) => {
         this.post = post;
+        for (let img of this.deletedImages) {
+          this.imgService.deleteImage(this.url, img).subscribe();
+        }
+        this.init(post);
         this.onModalClose.emit('closed');
         this.modal.close();
       })
     }, (error) => {
       this.loading = false;
-      this.alertService.error(error);
     });
   }
 
-  ngOnInit() {
-      this.myForm = this._fb.group({
-        title: [this.post.title, [Validators.required, Validators.minLength(3)]],
-        location: [""],
-        tag: [''],
-        postData: this._fb.array([])
-      });
 
-      this.initMap();
-      this.initTagged();
-      this.initData();
+  init(post: Post) {
+    this.deletedImages = [];
+    this.deleteOnCancel = [];
+    this.addedTags = new Set([]);
+    this.removedTags  = new Set([]);
+    this.myForm = this._fb.group({
+      title: [post.title, [Validators.required, Validators.minLength(3)]],
+      location: [""],
+      tag: [''],
+      postData: this._fb.array([])
+    });
 
-
-
+    this.initMap(post);
+    this.initTagged(post);
+    this.initData(post);
   }
-    cancel(){
-      this.postService.getById(this.post._id).subscribe((post) => {
-        this.post = post;
-        this.onModalClose.emit('closed');
-        this.modal.close();
-      })
-    }
+  ngOnInit() {
+    this.init(this.post);
+  }
+  cancel() {
+    this.postService.getById(this.post._id).subscribe((post) => {
+      this.post = post;
+      this.images
+      for (let img of this.deleteOnCancel) {
+        this.imgService.deleteImage(this.url, img).subscribe();
+      }
+      this.onModalClose.emit('closed');
+      this.init(post);
+      this.modal.close();
+    })
+  }
 
-  initMap() {
+  initMap(post: Post) {
     this.loadapi();
-    if (this.post.location) {
+    if (post.location) {
       this.showmap = true;
-      this.latitude = this.post.location.lat;
-      this.longitude = this.post.location.lng;
+      this.latitude = post.location.lat;
+      this.longitude = post.location.lng;
       this.marker = {
         lat: this.latitude,
         lng: this.longitude
@@ -195,19 +208,20 @@ export class EditPostComponent implements OnInit, OnDestroy {
     });
   }
 
-  initTagged() {
+  initTagged(post: Post) {
     this.userService.getAll().subscribe(users => {
       this.friendsList = users;
     });
-    this.userService.getUsers(this.post.taggedUsers).subscribe((users) => {
+    this.choosedUsers = [];
+    this.userService.getUsers(post.taggedUsers).subscribe((users) => {
       for (let user of users) {
         this.choosedUsers.push({
           _id: user._id,
           firstName: user.firstName
         })
       }
-      if(this.choosedUsers.length > 0)
-         this.tagged = true;
+      if (this.choosedUsers.length > 0)
+        this.tagged = true;
     });
   }
 
@@ -221,16 +235,16 @@ export class EditPostComponent implements OnInit, OnDestroy {
     return this._sanitizer.bypassSecurityTrustHtml(html);
   }
 
-  initText(index: number) {
-    let data = this.post.data.find(ele => ele.index == index);
+  initText(index: number, post: Post) {
+    let data = post.data.find(ele => ele.index == index);
     const control = <FormArray>this.myForm.controls['postData'];
     control.push(this._fb.group({
       text: [data.text, Validators.required],
     }));
   }
 
-  initImages(index: number) {
-    let imgData = this.post.data.find(ele => ele.index == index && ele.imgsUrl);
+  initImages(index: number, post: Post) {
+    let imgData = post.data.find(ele => ele.index == index && ele.imgsUrl);
     this.images.push(imgData);
     const control = <FormArray>this.myForm.controls['postData'];
     control.push(this._fb.group({
@@ -239,13 +253,14 @@ export class EditPostComponent implements OnInit, OnDestroy {
   }
 
 
-  initData() {
-    for (let data of this.post.data) {
+  initData(post: Post) {
+  this.images = [];
+    for (let data of post.data) {
 
       if (data.text) {
-        this.initText(data.index);
+        this.initText(data.index, post);
       } else {
-        this.initImages(data.index);
+        this.initImages(data.index, post);
       }
     }
   }
@@ -271,7 +286,7 @@ export class EditPostComponent implements OnInit, OnDestroy {
 
   removeFromList(i: number) {
     let id = this.choosedUsers[i]._id;
-    if(!this.addedTags.has(id))
+    if (!this.addedTags.has(id))
       this.removedTags.add(id);
     else
       this.addedTags.delete(id);
@@ -305,19 +320,16 @@ export class EditPostComponent implements OnInit, OnDestroy {
     }));
   }
 
-
-
   getImagesUrl(i) {
     let imgData = this.images.find(ele => ele.index == i);
     let token = this.currentUser.token;
     let editImgsUrl = [];
-    if(imgData){
+    if (imgData) {
       for (let imageUrl of imgData.imgsUrl) {
         editImgsUrl.push(appConfig.apiUrl + "/uploads/" + imageUrl + "?token=" + token);
-        //imagesUrl.push(imageUrl);
-      } 
+      }
     }
-      return editImgsUrl;
+    return editImgsUrl;
   }
 
 
@@ -337,7 +349,7 @@ export class EditPostComponent implements OnInit, OnDestroy {
     }
   }
 
-  checkImgData(i){
+  checkImgData(i) {
     return this.images.findIndex(ele => ele.index == i) >= 0
   }
 
@@ -345,15 +357,18 @@ export class EditPostComponent implements OnInit, OnDestroy {
   removeAllImgs(i: number) {
     let index = this.images.findIndex(ele => { return ele.index == i; });
     // find next image index..
-    let next = this.images.find(ele=> ele.index > i );
-    if(next)
+    let next = this.images.find(ele => ele.index > i);
+    if (next)
       next.index = i;
-    console.log(index);
     if (index >= 0)
       this.images.splice(index, 1);
   }
 
+  imageRemoved(image, i) {
+    this.imageDeleted(image.serverResponse._body, i);
+  }
   imageDeleted(imageUrl, i) {
+    this.deletedImages.push(imageUrl);
     let index = this.images.findIndex(ele => { return ele.index == i; });
     let imgs = this.images[index];
     let ind = imgs.imgsUrl.indexOf(imageUrl);
@@ -362,11 +377,11 @@ export class EditPostComponent implements OnInit, OnDestroy {
     }
     if (imgs.imgsUrl.length == 0)
       this.images.splice(index, 1);
-    this.deletedImages.push(imageUrl);
   }
 
   onUploadFinished(file, i: number) {
     let imgUrl: string = file.serverResponse._body;
+    this.deleteOnCancel.push(imgUrl);
     let found: boolean = false;
     let index = this.images.findIndex(ele => { return ele.index == i; });
     if (index >= 0) {

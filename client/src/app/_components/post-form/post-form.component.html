@@ -1,6 +1,7 @@
-<div class="jumbotron">
-  <div class="container">
-
+<div class="jumbotron" *ngIf="myForm">
+   <div class="panel panel-warning">
+     <div class="panel-heading">new post</div>
+        <div class="panel-body">
     <form [formGroup]="myForm" novalidate>
       <div class="form-group">
         <div class="panel panel-default">
@@ -102,12 +103,13 @@
           </button>
         </div>
       </div>
-      <!--
+      <hr>
           <div class="margin-20">
-            <button type="submit" class="btn btn-primary pull-right" [disabled]="!myForm.valid || loading">Submit</button>
+            <button type="submit" (click)='save()' class="btn btn-primary pull-right" [disabled]="!myForm.valid || loading">Submit</button>
+            <button type="cancel" (click)='cancel()' class="btn btn-link pull-right"> cancel </button>
           </div>
-          -->
       <div class="clearfix"></div>
     </form>
   </div>
+</div>
 </div>
