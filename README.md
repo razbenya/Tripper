@@ -15,3 +15,37 @@ Start MongoDB server by running "mongod.exe" from the command line (located in "
     1. Open a command line window and navigate to the "/client" folder below the project root folder
     1. Run `npm install` to install all required npm packages that are defined in the package.json file
     1. Run `npm start` to start the client, a browser window should automatically open to the application at http://localhost:3000
+
+
+##Structure
+Client:
+├───_components
+│   ├───comment
+│   ├───edit-post
+│   ├───edit-profile
+│   ├───home
+│   ├───login
+│   ├───main-navbar
+│   ├───popular-posts
+│   ├───popular-users
+│   ├───post
+│   ├───post-form
+│   ├───posts-list
+│   ├───profile
+│   ├───register
+│   ├───search
+│   ├───text-form
+│   └───user-card
+├───_directives
+│   ├───alert
+│   ├───gallery
+│   ├───images-for-edit
+│   └───userlist
+├───_guards
+├───_models
+└───_services
+
+Server:
+├───controllers
+├───services
+└───uploads
