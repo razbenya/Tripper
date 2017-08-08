@@ -1,0 +1,5 @@
+      <div class="card-deck" *ngIf="usersResult">
+          <div class="user-card col-md-3" *ngFor="let user of usersResult">
+            <app-user-card [user]='user'></app-user-card>
+          </div>
+      </div>

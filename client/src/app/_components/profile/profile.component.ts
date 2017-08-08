@@ -1,6 +1,6 @@
 import {NgZone, Component,ElementRef,  OnInit,  ViewChild, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { UserService, SocketService } from "../../_services/index"
+import { UserService, SocketService } from "../../_services/index";
 import { User } from "../../_models";
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 import { appConfig } from '../../app.config';
@@ -174,7 +174,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     let x = this.router.url.substr(1);
     this.nav = x.substr(x.indexOf("/")+1);
-    console.log(this.nav);
     if(this.nav=="following"){
       this.changeToFollowing();
     }

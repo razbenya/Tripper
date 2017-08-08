@@ -27,8 +27,48 @@ service.getUsersByIds = getUsersByIds;
 service.update = update;
 service.getPopularUsers = getPopularUsers;
 service.updateTaggedUsers = updateTaggedUsers;
+service.search = search;
 
 module.exports = service;
+
+function search(query){
+    var deferred = Q.defer();
+    var data = [];
+    data = query.split(" "); 
+    if(data.length > 1){
+        db.users.find(
+            { $or: [
+                { username : {$regex : ".*"+query+".*"} },
+                { email :  query },
+                { $and: [
+                    { firstName:  data[0] },  
+                    { lastName: {$regex : data[1], $options: 'i'}}]
+                }]})
+                .toArray((err, users) => {
+                    if (err) deferred.reject(err.name + ': ' + err.message);
+                    users = _.map(users, function (user) {
+                        return _.omit(user, 'hash');
+                    });
+                    deferred.resolve(users);
+                });
+    }
+    else{
+        db.users.find(
+        { $or: [
+            { username : {$regex : ".*"+query+".*"} },
+            { email :  query },
+            { firstName: query }
+            ]})
+            .toArray((err, users) => {
+                if (err) deferred.reject(err.name + ': ' + err.message);
+                users = _.map(users, function (user) {
+                    return _.omit(user, 'hash');
+                });
+                deferred.resolve(users);
+            });
+    }
+    return deferred.promise;
+}
 
 function update(userId, params){
      var deferred = Q.defer();

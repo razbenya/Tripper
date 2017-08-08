@@ -1,8 +1,7 @@
 <modal #modal>
-  <div class="slider">
+  <div class="slider" *ngIf="selectedImage">
     <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-
-      <img class="modal-image" *ngIf="selectedImage" src="{{selectedImage}}">
+      <img class="modal-image" src="{{selectedImage}}">
 
 
   <a class="left carousel-control" (click)="navigate(false)" role="button" data-slide="prev">

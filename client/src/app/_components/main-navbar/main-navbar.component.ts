@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { appConfig } from '../../app.config';
-//import { SocketService } from '../../_services/index';
+import { UserService,AlertService } from '../../_services/index';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-main-navbar',
@@ -10,9 +11,10 @@ import { appConfig } from '../../app.config';
 export class MainNavbarComponent implements OnInit {
 
   user;
+  query;
   //connection;
 
-  constructor(/*private socketService: SocketService*/){
+  constructor(private router: Router,private userService: UserService, private alertService: AlertService){
       this.user = JSON.parse(localStorage.getItem('currentUser'));
 
 
@@ -29,4 +31,9 @@ export class MainNavbarComponent implements OnInit {
     return appConfig.apiUrl+"/uploads/"+this.user.profilePic+"?token="+this.user.token;
   }
 
+  /*
+  search(){
+    this.router.navigate(['search?query='+this.query]);
+    
+  }*/
 }

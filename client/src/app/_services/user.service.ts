@@ -56,4 +56,8 @@ export class UserService {
       .map((response: Response) => response.json());
   }
 
+  search(query: string){
+          
+      return this.http.post('/users/search',{query: query}).map((response: Response) => response.json()); 
+  }
 }

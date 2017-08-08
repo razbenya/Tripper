@@ -10,6 +10,7 @@ router.post('/authenticate', authenticate);
 router.post('/register', register);
 router.post('/getUsers', getUsers);
 router.post('/getPopularUsers', getPopularUsers);
+router.post('/search', search);
 router.get('/', getAll);
 router.get('/current', getCurrent);
 router.put('/follow/:_id', follow);
@@ -45,6 +46,17 @@ function getPopularUsers(req, res){
     var params = parts.query;
     var limit  = parseInt(params.limit);
     userService.getPopularUsers(req.body, limit)
+        .then((users) => {
+            res.send(users);
+        })
+        .catch((err) => {
+            res.status(400).send(err);
+        });
+}
+
+function search(req, res){
+    let query = req.body.query;
+    userService.search(query)
         .then((users) => {
             res.send(users);
         })
