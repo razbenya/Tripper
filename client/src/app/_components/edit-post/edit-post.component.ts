@@ -50,13 +50,12 @@ export class EditPostComponent implements OnInit, OnDestroy {
     firstName: string,
   }[] = [];
    tagged = false;
-
-
+   addedTags: Set<string> = new Set([]);
+   removedTags: Set<string> = new Set([]);
 
   /* images */
   images: ImgData[] = [];
   deletedImages: string[] = [];
-
 
   constructor(private mapsAPILoader: MapsAPILoader, private ngZone: NgZone, private userService: UserService, private _sanitizer: DomSanitizer, private router: Router, private alertService: AlertService, private postService: PostService, private imgService: ImagesService, private _fb: FormBuilder) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -96,10 +95,12 @@ export class EditPostComponent implements OnInit, OnDestroy {
 
 
     let newpost = {
-      taggedUsers: taggedId,
       title: model.title,
       location: this.marker,
-      data: data
+      taggedUsers: taggedId,
+      data: data,
+      toAdd: Array.from(this.addedTags),
+      toRemove: Array.from(this.removedTags)
     }
     
     this.postService.update(newpost,this.post._id).subscribe((succ) => {
@@ -269,12 +270,18 @@ export class EditPostComponent implements OnInit, OnDestroy {
   }
 
   removeFromList(i: number) {
+    let id = this.choosedUsers[i]._id;
+    if(!this.addedTags.has(id))
+      this.removedTags.add(id);
+    else
+      this.addedTags.delete(id);
     this.choosedUsers.splice(i, 1);
   }
 
   addTaggedUser(user) {
     this.myForm.controls['tag'].reset();
     if (user) {
+      this.addedTags.add(user._id);
       this.choosedUsers.push({
         _id: user._id,
         firstName: user.firstName,
