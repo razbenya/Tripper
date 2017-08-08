@@ -92,6 +92,7 @@ export class PostFormComponent implements OnInit, OnDestroy {
           control.removeAt(i);
         this.myForm.reset();
         this.images = [];
+        this.choosedUsers =[];
         this.onclose.emit('close');
         this.modal.close();
       },
@@ -124,6 +125,7 @@ export class PostFormComponent implements OnInit, OnDestroy {
         for(let i=0;i<control.length;i++)
           control.removeAt(i);
         this.myForm.reset();
+        this.choosedUsers = [];
         this.images = [];
         this.modal.close();
   }

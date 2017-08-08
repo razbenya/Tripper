@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { User, Post} from '../../_models/index';
+import { User, Post } from '../../_models/index';
 import { PostService, UserService, SocketService } from '../../_services/index';
 import { appConfig } from '../../app.config';
 
@@ -13,8 +13,8 @@ export class HomeComponent implements OnInit {
   token;
   navFeed = true;
   navPopular = false;
-  feedClass ="nav-link active";
-  popularClass="nav-link";
+  feedClass = "nav-link active";
+  popularClass = "nav-link";
   connection;
 
   constructor(private postService: PostService, private userService: UserService, private socketService: SocketService) {
@@ -22,34 +22,38 @@ export class HomeComponent implements OnInit {
   }
 
 
-  changeToFeed(){
-      this.feedClass ="nav-link active";
-      this.popularClass="nav-link";
-      this.navFeed = true;
-      this.navPopular = false;
+  changeToFeed() {
+    this.feedClass = "nav-link active";
+    this.popularClass = "nav-link";
+    this.navFeed = true;
+    this.navPopular = false;
   }
 
-  changeToPopular(){
-      this.feedClass ="nav-link";
-      this.popularClass="nav-link active";
-      this.navFeed = false;
-      this.navPopular = true;
+  changeToPopular() {
+    this.feedClass = "nav-link";
+    this.popularClass = "nav-link active";
+    this.navFeed = false;
+    this.navPopular = true;
   }
- 
 
+  userObserver;
 
-  ngOnInit() {
+  getUser() {
     this.userService.getById(this.currentUser._id).subscribe((user) => {
       this.currentUser = user;
+
     });
-
-
+  }
+  ngOnInit() {
+    this.getUser();
+    this.userObserver = this.socketService.observeServer(this.currentUser._id).subscribe((data) => {
+      this.getUser();
+    });
     this.token = JSON.parse(localStorage.getItem('currentUser')).token;
   }
 
-
-  getProfile(){
-    return appConfig.apiUrl+"/uploads/"+this.currentUser.profilePic+"?token="+this.token;
+  getProfile() {
+    return appConfig.apiUrl + "/uploads/" + this.currentUser.profilePic + "?token=" + this.token;
   }
 
 }

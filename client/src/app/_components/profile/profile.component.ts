@@ -174,7 +174,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     let x = this.router.url.substr(1);
     this.nav = x.substr(x.indexOf("/")+1);
-    console.log(this.nav);
     if(this.nav=="following"){
       this.changeToFollowing();
     }

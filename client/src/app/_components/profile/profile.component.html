@@ -15,7 +15,7 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#"><img class="img-responsive" [src]='getProfile()'></a>
+            <a class="navbar-brand" (click)="modal.open()"><img class="img-responsive" [src]='getProfile()'></a>
             <span class="site-name">
               <a routerLink = "/{{userProfile._id}}">
                 <div class="whiteLinkText">{{userProfile.firstName}} {{userProfile.lastName}}</div></a></span>
