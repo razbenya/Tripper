@@ -19,6 +19,7 @@ Start MongoDB server by running "mongod.exe" from the command line (located in "
 
 ##Structure
 Client:
+.
 ├───_components
 │   ├───comment
 │   ├───edit-post
@@ -46,6 +47,7 @@ Client:
 └───_services
 
 Server:
+.
 ├───controllers
 ├───services
 └───uploads
