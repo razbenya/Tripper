@@ -18,36 +18,37 @@ Start MongoDB server by running "mongod.exe" from the command line (located in "
 
 
 ##Structure
-Client:
-.
-├───_components
-│   ├───comment
-│   ├───edit-post
-│   ├───edit-profile
-│   ├───home
-│   ├───login
-│   ├───main-navbar
-│   ├───popular-posts
-│   ├───popular-users
-│   ├───post
-│   ├───post-form
-│   ├───posts-list
-│   ├───profile
-│   ├───register
-│   ├───search
-│   ├───text-form
-│   └───user-card
-├───_directives
-│   ├───alert
-│   ├───gallery
-│   ├───images-for-edit
-│   └───userlist
-├───_guards
-├───_models
-└───_services
-
-Server:
-.
-├───controllers
-├───services
-└───uploads
++---client
+|   +---e2e
+|   \---src
+|       +---app
+|       |   +---_components
+|       |   |   +---comment
+|       |   |   +---edit-post
+|       |   |   +---edit-profile
+|       |   |   +---home
+|       |   |   +---login
+|       |   |   +---main-navbar
+|       |   |   +---popular-posts
+|       |   |   +---popular-users
+|       |   |   +---post
+|       |   |   +---post-form
+|       |   |   +---posts-list
+|       |   |   +---profile
+|       |   |   +---register
+|       |   |   +---search
+|       |   |   +---text-form
+|       |   |   \---user-card
+|       |   +---_directives
+|       |   |   +---alert
+|       |   |   +---gallery
+|       |   |   +---images-for-edit
+|       |   |   \---userlist
+|       |   +---_guards
+|       |   +---_models
+|       |   \---_services
+|       +---assets
+|       \---environments
+\---server
+    +---controllers
+    \---services
