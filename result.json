@@ -1,0 +1,143 @@
+[
+	{
+		"_id": "netaq",
+		"firstName": "Nata",
+		"lastName": "Cohen",
+		"email": "neta@gmail.com",
+		"username": "netaq",
+		"followersNum": 4,
+		"posts": [
+			"598845be76d39845f4d00437",
+			"59884ad3e29a7140d0587bc5",
+			"5988c2f0d19ca8053454054d",
+			"598ad671bf87bd147809de8e",
+			"598add45fd23ff2950b3b3bf",
+			"598adfa9fd23ff2950b3b3c0",
+			"598adfb5fd23ff2950b3b3c1"
+		],
+		"followers": [
+			"razi",
+			"noam",
+			"tamari"
+		],
+		"following": [
+			"liori",
+			"tamari"
+		],
+		"taggedPosts": [],
+		"profilePic": "7cf7db70-7ba8-11e7-9bf6-45a9ce1cbe1c-netaq-profilePic.jpg",
+		"hash": "$2a$10$FCltN2xIKl1W6isoR7/Ayu7Es0U.mHM1Bixv.wmewh7.ddq9rEuWC",
+		"recivedLikes": 6
+	},
+	{
+		"_id": "liori",
+		"firstName": "Lior",
+		"lastName": "Cohen",
+		"email": "lior@gmail.com",
+		"username": "liori",
+		"followersNum": 5,
+		"posts": [],
+		"followers": [
+			"netaq",
+			"razi",
+			"tamari"
+		],
+		"following": [
+			"noam"
+		],
+		"taggedPosts": [],
+		"profilePic": "4a220d70-7ba7-11e7-b035-ef098485b698-liori-profilePic.jpg",
+		"hash": "$2a$10$70vu11kst/RB3xAXriR2Aut1yZ.RXhpWAqnnxfEwdoNDTg9B.xv7e",
+		"recivedLikes": 1
+	},
+	{
+		"_id": "tamari",
+		"firstName": "Tamar",
+		"lastName": "Kerido",
+		"email": "tamar@gmail.com",
+		"username": "tamari",
+		"followersNum": 4,
+		"posts": [],
+		"followers": [
+			"noam",
+			"netaq"
+		],
+		"following": [
+			"liori",
+			"netaq",
+			"noam",
+			"yoni",
+			"razi"
+		],
+		"taggedPosts": [],
+		"profilePic": "default.jpg",
+		"hash": "$2a$10$zmfhujmCWchI0bp.oCim7uKRuJ6uCCI6Zr8mDrUezEKAjsBTAUD6K",
+		"recivedLikes": 4
+	},
+	{
+		"_id": "noam",
+		"firstName": "Noa",
+		"lastName": "Kerido",
+		"email": "noa@gmail.com",
+		"username": "noam",
+		"followersNum": 3,
+		"posts": [
+			"5987382996eb3c3d687cac79"
+		],
+		"followers": [
+			"razi",
+			"tamari",
+			"liori"
+		],
+		"following": [
+			"tamari",
+			"netaq"
+		],
+		"taggedPosts": [],
+		"profilePic": "default.jpg",
+		"hash": "$2a$10$X6TdRUJoY4UiLSi4hBo/UuBPo9Q9IkuB4EqTpd8iZVE8EWStzmEoK",
+		"recivedLikes": 1
+	},
+	{
+		"_id": "razi",
+		"firstName": "Raz",
+		"lastName": "BenYaish",
+		"email": "razb13@gmail.com",
+		"username": "razi",
+		"followersNum": 1,
+		"posts": [
+			"598af3ec2a53f246d8809083"
+		],
+		"followers": [
+			"tamari"
+		],
+		"following": [
+			"netaq",
+			"liori",
+			"noam"
+		],
+		"taggedPosts": [
+			"598845be76d39845f4d00437",
+			"598adfb5fd23ff2950b3b3c1"
+		],
+		"profilePic": "default.jpg",
+		"hash": "$2a$10$YSGMagGi9lyOjfhcZjmGQuA2r35QQRDsSyl8Cji0dpuxiwDtN6zva",
+		"recivedLikes": 2
+	},
+	{
+		"_id": "yoni",
+		"firstName": "Yonatan",
+		"lastName": "Cohen",
+		"email": "yon@gmail.com",
+		"username": "yoni",
+		"followersNum": 1,
+		"posts": [],
+		"followers": [
+			"tamari"
+		],
+		"following": [],
+		"taggedPosts": [],
+		"profilePic": "default.jpg",
+		"hash": "$2a$10$eJlh06SQ3TaSMMkHzz03kugtoRH9U3TPUvKZ03WfDHk0BA5DHlx9u"
+	}
+]
