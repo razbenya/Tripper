@@ -18,6 +18,7 @@ Start MongoDB server by running "mongod.exe" from the command line (located in "
 
 
 ##Structure
+```
 +---client
 |   +---e2e
 |   \---src
@@ -52,3 +53,4 @@ Start MongoDB server by running "mongod.exe" from the command line (located in "
 \---server
     +---controllers
     \---services
+```
