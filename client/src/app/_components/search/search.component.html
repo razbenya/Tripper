@@ -2,6 +2,7 @@
   <div class="container">
     <div class="row">
         <div class="col-md-4 col-sm-4 col-xs-4">
+            <!-- current user card -->
             <div class="card" style="width: 20rem;">
                 <img class="card-img-top" [src]='getProfile()' alt="Card image cap">
                 <div class="card-block">
@@ -31,37 +32,42 @@
                         </ul>
                 </div>
             </div>
+            <!-- popular users list -->
             <app-popular-users></app-popular-users>
         </div>
 
         <div class="col-md-8 col-sm-8 col-xs-8" id="search-results">
             <br>
           <div class="well well-sm"><h3>Search Results</h3></div>
-          <h4><b>Users</b></h4>
+          <div class="container users-result">
+            <h4><b>Users</b></h4>
+            <hr>
+            <div class="card-deck" *ngIf="usersResult">
+                <div class="user-card col-md-3" *ngFor="let user of usersResult">
+                    <app-user-card [user]='user'></app-user-card>
+                </div>
+            </div>
+            <div *ngIf="usersResult?.length==0">
+                <h4>Nothing to show.</h4>
+            </div>
+          </div>
           <hr>
-          <div class="card-deck" *ngIf="usersResult">
-              <div class="user-card col-md-3" *ngFor="let user of usersResult">
-                <app-user-card [user]='user'></app-user-card>
-              </div>
-          </div>
-          <div *ngIf="usersResult?.length==0">
-            <h4>Nothing to show.</h4>
-          </div>
-        <hr>
-          <h4><b>Posts</b></h4>
-          <hr>
-          <div *ngIf="postsResult">
-            <ul class="list-unstyled">
-                <li class="post-item" *ngFor="let post of postsResult | slice:0:end; let i=index">
-                    <app-post [post]='post'></app-post>
-                    <div class="btn-show-more" *ngIf="i + 1 == end && i < postsResult?.length-1">
-                        <button class="btn btn-link" (click)='end=end+2' id="btn-show-more">Show More</button>
-                    </div>
-                </li>
-            </ul>
-          </div>
-          <div *ngIf="postsResult?.length==0">
-            <h4>Nothing to show.</h4>
+          <div class="container posts-result">
+            <h4><b>Posts</b></h4>
+            <hr>
+            <div *ngIf="postsResult">
+                <ul class="list-unstyled">
+                    <li class="post-item" *ngFor="let post of postsResult | slice:0:end; let i=index">
+                        <app-post [post]='post'></app-post>
+                        <div class="btn-show-more" *ngIf="i + 1 == end && i < postsResult?.length-1">
+                            <button class="btn btn-link" (click)='end=end+2' id="btn-show-more">Show More</button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div *ngIf="postsResult?.length==0">
+                <h4>Nothing to show.</h4>
+            </div>
           </div>
         </div>
     </div>
