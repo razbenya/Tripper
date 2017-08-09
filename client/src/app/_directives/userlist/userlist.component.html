@@ -15,7 +15,7 @@
                 <img class="media-object" [src]="getProfile(user)">
             </div>
             <div class="media-body">
-              <h4 class="media-heading"> <a routerLink='../{{user._id}}'> {{user.firstName}} {{user.lastName}} </a> </h4>
+              <h4 class="media-heading"> <a [routerLink]="['/profiles', user._id]"> {{user.firstName}} {{user.lastName}} </a> </h4>
               <div class="text-muted"> {{user.followers.length}} followers </div>
             </div>
           </div>

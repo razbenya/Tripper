@@ -34,9 +34,8 @@
             <div class="panel-heading">choose location</div>
             <div class="panel-body">
               <agm-map #mymap [zoom]="zoom" [latitude]="latitude" [longitude]="longitude" 
-              (mapClick)="mapClicked($event)"
-              >
-                <agm-marker *ngIf="marker" [latitude]="marker.lat" [longitude]="marker.lng" [label]="test">
+              (mapClick)="mapClicked($event)">
+                <agm-marker (markerClick)="clickedMarker()" *ngIf="marker" [latitude]="marker.lat" [longitude]="marker.lng">
                 </agm-marker>
               </agm-map>
               <input placeholder="search for location" autocorrect="on" autocapitalize="off" spellcheck="off" type="text" class="form-control"

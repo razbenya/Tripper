@@ -3,7 +3,6 @@ import { User, Post, ImgData, TextData, Comment } from '../../_models/index';
 import { PostService, SocketService, UserService, ImagesService } from '../../_services/index'
 import { DatePipe } from '@angular/common';
 import { appConfig } from '../../app.config';
-//import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery';
 
 @Component({
   selector: 'app-post',
@@ -91,16 +90,14 @@ export class PostComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    this.latitude = 50;
-    this.longitude = 50;
-    this.checkLike() 
-    /* for testing */
-    this.getLikesUsersList();
+      this.latitude = 50;
+      this.longitude = 50;
+      this.checkLike() 
+      this.getLikesUsersList();
       this.initMap();
       this.getPostMembers();
       let timeStamp = parseInt(this.post._id.toString().substr(0, 8), 16) * 1000
       this.date = new Date(timeStamp);
-  
 
       this.postObserver = this.socketService.observeServer(this.post._id).subscribe((data) => {
         this.postService.getById(this.post._id).subscribe((post) => {
@@ -108,6 +105,7 @@ export class PostComponent implements OnInit, OnDestroy {
           this.getPostMembers();
           this.getLikesUsersList() 
           this.checkLike();
+          this.initMap();
         });
       });
 
@@ -151,6 +149,8 @@ export class PostComponent implements OnInit, OnDestroy {
       this.marker = this.post.location;
       this.zoom = 16;
       this.showmap = true;
+    } else {
+      this.showmap = false;
     }
   }
 

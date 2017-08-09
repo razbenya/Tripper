@@ -4,7 +4,7 @@
      <img *ngIf="profilepic" id="coomentpic" class="media-object" [src]="profilepic">
   </div>
     <div class="media-body">
-      <a href="/{{user._id}}">
+      <a [routerLink]="['/profiles', user._id]" >
       <h5 class="media-heading"> <b> {{user.firstName}} {{user.lastName}} </b> </h5>
       </a>
 

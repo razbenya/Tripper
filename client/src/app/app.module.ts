@@ -29,6 +29,7 @@ import { EditPostComponent } from './_components/edit-post/edit-post.component';
 import { PopularPostsComponent } from './_components/popular-posts/popular-posts.component';
 import { MainNavbarComponent } from './_components/main-navbar/main-navbar.component';
 import { SearchComponent } from './_components/search/search.component';
+import { DummyProfileComponent } from './_directives/dummy-profile/dummy-profile.component';
 
 
 
@@ -40,6 +41,7 @@ const ROUTES = [
   { path: 'register', component: RegisterComponent },
   { path: 'edit', component: EditPostComponent},
   { path: 'search/:q', component: SearchComponent},
+  { path: 'profiles/:id', component: DummyProfileComponent},
   { path: ':id', component: ProfileComponent},
   { path: ':id/following', component: ProfileComponent},
   { path: ':id/followers', component: ProfileComponent},
@@ -73,7 +75,9 @@ const ROUTES = [
     EditPostComponent,
     PopularPostsComponent,
     MainNavbarComponent,
-    SearchComponent
+    SearchComponent,
+    DummyProfileComponent,
+    DummyProfileComponent
   ],
   imports: [
     BrowserModule,

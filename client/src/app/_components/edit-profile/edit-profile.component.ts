@@ -35,11 +35,6 @@ export class EditProfileComponent implements OnInit {
   }
 
   onUploadFinished(fileEvent) {
-    /* let imgUrl: string = fileEvent.serverResponse._body;
-     this.imageUploaded = true;
-     this.oldpicture = this.newpicture;
-     this.newpicture = imgUrl;
-     this.currentProfilePicture = appConfig.apiUrl + "/uploads/" + imgUrl + "?token=" + this.currentUser.token;*/
 
     this.oldpicture = this.newpicture;
     this.imageUploaded = true;
@@ -53,7 +48,6 @@ export class EditProfileComponent implements OnInit {
       that.cropper.setImage(image);
     };
     myReader.readAsDataURL(file);
-
 
   }
 

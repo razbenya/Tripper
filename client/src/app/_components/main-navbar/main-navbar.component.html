@@ -8,7 +8,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand" routerLink="/">
         <img alt="Brand" id="nav-brand-img" src="../../../logo.jpeg" height="50" width="50">
       </a>
     </div>
@@ -29,7 +29,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li><button (click)='modal.open()' class="btn btn-warning" id="new-post-btn">New Post</button></li>
         <li><a [routerLink]="['/login']">Logout</a></li>
-        <li><a class="navbar-brand" routerLink = "/{{user._id}}">
+        <li><a class="navbar-brand" [routerLink]="['/profiles', user._id]">
           <img class="img-responsive" id="nav-brand-profile" [src]='getProfile()' height="40" width="40">
         </a></li>
 
