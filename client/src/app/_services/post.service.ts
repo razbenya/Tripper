@@ -55,4 +55,9 @@ export class PostService {
       .map((response: Response) => response.json());
   }
 
+  search(query: string){
+          
+      return this.http.post('/posts/search',{query: query}).map((response: Response) => response.json()); 
+  }
+
 }

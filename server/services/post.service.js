@@ -6,6 +6,7 @@ var mongo = require('mongoskin');
 var db = mongo.db(config.connectionString, { native_parser: true });
 
 db.bind('posts');
+db.posts.createIndex({ "$**": "text" });
 
 var service = {};
 
@@ -27,53 +28,26 @@ function search(query){
     var deferred = Q.defer();
     var allData = query.split(" ");
     var data = [];
+    data = allData;
+    var str = data.join(" ");
     //create unique data array
+    /*
     $.each(allData, function(i, el){
         if($.inArray(el, data) === -1) data.push(el);
-    });
-}
-//////////////////////////////////////////////////////////
-/*
-function search(query){
-    var deferred = Q.defer();
-    var data = [];
-    data = query.split(" "); 
-    if(data.length > 1){
-        db.users.find(
-            { $or: [
-                { username : {$regex : query, $options: 'i'} },
-                { email :  query },
-                { $and: [
-                    { firstName:  {$regex : data[0], $options: 'i'}},  
-                    { lastName: {$regex : data[1], $options: 'i'}}]
-                }]})
-                .toArray((err, users) => {
-                    if (err) deferred.reject(err.name + ': ' + err.message);
-                    users = _.map(users, function (user) {
-                        return _.omit(user, 'hash');
-                    });
-                    deferred.resolve(users);
-                });
-    }
-    else{
-        db.users.find(
-        { $or: [
-            { username : {$regex : query, $options: 'i'} },
-            { email :  query },
-            { firstName: query }
-            ]})
-            .toArray((err, users) => {
-                if (err) deferred.reject(err.name + ': ' + err.message);
-                users = _.map(users, function (user) {
-                    return _.omit(user, 'hash');
-                });
-                deferred.resolve(users);
-            });
-    }
+    });*/
+    console.log(data);
+    //search words
+    db.posts.find(
+        { $text: { $search: str } },
+        { score: { $meta: "textScore" } })
+        .sort( { score: { $meta: "textScore" } } )
+        .toArray(function (err, posts) {
+            if (err) deferred.reject(err.name + ': ' + err.message);
+            deferred.resolve(posts);
+        });
     return deferred.promise;
+
 }
-*/
-//////////////////////////////////////////////////////////
 
 function getAll() {
     var deferred = Q.defer();

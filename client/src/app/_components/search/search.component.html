@@ -34,7 +34,8 @@
             <app-popular-users></app-popular-users>
         </div>
 
-        <div class="col-md-8 col-sm-8 col-xs-8">
+        <div class="col-md-8 col-sm-8 col-xs-8" id="search-results">
+            <br>
           <div class="well well-sm"><h3>Search Results</h3></div>
           <h4><b>Users</b></h4>
           <hr>
@@ -44,6 +45,22 @@
               </div>
           </div>
           <div *ngIf="usersResult?.length==0">
+            <h4>Nothing to show.</h4>
+          </div>
+        <hr>
+          <h4><b>Posts</b></h4>
+          <hr>
+          <div *ngIf="postsResult">
+            <ul class="list-unstyled">
+                <li class="post-item" *ngFor="let post of postsResult | slice:0:end; let i=index">
+                    <app-post [post]='post'></app-post>
+                    <div class="btn-show-more" *ngIf="i + 1 == end && i < postsResult?.length-1">
+                        <button class="btn btn-link" (click)='end=end+2' id="btn-show-more">Show More</button>
+                    </div>
+                </li>
+            </ul>
+          </div>
+          <div *ngIf="postsResult?.length==0">
             <h4>Nothing to show.</h4>
           </div>
         </div>

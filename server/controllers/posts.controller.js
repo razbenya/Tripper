@@ -10,6 +10,7 @@ router.post('/members', getMembers);
 router.post('/like/:_id', like);
 router.post('/unlike/:_id', unlike);
 router.post('/comment/:_id', comment);
+router.post('/search', search);
 router.get('/', getAll);
 router.get('/myPosts', myPosts);
 router.get('/feedPosts', feedPosts);
@@ -40,6 +41,17 @@ function update(req, res) {
                     res.status(400).send(err);
                 });
         }).catch(err => {
+            res.status(400).send(err);
+        });
+}
+
+function search(req, res){
+    let query = req.body.query;
+    postService.search(query)
+        .then((posts) => {
+            res.send(posts);
+        })
+        .catch((err) => {
             res.status(400).send(err);
         });
 }
