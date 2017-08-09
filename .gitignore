@@ -27,6 +27,7 @@ node_modules
 connect.lock
 coverage/*
 libpeerconnection.log
+debug.log
 npm-debug.log
 testem.log
 typings
@@ -38,4 +39,3 @@ typings
 #System Files
 .DS_Store
 Thumbs.db
-debug.log
