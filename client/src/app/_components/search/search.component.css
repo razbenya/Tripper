@@ -42,3 +42,9 @@ h3{
 #search-results{
     background: white;
 }
+
+#btn-show-more{
+    text-align: center;
+    background: white;
+    width: 100%;
+}

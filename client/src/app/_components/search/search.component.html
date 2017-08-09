@@ -60,7 +60,7 @@
                     <li class="post-item" *ngFor="let post of postsResult | slice:0:end; let i=index">
                         <app-post [post]='post'></app-post>
                         <div class="btn-show-more" *ngIf="i + 1 == end && i < postsResult?.length-1">
-                            <button class="btn btn-link" (click)='end=end+2' id="btn-show-more">Show More</button>
+                            <button class="btn btn-link well" (click)='end=end+2' id="btn-show-more">Show More</button>
                         </div>
                     </li>
                 </ul>

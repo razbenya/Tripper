@@ -2,7 +2,7 @@
       <li class="post-item" *ngFor="let post of popularPosts; let i=index">
         <app-post [post]='post'></app-post>
         <div class="btn-show-more" *ngIf="isMore && i==popularPosts.length-1">
-          <button class="btn btn-link" (click)='showMore()' id="btn-show-more">Show More</button>
+          <button class="btn btn-link well" (click)='showMore()' id="btn-show-more">Show More</button>
         </div>
       </li>
   </ul>
