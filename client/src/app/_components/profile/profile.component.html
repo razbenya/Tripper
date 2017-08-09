@@ -26,7 +26,7 @@
           <div class="collapse navbar-collapse" id="mainNav">
             <ul class="nav main-menu navbar-nav">
               
-              <li [class]='postClass'><a routerLink='/{{userProfile._id}}'>
+              <li [class]='postClass'><a [routerLink]="['/profiles', userProfile._id]">
                 <span class="nav-label">Posts</span>
                 <span class="sr-only">(current)</span>
                 <span class="nav-label-val">{{userProfile.posts?.length}}</span></a></li>
@@ -40,14 +40,11 @@
               <li [class]='followersClass'><a routerLink='/{{userProfile._id}}/followers'>
                 <span class="nav-label">Followers</span>
                 <span class="nav-label-val">{{userProfile.followers?.length}}</span></a></li>
-
             </ul>
             <button class="btn btn-default pull-right" [disabled]="loading" (click)='follow()' id="btn-follow">{{following}}</button>
           </div><!-- /.navbar-collapse -->
           </div>
-
       </nav>
-    
   </header>
 
   <modal #modal>

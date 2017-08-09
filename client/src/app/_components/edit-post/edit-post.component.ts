@@ -23,6 +23,9 @@ export class EditPostComponent implements OnInit, OnDestroy {
   @Output() onModalClose: EventEmitter<string> = new EventEmitter();
 
   @ViewChild("search") searchElementRef: ElementRef;
+  @ViewChild('mymap') mymap;
+
+
   public myForm: FormGroup;
   uploadUrl: string;
   url: string;
@@ -132,9 +135,9 @@ export class EditPostComponent implements OnInit, OnDestroy {
       postData: this._fb.array([])
     });
 
-    this.initMap(post);
     this.initTagged(post);
     this.initData(post);
+    this.initMap(post);
   }
   
   ngOnInit() {
@@ -275,6 +278,14 @@ export class EditPostComponent implements OnInit, OnDestroy {
       lat: $event.coords.lat,
       lng: $event.coords.lng
     };
+  }
+
+  triggerMapResize() {
+    this.mymap.triggerResize();
+  }
+
+  clickedMarker() {
+    this.marker = undefined;
   }
 
   showMap() {

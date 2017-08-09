@@ -19,8 +19,7 @@ export class PostsListComponent implements OnInit {
   isMore = false;
 
 
-  constructor(private socketService: SocketService, private postService: PostService) {
-  }
+  constructor(private socketService: SocketService, private postService: PostService) {}
 
   getMore(){
     var currentIndex = this.posts.length;

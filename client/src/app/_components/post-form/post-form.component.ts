@@ -131,6 +131,8 @@ export class PostFormComponent implements OnInit, OnDestroy {
         this.modal.close();
   }
 
+
+
   initText() {
     return this._fb.group({
       text: ['', Validators.required],
@@ -172,13 +174,19 @@ export class PostFormComponent implements OnInit, OnDestroy {
   showmap: boolean = false;
   marker: {
     lat: number,
-    lng: number
+    lng: number,
   };
+
+  
+
+  clickedMarker() {
+    this.marker = undefined;
+  }
 
   mapClicked($event) {
     this.marker = {
       lat: $event.coords.lat,
-      lng: $event.coords.lng
+      lng: $event.coords.lng,
     };
   }
 

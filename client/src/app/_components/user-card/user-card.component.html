@@ -3,7 +3,7 @@
       <img class="card-img-top" [src]='getProfile()'>
       <div class="card-block">
         
-        <h4 class="card-title mt-3"><a href = "/{{user._id}}">
+        <h4 class="card-title mt-3"><a [routerLink]="['/profiles', user._id]">
                 <div class="whiteLinkText">{{user.firstName}} {{user.lastName}}
                 </div></a></h4>
         

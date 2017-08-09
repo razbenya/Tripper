@@ -10,16 +10,16 @@
             </div>
             <div class="media-body">
               <h4 class="media-heading">
-                <a routerLink='../{{members.publisher._id}}'>
+                <a [routerLink]="['/profiles', members.publisher._id]">
                  <b> {{members.publisher.firstName}} {{members.publisher.lastName}} </b> </a>
                 <span *ngIf="members.tagged?.length > 0">
                       <span class="text-muted"> with </span>
-                <a routerLink='../{{members.tagged[0]._id}}'>
+                <a [routerLink]="['/profiles', members.tagged[0]._id]">
                       {{ members.tagged[0].firstName }} {{ members.tagged[0].lastName }} 
                       </a>
                 <span *ngIf="members.tagged?.length == 2">
                         <span class="text-muted"> and </span>
-                <a routerLink='../{{ members.tagged[1]._id }}'>
+                <a [routerLink]="['/profiles', members.tagged[1]._id]">
                         {{ members.tagged[1].firstName }} {{ members.tagged[1].lastName }}
                         </a>
                 </span>
@@ -113,7 +113,7 @@
     <!--/div-->
   </div>
 
-  <modal #modal>
-    <app-edit-post [modal]='modal' [post]='post' (onModalClose)="notifyLike()"></app-edit-post>
+  <modal #modal (onOpen)='editpost.triggerMapResize()' >
+    <app-edit-post #editpost [modal]='modal' [post]='post' (onModalClose)="notifyLike()"></app-edit-post>
   </modal>
 </div>

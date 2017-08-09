@@ -15,7 +15,6 @@
             (onFileUploadFinish)="onUploadFinished($event)" (onRemove)="imageRemoved($event)">
           </image-upload>
           
-
           <img-cropper *ngIf="imageUploaded" #cropper [image]="data" [settings]="cropperSettings"></img-cropper>
           <br>
          <!-- <span class="result rounded" *ngIf="data.image">
