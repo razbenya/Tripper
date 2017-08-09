@@ -1,5 +1,5 @@
 # Tripper
-ATD Assignment4 Single Page Application
+ATD Assignment4 Single Page Application - a social network for sharing traveling reviews.
 
 ## Prerequisites
 To run the app locally you need NodeJS installed and MongoDB running.
@@ -17,7 +17,7 @@ Start MongoDB server by running "mongod.exe" from the command line (located in "
     1. Run `npm start` to start the client, a browser window should automatically open to the application at http://localhost:3000
 
 
-##Structure
+## Structure
 ```
 ├───client
 │   ├───e2e
