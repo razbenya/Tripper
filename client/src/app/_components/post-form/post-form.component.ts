@@ -115,8 +115,8 @@ export class PostFormComponent implements OnInit, OnDestroy {
     });
 
     this.zoom = 4;
-    this.latitude = 39.8282;
-    this.longitude = -98.5795;
+    this.latitude = 31.262218;
+    this.longitude = 34.7992723;
     this.searchControl = this.myForm.controls['location'];
     this.loadAllUsers();
   }
@@ -130,8 +130,6 @@ export class PostFormComponent implements OnInit, OnDestroy {
         this.images = [];
         this.modal.close();
   }
-
-
 
   initText() {
     return this._fb.group({

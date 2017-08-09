@@ -48,9 +48,8 @@ export class EditProfileComponent implements OnInit {
       that.cropper.setImage(image);
     };
     myReader.readAsDataURL(file);
-
   }
-
+  
   imageRemoved(file) {
     this.imageUploaded = false;
     this.data = {};
