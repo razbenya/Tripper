@@ -12,7 +12,6 @@ export class PostsListComponent implements OnInit {
   @Input() user: User;
   @Input() isFeed = true;
   numPostsToShow = 2;
-  count = 1; //number of time pressed show more
   posts: Post[];
   morePosts: Post[];
   userObserver;
