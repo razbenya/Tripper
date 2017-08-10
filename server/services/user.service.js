@@ -362,10 +362,11 @@ function addPostToUser(publisherId, taggedUsers, _postId) {
 }
 
 function updateTaggedUsers(_postId, toAdd, toRemove) {
+  var obj_postId = mongo.helper.toObjectID(_postId);
   var deferred = Q.defer();
   db.users.update(
             { _id: { $in: toRemove } },
-            { $pull: { taggedPosts: _postId } },
+            { $pull: { taggedPosts: obj_postId } },
             { multi: true }, (err, doc) => {
                 if (err) 
                     deferred.reject(err.name + ': ' + err.message);
@@ -374,7 +375,7 @@ function updateTaggedUsers(_postId, toAdd, toRemove) {
    function addToTaggedUser() {
         db.users.update(
             { _id: { $in: toAdd } },
-            { $push: { taggedPosts: _postId } },
+            { $addToSet: { taggedPosts: obj_postId } },
             { multi: true }, (err, doc) => {
                 if (err) deferred.reject(err.name + ': ' + err.message);
                 deferred.resolve();

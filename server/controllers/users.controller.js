@@ -15,23 +15,27 @@ router.get('/', getAll);
 router.get('/current', getCurrent);
 router.put('/follow/:_id', follow);
 router.put('/unfollow/:_id', unfollow);
-router.put('/:_id',update);
+router.put('/:_id', update);
 router.delete('/:_id', _delete);
 router.get('/:_id', getUser);
 
 module.exports = router;
 
-function update(req, res){
-    userService.update(req.params._id, req.body)
-        .then(()=>{
-            res.sendStatus(200);
-        }).catch((err) => {
-            res.status(400).send(err);
-        });
-    
+function update(req, res) {
+    if (req.user.sub == req.params._id) {
+        userService.update(req.params._id, req.body)
+            .then(() => {
+                res.sendStatus(200);
+            }).catch((err) => {
+                res.status(400).send(err);
+            });
+    } else {
+        res.status(401).send("Unauthorized");
+    }
+
 }
 
-function getUsers(req, res){
+function getUsers(req, res) {
     userService.getUsersByIds(req.body)
         .then((users) => {
             res.send(users);
@@ -41,10 +45,10 @@ function getUsers(req, res){
         });
 }
 
-function getPopularUsers(req, res){
+function getPopularUsers(req, res) {
     var parts = url.parse(req.url, true);
     var params = parts.query;
-    var limit  = parseInt(params.limit);
+    var limit = parseInt(params.limit);
     userService.getPopularUsers(req.body, limit)
         .then((users) => {
             res.send(users);
@@ -54,7 +58,7 @@ function getPopularUsers(req, res){
         });
 }
 
-function search(req, res){
+function search(req, res) {
     let query = req.body.query;
     userService.search(query)
         .then((users) => {

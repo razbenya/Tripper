@@ -86,13 +86,15 @@ export class PostFormComponent implements OnInit, OnDestroy {
       succ => {
         this.submit = true;
         this.loading = false;
-        this.alertService.success("post published successfully", true);
+        //this.alertService.success("post published successfully", true);
         const control = <FormArray>this.myForm.controls['postData'];
         for(let i=0;i<control.length;i++)
           control.removeAt(i);
         this.myForm.reset();
         this.images = [];
         this.choosedUsers =[];
+        this.showmap = false;
+        this.tagged = false;
         this.onclose.emit('close');
         this.onsubmit.emit('newpost');
         this.modal.close();
@@ -114,9 +116,9 @@ export class PostFormComponent implements OnInit, OnDestroy {
       postData: this._fb.array([])
     });
 
-    this.zoom = 4;
-    this.latitude = 31.262218;
-    this.longitude = 34.7992723;
+    this.zoom = 12;
+    this.latitude = 31.2592689;
+    this.longitude = 34.8016943;
     this.searchControl = this.myForm.controls['location'];
     this.loadAllUsers();
   }
@@ -199,7 +201,7 @@ export class PostFormComponent implements OnInit, OnDestroy {
       navigator.geolocation.getCurrentPosition((position) => {
         this.latitude = position.coords.latitude;
         this.longitude = position.coords.longitude;
-        this.zoom = 4;
+        this.zoom = 6;
       });
     }
   }
@@ -268,10 +270,6 @@ export class PostFormComponent implements OnInit, OnDestroy {
   private loadAllUsers() {
     this.userService.getAll().subscribe(users => {
       this.friendsList = users;
-      let index = this.friendsList.findIndex(ele => ele._id = this.currentUser._id);
-      if (index > -1) {
-        this.friendsList.splice(index, 1);
-      }
     });
   }
 
