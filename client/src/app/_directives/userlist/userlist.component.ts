@@ -54,7 +54,14 @@ export class UserlistComponent {
     this.currentUserFollowing = this.currentUser.following;
     this.updateFollowing();
     this.connection = this.socketService.observeServer(this.currentUser._id).subscribe(data => {
-          this.updateFollowing();
+      let idList =[];
+      for(let user of this.taggedList){
+        idList.push(user._id);
+      }
+      this.userService.getUsers(idList).subscribe(newList => {
+        this.taggedList = newList;
+      });
+      this.updateFollowing();
     });
   }
 

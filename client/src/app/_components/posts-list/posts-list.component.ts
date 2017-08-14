@@ -87,6 +87,16 @@ export class PostsListComponent implements OnInit {
     }
   }
 
+  refreshFeed(){
+    var currentIndex = this.posts.length;
+    if(this.isFeed){
+      this.postService.feedPosts(this.user._id, 0, currentIndex + this.numPostsToShow).subscribe((posts) =>{
+       this.posts = posts;
+       this.getMore();
+      });
+    }
+  }
+
   deletePostObserver;
   ngOnInit() {
     this.init();
@@ -94,7 +104,7 @@ export class PostsListComponent implements OnInit {
       if(data['type'] == 'newPost'){
         this.getNew();
       } else {
-         this.getMore();
+         this.refreshFeed();
       }
     });
 
